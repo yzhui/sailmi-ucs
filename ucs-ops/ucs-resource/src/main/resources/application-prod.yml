@@ -1,0 +1,30 @@
+#服务器端口
+server:
+  port: 8010
+
+
+qiniu-oss:
+  enable: true
+  name: qiniu
+  tenant-mode: true
+  endpoint: http://sailmi.s3-cn-south-1.qiniucs.com
+  access-key: VkmGKxgATNJI7fUR02m3c62mgz4wWHN4S8fCCt23
+  secret-key: pL0wM5jCDjtSWmEdGifgeRm8CqIHPeGt_lmctJr5
+  bucket-name: sailmi
+
+#oss-alioss:
+oss:
+  enable: true
+  name: alioss
+  endpoint: http://oss-cn-beijing.aliyuncs.com
+  access-key: LTAI4G64fM2RanntFTx12WXN
+  secret-key: pEV1xwUcL9i9NWvpNGwuyPSLiViuaj
+  bucket-name: test-yudorm
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${ucs.datasource.dev.url}
+    username: ${ucs.datasource.dev.username}
+    password: ${ucs.datasource.dev.password}

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sailmi.system.user.mapper.UserMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="userResultMap" type="com.sailmi.system.user.entity.User">
+        <result column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="safe_code" property="code"/>
+        <result column="login_name" property="account"/>
+        <result column="password" property="password"/>
+        <result column="nick_name" property="name"/>
+        <result column="real_name" property="realName"/>
+        <result column="user_email" property="email"/>
+        <result column="user_phone" property="phone"/>
+        <result column="user_birthday" property="birthday"/>
+        <result column="user_sex" property="sex"/>
+        <result column="head_img" property="avatar"/>
+        <result column="user_address" property="userAddress"/>
+        <result column="real_status" property="realStatus"/>
+        <result column="last_login" property="lastLogin"/>
+        <result column="enterprise_status" property="enterpriseStatus"/>
+        <result column="phone_status" property="phoneStatus"/>
+        <result column="email_status" property="emailStatus"/>
+        <result column="info_status" property="infoStatus"/>
+        <result column="default_enterprise" property="defaultEnterpriseId"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="baseColumnList">
+        select id,
+        create_user AS createUser,
+        create_time AS createTime,
+        update_user AS updateUser,
+        update_time AS updateTime,
+        status,
+        is_deleted AS isDeleted,
+        login_name AS account,
+        password,
+        nick_name  AS name,
+        real_name AS realName ,
+        user_email AS email,
+        user_phone AS phone,
+        user_birthday AS birthday,
+        user_sex AS sex,
+        default_enterprise AS defaultEnterpriseId
+    </sql>
+
+    <select id="selectUserPage" resultMap="userResultMap">
+        select * from ucs_user where is_deleted = 0
+    </select>
+
+    <select id="getUser" parameterType="map"  resultMap="userResultMap">
+        SELECT
+            *
+        FROM
+            ucs_user
+        WHERE
+           login_name = #{account} and password = #{password} and is_deleted = 0
+    </select>
+
+    <select id="getTenantByEnterpriseId" resultType="java.lang.String">
+      SELECT
+            tenant_id
+        FROM
+            ucs_enterprise
+        WHERE
+            id = #{defaultEnterpriseId}
+        AND is_deleted = 0
+    </select>
+
+    <select id="queryUserRoles" resultType="java.lang.String">
+        SELECT
+            a.role_id
+        FROM
+            ucs_user_role a
+        LEFT JOIN ucs_role b ON a.role_id = b.id
+        WHERE
+            a.user_id = #{id}
+        AND b.enterprise_id = #{defaultEnterpriseId}
+    </select>
+    <select id="getRoleName" resultType="java.lang.String">
+        SELECT
+        role_name
+        FROM
+        ucs_role
+        WHERE
+        id IN
+        <foreach collection="array" item="ids" index="index" open="(" close=")" separator=",">
+            #{ids}
+        </foreach>
+        and is_deleted = 0
+    </select>
+
+    <select id="getRoleAlias" resultType="java.lang.String">
+        SELECT
+            role_alias
+        FROM
+            ucs_role
+        WHERE
+            id IN
+        <foreach collection="array" item="ids" index="index" open="(" close=")" separator=",">
+            #{ids}
+        </foreach>
+        and is_deleted = 0
+    </select>
+
+    <select id="getDeptName" resultType="java.lang.String">
+        SELECT
+            dept_name
+        FROM
+            ucs_dept
+        WHERE
+            id IN
+        <foreach collection="array" item="ids" index="index" open="(" close=")" separator=",">
+            #{ids}
+        </foreach>
+        and is_deleted = 0
+    </select>
+
+    <select id="exportUser" resultType="com.sailmi.system.user.excel.UserExcel">
+        SELECT id,
+        login_name AS account,
+        nick_name  AS  name,
+        real_name AS realName,
+        user_email AS email,
+        user_phone AS phone,
+        user_birthday AS birthday
+        FROM ucs_user ${ew.customSqlSegment}
+    </select>
+
+</mapper>

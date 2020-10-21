@@ -1,0 +1,47 @@
+server:
+  port: 8000
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/sailplat_messages?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+    username: root
+    password: password
+  redis:
+    host: localhost
+    port: 6379
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    shutdown:
+      enabled: false
+    health:
+      show-details: always
+message:
+  sms:
+    health:
+      samples: 10 #统计最近10次短信发送结果
+      threshold: 0.5 #如果成功率低于50%则认为短信服务down掉了
+    channel:
+      aliyun:
+        access-key-id:  #####你的accessKeyId
+        access-key-secret:  #####你的accessKeySecret
+      link:
+        corp-id:  ######企业号
+        password:  ######密码
+      available:
+      - aliyun #优先使用阿里云
+      - link #备用凌凯短信
+      batchSend: link #使用凌凯发送批量短信
+
+swagger:
+  base-package:
+    com.sailmi.message.controller
+
+logging:
+  level:
+    com.sailmi.message: debug

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sailmi.enterprise.mapper.ServiceEnterpriseMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="serviceEnterpriseResultMap" type="com.sailmi.system.entity.ServiceEnterprise">
+        <id column="ID" property="id"/>
+        <result column="service_id" property="serviceId"/>
+        <result column="enterprise_id" property="enterpriseId"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
+        <result column="is_deleted" property="isDeleted"/>
+    </resultMap>
+
+
+    <select id="selectServiceEnterprisePage" resultMap="serviceEnterpriseResultMap">
+        select * from ucs_service_enterprise where is_deleted = 0
+    </select>
+
+</mapper>

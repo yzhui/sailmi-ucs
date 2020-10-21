@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.sailmi</groupId>
+        <artifactId>sailmi-ucs</artifactId>
+        <version>2.7.1</version>
+    </parent>
+
+    <artifactId>ucs-service</artifactId>
+    <name>${project.artifactId}</name>
+    <version>2.7.1</version>
+    <packaging>pom</packaging>
+    <description>sailmi-ucs 微服务集合</description>
+
+    <modules><module>ucs-desk</module>
+        <module>ucs-log</module>
+        <module>ucs-system</module>
+        <module>ucs-user</module>
+        <module>ucs-demo</module>
+		<module>ucs-enterprise</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.sailmi</groupId>
+            <artifactId>ucs-common</artifactId>
+            <version>${ucs.project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>${docker.plugin.version}</version>
+                <configuration>
+                    <imageName>${docker.registry.url}/sailmi/${project.artifactId}:${project.version}</imageName>
+                    <dockerDirectory>${project.basedir}</dockerDirectory>
+                    <dockerHost>${docker.registry.host}</dockerHost>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                    <registryUrl>${docker.registry.url}</registryUrl>
+                    <serverId>${docker.registry.url}</serverId>
+                    <pushImage>true</pushImage>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

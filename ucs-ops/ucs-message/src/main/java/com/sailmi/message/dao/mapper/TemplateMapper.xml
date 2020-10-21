@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sailmi.message.dao.mapper.TemplateMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="templateResultMap" type="com.sailmi.message.dao.model.Template">
+        <id column="id" property="id"/>
+        <result column="channel_template_no" property="channelTemplateNo"/>
+        <result column="name" property="name"/>
+        <result column="type" property="type"/>
+        <result column="template" property="template"/>
+        <result column="validate_code_key" property="validateCodeKey"/>
+        <result column="validate_code_expire" property="validateCodeExpire"/>
+        <result column="messageSetting_id" property="messageSettingId"/>
+    </resultMap>
+
+
+    <select id="selectTemplatePage" resultMap="templateResultMap">
+        select * from t_template where is_deleted = 0
+    </select>
+
+</mapper>

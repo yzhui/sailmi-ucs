@@ -1,0 +1,21 @@
+#server port
+server:
+  port: 8122
+
+#data source
+spring:
+  datasource:
+    url: ${ucs.datasource.dev.url}
+    username: ${ucs.datasource.dev.username}
+    password: ${ucs.datasource.dev.password}
+
+#SMS
+sms:
+  url: https://api.rtc.huaweicloud.com:10443/sms/batchSendSms/v1
+  appKey: JiL9xzHghaStEJAEUbB6J08hC660
+  appSecret: JD0913d8GqI93zr2ZS8hv2NF4Kz5
+  sender: 881905205853
+  templateId: ba2b667bc714465e89a207909a4f28d5
+  signature: 莱诺斯科技
+  receiver: +86
+  statusCallBack:

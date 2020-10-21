@@ -1,0 +1,67 @@
+server:
+  undertow:
+    io-threads: 4
+    worker-threads: 20
+    buffer-size: 1024
+    direct-buffers: true
+spring:
+  cloud:
+    sentinel:
+      eager: true
+  devtools:
+    restart:
+      log-condition-evaluation-delta: false
+    livereload:
+      port: 23333
+feign:
+  hystrix:
+    enabled: true
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+hystrix:
+  threadpool:
+    default:
+      coreSize: 300
+      maxQueueSize: 1000
+      queueSizeRejectionThreshold: 800
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+ribbon:
+  MaxAutoRetries: 1
+  MaxAutoRetriesNextServer: 2
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+  OkToRetryOnAllOperations: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+ucs:
+  xss:
+    enabled: true
+    skip-url:
+      - /weixin
+  secure:
+    skip-url:
+      - /test/**
+    client:
+      - client-id: sword
+        path-patterns:
+          - /sword/**
+      - client-id: saber
+        path-patterns:
+          - /saber/**
+  tenant:
+    column: tenant_id
+    tables:
+      - ucs_notice

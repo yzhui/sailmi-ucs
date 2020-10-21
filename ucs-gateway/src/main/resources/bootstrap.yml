@@ -1,0 +1,46 @@
+server:
+  port: 90
+
+spring:
+  cloud:
+    discovery:
+      reactive:
+        enabled: false
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+    loadbalancer:
+      retry:
+        enabled: true
+    nacos:
+      config:
+<<<<<<< HEAD
+        server-addr: localhost:26502
+        namespace: ucs
+=======
+        server-addr: localhost:8848
+        namespace: public
+>>>>>>> 94aabb366fcf87abecda5d24e8441adcac7142c0
+        group: DEFAULT_GROUP
+      discovery:
+        server-addr: localhost:8848
+
+# 聚合文档配置
+sailmi:
+  document:
+    resources:
+      - name: 授权模块
+        location: /sailmi-auth
+      - name: 工作台模块
+        location: /sailmi-desk
+      - name: 系统模块
+        location: /sailmi-system
+      - name: 用户模块
+        location: /sailmi-user
+      - name: 日志模块
+        location: /sailmi-log
+      - name: 资源模块
+        location: /sailmi-resource
+      - name: 企业管理模块
+        location: /sailmi-enterprise
