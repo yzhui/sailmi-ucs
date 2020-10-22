@@ -104,7 +104,11 @@ public class EnterpriseController extends AppController {
 	public R<IPage<EnterpriseVO>> list(AuthUser user,Enterprise enterprise, Query query) {
 		QueryWrapper<Enterprise> queryWrapper = Condition.getQueryWrapper(enterprise);
 		if(user!=null && user.getTenantId()!=null){
-			queryWrapper.eq("tenant_id",user.getTenantId());
+			if(user.getTenantId().equals("000000")) {//平台管理员
+
+			}else{
+				queryWrapper.eq("tenant_id", user.getTenantId());
+			}
 		}
 		IPage<Enterprise> pages = enterpriseService.page(Condition.getPage(query), queryWrapper);
 		return R.data(EnterpriseWrapper.build().pageVO(pages));

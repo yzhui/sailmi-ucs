@@ -15,13 +15,8 @@ spring:
         enabled: true
     nacos:
       config:
-<<<<<<< HEAD
-        server-addr: localhost:26502
-        namespace: ucs
-=======
         server-addr: localhost:8848
         namespace: public
->>>>>>> 94aabb366fcf87abecda5d24e8441adcac7142c0
         group: DEFAULT_GROUP
       discovery:
         server-addr: localhost:8848

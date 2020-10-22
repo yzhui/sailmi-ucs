@@ -17,14 +17,15 @@ package com.sailmi.system.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.sailmi.core.tool.api.R;
+import com.sailmi.system.entity.*;
+import com.sailmi.system.feign.IEnterpriseFeign;
+import com.sailmi.system.service.IRoleService;
 import lombok.AllArgsConstructor;
 import com.sailmi.core.boot.tenant.TenantId;
 import com.sailmi.core.mp.base.BaseServiceImpl;
 import com.sailmi.core.tool.constant.AppConstant;
 import com.sailmi.core.tool.utils.Func;
-import com.sailmi.system.entity.Dept;
-import com.sailmi.system.entity.Role;
-import com.sailmi.system.entity.Tenant;
 import com.sailmi.system.mapper.DeptMapper;
 import com.sailmi.system.mapper.RoleMapper;
 import com.sailmi.system.mapper.TenantMapper;
@@ -47,7 +48,8 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, Tenant> imp
 	private final TenantId tenantId;
 	private final RoleMapper roleMapper;
 	private final DeptMapper deptMapper;
-
+	private IEnterpriseFeign enterpriseFeign;
+	private IRoleService roleService;
 	@Override
 	public IPage<Tenant> selectTenantPage(IPage<Tenant> page, Tenant tenant) {
 		return page.setRecords(baseMapper.selectTenantPage(page, tenant));
@@ -61,28 +63,30 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, Tenant> imp
 			List<String> codes = tenants.stream().map(Tenant::getTenantId).collect(Collectors.toList());
 			String tenantId = getTenantId(codes);//生成新的tennantId
 			tenant.setTenantId(tenantId);
-			// 新建租户对应的默认角色
-			/*
-			// 新建租户时，建立对应的管理员企业
-			String enterpriseId="000000";
-			Role role = new Role();
-			role.setEnterpriseId(enterpriseId);
-			role.setParentId(0L);
-			role.setRoleName("管理员");
-			role.setRoleAlias("admin");
-			role.setSort(2);
-			role.setIsDeleted(0);
-			roleMapper.insert(role);
-			// 新建租户对应的默认部门
-//			Dept dept = new Dept();
-//			dept.setTenantId(tenantId);
-//			dept.setParentId(0L);
-//			dept.setDeptName(tenant.getTenantName());
-//			dept.setFullName(tenant.getTenantName());
-//			dept.setSort(2);
-//			dept.setIsDeleted(0);
-//			deptMapper.insert(dept);
-			*/
+
+
+			if(tenant!=null && tenant.getEnterpriseId()!=null && tenant.getEnterpriseId()!=""){//选择了某企业，创建企业管理员角色
+				Role role = new Role();
+				role.setEnterpriseId(Long.valueOf(tenant.getEnterpriseId()));
+				role.setParentId(0l);
+				role.setRoleName("租户管理员"+tenant.getEnterpriseId());
+				role.setRoleAlias(tenant.getEnterpriseId()+"tenant_administrator");
+				role.setSort(2);
+				role.setIsDeleted(0);
+				roleMapper.insert(role);
+
+			//	R<UserEnterprise> userEnterpriseR = enterpriseFeign.queryUserEnterpriseInfo(tenant.getEnterpriseId());
+			//	if(userEnterpriseR!=null && userEnterpriseR.getData()!=null && userEnterpriseR.getData().getUserId()!=null){
+					//TODO
+					//设定租户管理员登陆人和role的绑定还是在用户中设定呢
+			//	}
+				Enterprise enterprise = new Enterprise();
+				enterprise.setTenantId(tenantId);
+				enterprise.setId(Long.valueOf(tenant.getEnterpriseId()));
+				enterpriseFeign.update(enterprise);
+			}else{
+				tenant.setEnterpriseId("0");
+			}
 		}
 		return super.saveOrUpdate(tenant);
 	}

@@ -61,7 +61,16 @@
         FROM
             ucs_user
         WHERE
-           login_name = #{account} and password = #{password} and is_deleted = 0
+          tenant_id=#{tenantId} and login_name = #{account} and password = #{password} and is_deleted = 0
+    </select>
+
+    <select id="getConsoleUser" parameterType="map"  resultMap="userResultMap">
+        SELECT
+            *
+        FROM
+            ucs_user
+        WHERE
+            login_name = #{account} and password = #{password} and is_deleted = 0
     </select>
 
     <select id="getTenantByEnterpriseId" resultType="java.lang.String">

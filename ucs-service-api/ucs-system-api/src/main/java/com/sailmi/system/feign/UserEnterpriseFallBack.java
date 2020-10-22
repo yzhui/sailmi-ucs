@@ -8,7 +8,7 @@ import java.util.List;
 @Component
 public class UserEnterpriseFallBack implements IuserEnterRelationFeign{
 	@Override
-	public R<List<UserEnterprise>> detailInfo(String enterpriseId) {
+	public R<List<UserEnterprise>> detailInfo(String enterpriseId,Boolean flag) {
 		return R.fail("未获取到企业用户信息");
 	}
 }

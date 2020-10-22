@@ -55,7 +55,6 @@ import java.util.Map;
 public class TenantController extends AppController {
 	private ITenantService tenantService;
 	private IEnterpriseFeign enterpriseFeign;
-	private IRoleService roleService;
 	/**
 	 * 详情
 	 */
@@ -81,7 +80,11 @@ public class TenantController extends AppController {
 	public R<IPage<TenantVo>> list(AuthUser user,@ApiIgnore @RequestParam Map<String, Object> tenant, Query query) {
 		QueryWrapper<Tenant> queryWrapper = Condition.getQueryWrapper(tenant, Tenant.class);
 		if(user!=null && user.getTenantId()!=null){
-			queryWrapper.eq("tenant_id",user.getTenantId());
+			if(user.getTenantId().equals("000000")) {//平台管理员
+
+			}else{//租户管理员
+				queryWrapper.eq("tenant_id", user.getTenantId());
+			}
 		}
 		IPage<Tenant> pages = tenantService.page(Condition.getPage(query),queryWrapper);
 		IPage<TenantVo> tenantVOIPage = TenantWrapper.build().pageVO(pages);
@@ -126,15 +129,7 @@ public class TenantController extends AppController {
 	 */
 	@PostMapping("/submit")
 	@ApiOperation(value = "租户新增或修改", notes = "传入tenant")
-	public R submit(@Valid @RequestBody Tenant tenant) {
-		if(tenant!=null && tenant.getEnterpriseId()!=null && tenant.getEnterpriseId()!=""){//选择了某企业，创建企业管理员角色
-			Role role = new Role();
-			role.setEnterpriseId(Long.valueOf(tenant.getEnterpriseId()));
-			role.setParentId(0l);
-			role.setRoleName("租户管理员");
-			role.setRoleAlias("tenant_administrator");
-			roleService.save(role);
-		}
+	public R submit(AuthUser authUser,@Valid @RequestBody Tenant tenant) {
 		return R.status(tenantService.saveTenant(tenant));
 	}
 

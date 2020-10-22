@@ -85,6 +85,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 					if (users.getPassword() != null) {
 						user.setPassword(DigestUtil.encrypt(users.getPassword()));
 					}
+					user.setTenantId("0000000");
 					user.setDefaultEnterpriseId(Long.valueOf(0));//默认公司是0
 					user.setLastLogin(String.valueOf(new Date().getTime()));//登陆时间
 					user.setCreateTime(new Date());//创建时间
@@ -144,40 +145,52 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 	@Override
 			public UserInfo userInfo(String tenantId,String account, String password) {
 				UserInfo userInfo = new UserInfo();
-				//User user = baseMapper.getUser(tenantId, account, password);
-				User user =userMapper.getUser(account, password);//查询用户信息（企业控制台或后台）
 				UserVO userVO = new UserVO();
-				if (Func.isNotEmpty(user)) {
-					userVO = BeanUtil.copy(user, UserVO.class);//用户信息封装
-					//查看用户是否有默认企业
-					System.out.println("user default enterprise is:"+user.getDefaultEnterpriseId());
-					if(user.getDefaultEnterpriseId()!=null ){//有默认企业（加入企业或创建企业）
-						//查询该企业的tenanted
-						String tenatedId=userMapper.getTenantByEnterpriseId(user.getDefaultEnterpriseId().toString());
-						if(tenatedId!=null && tenatedId!=""){//企业有默认tenantId信息
-							if(tenantId.equals(tenatedId)){//tenantedId校验
-								List<String> roles = baseMapper.queryUserRoles(user.getId().toString(), user.getDefaultEnterpriseId().toString());
-								if(roles!=null && roles.size()>0) {
-									String roleIds = Joiner.on(",").join(roles);
-									if(roleIds!=null  && roleIds!="") {
-										List<String> roleAlias = baseMapper.getRoleAlias(Func.toStrArray(roleIds));
-										if(roleAlias!=null && roleAlias.size()>0) {
-											userInfo.setRoles(roleAlias);
+				User user = baseMapper.getUser(tenantId, account, password);
+				if (Func.isEmpty(user) && user.getTenantId().equals("0000000")) {//非租户（企业控制台可以登陆）
+					User user1 =userMapper.getConsoleUser(account, password);//查询用户信息（企业控制台用户）
+					if(user1!=null){
+						userVO = BeanUtil.copy(user1, UserVO.class);//用户信息封装
+						//查看用户是否有默认企业
+						System.out.println("user default enterprise is:"+user1.getDefaultEnterpriseId());
+						if(user1.getDefaultEnterpriseId()!=null ) {//有默认企业（加入企业或创建企业）
+							//查询该企业的tenanted
+							String tenatedId = userMapper.getTenantByEnterpriseId(user1.getDefaultEnterpriseId().toString());
+									List<String> roles = baseMapper.queryUserRoles(user1.getId().toString(), user1.getDefaultEnterpriseId().toString());
+									if (roles != null && roles.size() > 0) {
+										String roleIds = Joiner.on(",").join(roles);
+										if (roleIds != null && roleIds != "") {
+											List<String> roleAlias = baseMapper.getRoleAlias(Func.toStrArray(roleIds));
+											if (roleAlias != null && roleAlias.size() > 0) {
+												userInfo.setRoles(roleAlias);
+											}
+											// 用户角色信息
+											userVO.setRoleId(roleIds);
 										}
-										// 用户角色信息
-										userVO.setRoleId(roleIds);
 									}
-								}
-								userVO.setTenantId(tenatedId);
-						    }else{//输入的tenantid错误
-								return null;
-							}
+									userVO.setTenantId(tenatedId);
 						}
 					}else{//无默认企业，新注册用户
 						return null;
 					}
-					userInfo.setUser(userVO);
+				}else{//平台管理员或租户管理员
+					userVO = BeanUtil.copy(user, UserVO.class);//用户信息封装
+					if(user.getDefaultEnterpriseId()!=null ) {//有默认企业（加入企业或创建企业）
+						List<String> roles = baseMapper.queryUserRoles(user.getId().toString(), user.getDefaultEnterpriseId().toString());
+						if (roles != null && roles.size() > 0) {
+							String roleIds = Joiner.on(",").join(roles);
+							if (roleIds != null && roleIds != "") {
+								List<String> roleAlias = baseMapper.getRoleAlias(Func.toStrArray(roleIds));
+								if (roleAlias != null && roleAlias.size() > 0) {
+									userInfo.setRoles(roleAlias);
+								}
+								// 用户角色信息
+								userVO.setRoleId(roleIds);
+							}
+						}
+					}
 				}
+				userInfo.setUser(userVO);
 				return userInfo;
 			}
 

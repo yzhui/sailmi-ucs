@@ -20,9 +20,12 @@ public class UserEnterpriseFeign implements IuserEnterRelationFeign {
 
 	@Override
 	@GetMapping(API_PREFIX + "/userenterlist")
-	public R<List<UserEnterprise>> detailInfo(String enterpriseId) {
+	public R<List<UserEnterprise>> detailInfo(String enterpriseId,Boolean flag) {
 		QueryWrapper<UserEnterprise> userEnterpriseQueryWrapper = new QueryWrapper<>();
-		userEnterpriseQueryWrapper.eq("",enterpriseId);
+		userEnterpriseQueryWrapper.eq("enterprise_id",enterpriseId);
+		if(flag){
+			userEnterpriseQueryWrapper.eq("status",1);//查询管理员列表
+		}
 		List<UserEnterprise> list = userEnterpriseServiceImpl.list(userEnterpriseQueryWrapper);
 		return R.data(list);
 	}

@@ -15,7 +15,7 @@ public interface IuserEnterRelationFeign {
 	String API_PREFIX = "/userenterprise";
 
 	@GetMapping(API_PREFIX + "/userenterlist")
-	R<List<UserEnterprise>> detailInfo(String enterpriseId);
+	R<List<UserEnterprise>> detailInfo(String enterpriseId,Boolean flag);
 
 
 }

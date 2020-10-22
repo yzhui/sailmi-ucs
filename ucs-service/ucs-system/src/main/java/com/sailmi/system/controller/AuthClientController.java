@@ -80,7 +80,12 @@ public class AuthClientController extends AppController {
 		ArrayList<Long> systemIds = new ArrayList<>();
 		if(user!=null && user.getTenantId()!=null) {
 			QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
-			systemEntityQueryWrapper.eq("tenant_id",user.getTenantId());
+			if(user.getTenantId().equals("000000")){
+
+			}else{
+				systemEntityQueryWrapper.eq("tenant_id",user.getTenantId());
+			}
+
 			List<SystemEntity> list = systemService.list(systemEntityQueryWrapper);
 			if(list!=null && list.size()>0){
 				list.stream().forEach(sysEntity->{

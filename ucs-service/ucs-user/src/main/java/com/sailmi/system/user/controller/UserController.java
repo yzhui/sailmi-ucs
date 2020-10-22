@@ -164,14 +164,27 @@ public class UserController {
 		QueryWrapper<User> queryWrapper = Condition.getQueryWrapper(user, User.class);
 		ArrayList<Long> userIds = new ArrayList<>();
 		if(authUser!=null) {
-			if (authUser.getEnterpriseId() != null) {
-				R<List<UserEnterprise>> listR = iuserEnterRelationFeign.detailInfo(authUser.getEnterpriseId());
-				if(listR!=null && listR.getData()!=null && listR.getData().size()>0){
-					listR.getData().stream().forEach(userEnter->{
-						userIds.add(userEnter.getUserId());
-					});
+			if(authUser.getTenantId().equals("000000")){//平台管理员
+				//查询所有租户的管理员列表
+				if (authUser.getEnterpriseId() != null) {
+					R<List<UserEnterprise>> listR = iuserEnterRelationFeign.detailInfo(authUser.getEnterpriseId(),true);
+					if(listR!=null && listR.getData()!=null && listR.getData().size()>0){
+						listR.getData().stream().forEach(userEnter->{
+							userIds.add(userEnter.getUserId());
+						});
+					}
+				}
+			}else{//租户管理员
+				if (authUser.getEnterpriseId() != null) {
+					R<List<UserEnterprise>> listR = iuserEnterRelationFeign.detailInfo(authUser.getEnterpriseId(),false);
+					if(listR!=null && listR.getData()!=null && listR.getData().size()>0){
+						listR.getData().stream().forEach(userEnter->{
+							userIds.add(userEnter.getUserId());
+						});
+					}
 				}
 			}
+
 		}
 		if(userIds.size()>0){
 			queryWrapper.in("id",userIds);

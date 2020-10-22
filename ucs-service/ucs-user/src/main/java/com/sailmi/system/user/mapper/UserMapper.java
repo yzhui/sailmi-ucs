@@ -47,7 +47,7 @@ public interface UserMapper extends BaseMapper<User> {
 	 * @param password
 	 * @return
 	 */
-	User getUser(@Param("account") String account, @Param("password") String password);
+	User getUser(@Param("tenantId") String tenantId,@Param("account") String account, @Param("password") String password);
 
 	/**
 	 * 获取角色名
@@ -84,4 +84,6 @@ public interface UserMapper extends BaseMapper<User> {
 	List<String> queryUserRoles(@Param("id") String id, @Param("defaultEnterpriseId") String defaultEnterpriseId);
 
 	String getTenantByEnterpriseId(String EnterpriseId); //erro by yzh
+
+	User getConsoleUser(@Param("account")String account, @Param("password")String password);
 }

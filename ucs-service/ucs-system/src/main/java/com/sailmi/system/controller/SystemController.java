@@ -78,7 +78,11 @@ public class SystemController extends AppController {
 	public R<IPage<SystemVO>> list(AuthUser user, SystemEntity system, Query query) {
 		QueryWrapper<SystemEntity> queryWrapper = Condition.getQueryWrapper(system);
 		if(user!=null && user.getTenantId()!=null){
-			queryWrapper.eq("tenant_id",user.getTenantId());
+			if(user.getTenantId().equals("000000")) {//平台管理员
+
+			}else{
+				queryWrapper.eq("tenant_id", user.getTenantId());
+			}
 		}
 		IPage<SystemEntity> pages = systemService.page(Condition.getPage(query), queryWrapper);
 		IPage<SystemVO> systemVOIPage = SystemWrapper.build().pageVO(pages);
