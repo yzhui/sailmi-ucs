@@ -85,7 +85,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 					if (users.getPassword() != null) {
 						user.setPassword(DigestUtil.encrypt(users.getPassword()));
 					}
-					user.setTenantId("0000000");
+					user.setTenantId("000000");
 					user.setDefaultEnterpriseId(Long.valueOf(0));//默认公司是0
 					user.setLastLogin(String.valueOf(new Date().getTime()));//登陆时间
 					user.setCreateTime(new Date());//创建时间
