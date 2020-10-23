@@ -16,6 +16,7 @@
 package com.sailmi.system.user.feign;
 
 import com.sailmi.core.tool.api.R;
+import com.sailmi.system.user.entity.User;
 import com.sailmi.system.user.entity.UserInfo;
 import org.springframework.stereotype.Component;
 
@@ -35,5 +36,10 @@ public class IUserClientFallback implements IUserClient {
 	@Override
 	public R<UserInfo> userInfo(String tenantId,String account, String password) {
 		return R.fail("未获取到账号信息");
+	}
+
+	@Override
+	public R submitUserInfo(User user) {
+		return R.fail("添加用户信息失败");
 	}
 }

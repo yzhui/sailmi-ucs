@@ -30,6 +30,12 @@
             <artifactId>ucs-system-api</artifactId>
             <version>${ucs.project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.sailmi</groupId>
+            <artifactId>ucs-user-api</artifactId>
+            <version>2.7.1</version>
+            <scope>compile</scope>
+        </dependency>
         <!--Zipkin-->
         <!--<dependency>
             <groupId>org.springframework.cloud</groupId>

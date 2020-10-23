@@ -18,9 +18,11 @@ package com.sailmi.system.user.feign;
 
 import com.sailmi.core.launch.constant.LaunchConstant;
 import com.sailmi.core.tool.api.R;
+import com.sailmi.system.user.entity.User;
 import com.sailmi.system.user.entity.UserInfo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -54,4 +56,11 @@ public interface IUserClient {
 	@GetMapping(API_PREFIX + "/user-info")
 	R<UserInfo> userInfo(@RequestParam("tenantId") String tenantId, @RequestParam("account") String account, @RequestParam("password") String password);
 
+	/**
+	 * 创建企业的时候调用默认用户信息查询
+	 * @param user
+	 * @return
+	 */
+	@GetMapping(API_PREFIX + "/submit-user")
+	public R  submitUserInfo(@RequestBody User user);
 }

@@ -17,6 +17,9 @@ package com.sailmi.enterprise.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sailmi.core.secure.AuthUser;
+import com.sailmi.core.tool.utils.DigestUtil;
+import com.sailmi.system.user.entity.User;
+import com.sailmi.system.user.feign.IUserClient;
 import com.sailmi.system.vo.MenuVO;
 import com.sailmi.system.vo.ServiceVO;
 import io.swagger.annotations.Api;
@@ -31,6 +34,7 @@ import com.sailmi.core.mp.support.Query;
 import com.sailmi.core.tool.api.R;
 import com.sailmi.core.tool.utils.Func;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -54,7 +58,7 @@ import java.util.List;
 public class EnterpriseController extends AppController {
 
 	private IEnterpriseService enterpriseService;
-
+	private IUserClient iUserClient;
 	/**
 	* 详情
 	*/
@@ -141,13 +145,29 @@ public class EnterpriseController extends AppController {
 	@PostMapping("/save")
     @ApiOperationSupport(order = 4)
 	@ApiOperation(value = "新增", notes = "传入enterprise")
-	public R save(@Valid @RequestBody Enterprise enterprise) {
+	public R save(AuthUser authUser,@Valid @RequestBody Enterprise enterprise) {
 		if(enterprise!=null){
 			if(StringUtils.isEmpty(enterprise.getTenantId())){
 				enterprise.setTenantId("000000");
 			}
 		}
-		return R.status(enterpriseService.save(enterprise));
+			//平台管理员或租户建立企业
+		boolean save = enterpriseService.save(enterprise);
+		//创建默认user
+		User user = new User();
+		user.setAccount("admin");
+		user.setTenantId("000000");
+		user.setPassword(DigestUtil.encrypt("123456"));//默认密码
+		R r = iUserClient.submitUserInfo(user);
+
+		//绑定用户 角色（-2，-3）
+
+
+		//
+
+
+
+		return R.status(save);
 	}
 
 	/**

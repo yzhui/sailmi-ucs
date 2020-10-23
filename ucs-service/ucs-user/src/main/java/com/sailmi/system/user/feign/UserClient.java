@@ -21,6 +21,7 @@ import com.sailmi.system.user.entity.User;
 import com.sailmi.system.user.entity.UserInfo;
 import com.sailmi.system.user.service.IUserService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -45,6 +46,12 @@ public class UserClient implements IUserClient {
 	@GetMapping(API_PREFIX + "/user-info")
 	public R<UserInfo> userInfo(String tenantId,String account, String password) {
 		return R.data(service.userInfo(tenantId,account, password));
+	}
+
+	@Override
+	@GetMapping(API_PREFIX + "/submit-user")
+	public R  submitUserInfo(@RequestBody User user) {
+		return R.status(service.submit(user));
 	}
 
 }
