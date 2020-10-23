@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="detail.mapper.EnterpriseDetailsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="enterpriseDetailsResultMap" type="detail.entity.EnterpriseDetails">
+        <id column="id" property="id"/>
+        <result column="enterpriseId" property="enterpriseId"/>
+        <result column="logoUrl" property="logoUrl"/>
+        <result column="licenseUrl" property="licenseUrl"/>
+        <result column="legalPersonFrontUrl" property="legalPersonFrontUrl"/>
+        <result column="legalPersonAfterUrl" property="legalPersonAfterUrl"/>
+        <result column="enterpriseAddress" property="enterpriseAddress"/>
+        <result column="enterprisePhone" property="enterprisePhone"/>
+        <result column="enterpriseWebsite" property="enterpriseWebsite"/>
+        <result column="enterpriseFax" property="enterpriseFax"/>
+        <result column="enterpriseProfile" property="enterpriseProfile"/>
+        <result column="status" property="status"/>
+        <result column="createBy" property="createBy"/>
+        <result column="createDate" property="createDate"/>
+        <result column="updateBy" property="updateBy"/>
+        <result column="updateDate" property="updateDate"/>
+        <result column="remarks" property="remarks"/>
+    </resultMap>
+
+
+    <select id="selectEnterpriseDetailsPage" resultMap="enterpriseDetailsResultMap">
+        select * from ucs_enterprise_details where is_deleted = 0
+    </select>
+
+</mapper>

@@ -18,6 +18,8 @@ package com.sailmi.enterprise.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.core.tool.utils.DigestUtil;
+import com.sailmi.system.entity.EnterpriseDetails;
+import com.sailmi.system.entity.EnterpriseFinance;
 import com.sailmi.system.user.entity.User;
 import com.sailmi.system.user.feign.IUserClient;
 import com.sailmi.system.vo.MenuVO;
@@ -221,5 +223,18 @@ public class EnterpriseController extends AppController {
 		return R.status(enterpriseService.deleteLogic(Func.toLongList(ids)));
 	}
 
+	/**
+	 * <p>Description: </p>
+	 *云测用户创建企业
+	 * @return: com.sailmi.core.tool.api.R
+	 * @Author: syt
+	 * @Date: 2020/10/23/0023 10:41
+	 */
+	@PostMapping("/create")
+	@ApiOperationSupport(order = 8)
+	@ApiOperation(value = "创建企业", notes = "传入企业信息,详细信息,以及财务信息")
+	public R create(@Valid @RequestBody Enterprise enterprise, @Valid @RequestBody EnterpriseDetails enterpriseDetails, @Valid @RequestBody EnterpriseFinance enterpriseFinance){
+		return R.success("操作成功");
+	}
 
 }

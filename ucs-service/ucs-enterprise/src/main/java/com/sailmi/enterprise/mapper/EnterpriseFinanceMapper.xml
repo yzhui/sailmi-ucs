@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="finance.mapper.EnterpriseFinanceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="enterpriseFinanceResultMap" type="finance.entity.EnterpriseFinance">
+        <id column="id" property="id"/>
+        <result column="enterpriseId" property="enterpriseId"/>
+        <result column="enterpriseTaxNumber" property="enterpriseTaxNumber"/>
+        <result column="openBank" property="openBank"/>
+        <result column="bankAccount" property="bankAccount"/>
+        <result column="invoicePayable" property="invoicePayable"/>
+        <result column="enterprisePhone" property="enterprisePhone"/>
+        <result column="companyAddress" property="companyAddress"/>
+        <result column="status" property="status"/>
+        <result column="createBy" property="createBy"/>
+        <result column="createDate" property="createDate"/>
+        <result column="updateBy" property="updateBy"/>
+        <result column="updateDate" property="updateDate"/>
+        <result column="remarks" property="remarks"/>
+    </resultMap>
+
+
+    <select id="selectEnterpriseFinancePage" resultMap="enterpriseFinanceResultMap">
+        select * from ucs_enterprise_finance where is_deleted = 0
+    </select>
+
+</mapper>
