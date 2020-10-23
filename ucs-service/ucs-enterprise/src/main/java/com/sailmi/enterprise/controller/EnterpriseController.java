@@ -154,6 +154,9 @@ public class EnterpriseController extends AppController {
 			}
 		}
 			//平台管理员或租户建立企业
+		enterprise.setIsDeleted(0);
+		enterprise.setCreateTime(new Date());
+		enterprise.setCreateUser(authUser.getUserId());
 		Enterprise save = enterpriseService.saveEnterpriseInfo(enterprise);
 		//创建默认user
 		User user = new User();
@@ -165,7 +168,7 @@ public class EnterpriseController extends AppController {
 		user.setCreateTime(new Date());
 		user.setCreateUser(authUser.getUserId());
 		user.setIsDeleted(0);
-		R r = iUserClient.submitUserInfo(user);
+		User r = iUserClient.submitUserInfo(user);
 
 		//绑定用户 角色（-2，-3）
 

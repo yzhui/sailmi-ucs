@@ -28,4 +28,7 @@ public interface IEnterpriseFeign {
 
 	@PostMapping(API_PREFIX+"/userenter-detail")
 	public R<UserEnterprise> queryUserEnterpriseInfo(String enterpriseId);
+
+
+
 }

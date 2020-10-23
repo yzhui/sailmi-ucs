@@ -39,7 +39,7 @@ public class IUserClientFallback implements IUserClient {
 	}
 
 	@Override
-	public R submitUserInfo(User user) {
-		return R.fail("添加用户信息失败");
+	public User submitUserInfo(User user) {
+		return null;
 	}
 }
