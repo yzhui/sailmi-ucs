@@ -2,8 +2,8 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: localhost:26502
-        namespace: ucs
+        server-addr: localhost:8848
+        namespace: public
         group: DEFAULT_GROUP
       discovery:
-        server-addr: localhost:26502
+        server-addr: localhost:8848
