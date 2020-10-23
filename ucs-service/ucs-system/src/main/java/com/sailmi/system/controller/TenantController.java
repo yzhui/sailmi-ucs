@@ -91,10 +91,12 @@ public class TenantController extends AppController {
 		if(tenantVOIPage!=null && tenantVOIPage.getTotal()>0){
 			tenantVOIPage.getRecords().stream().forEach(tenantVo->{
 				Enterprise enterprise = new Enterprise();
-				enterprise.setId(Long.valueOf(tenantVo.getEnterpriseId()));
-				R<EnterpriseVO> detail = enterpriseFeign.detailInfo(enterprise);
-				if(detail!=null &&  detail.getData()!=null && detail.getData().getEnterpriseName()!=null){
-					tenantVo.setEnterpriseName(detail.getData().getEnterpriseName());
+				if(tenantVo.getEnterpriseId()!=null && tenantVo.getEnterpriseId().length()>0){
+					enterprise.setId(Long.valueOf(tenantVo.getEnterpriseId()));
+					R<EnterpriseVO> detail = enterpriseFeign.detailInfo(enterprise);
+					if (detail != null && detail.getData() != null && detail.getData().getEnterpriseName() != null) {
+						tenantVo.setEnterpriseName(detail.getData().getEnterpriseName());
+					}
 				}
 			});
 		}

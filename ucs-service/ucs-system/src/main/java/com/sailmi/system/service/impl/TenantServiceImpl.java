@@ -63,30 +63,29 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, Tenant> imp
 			List<String> codes = tenants.stream().map(Tenant::getTenantId).collect(Collectors.toList());
 			String tenantId = getTenantId(codes);//生成新的tennantId
 			tenant.setTenantId(tenantId);
+		}
 
 
-			if(tenant!=null && tenant.getEnterpriseId()!=null && tenant.getEnterpriseId()!=""){//选择了某企业，创建企业管理员角色
-				Role role = new Role();
-				role.setEnterpriseId(Long.valueOf(tenant.getEnterpriseId()));
-				role.setParentId(0l);
-				role.setRoleName("租户管理员"+tenant.getEnterpriseId());
-				role.setRoleAlias(tenant.getEnterpriseId()+"tenant_administrator");
-				role.setSort(2);
-				role.setIsDeleted(0);
-				roleMapper.insert(role);
-
+		if(tenant!=null && tenant.getEnterpriseId()!=null && tenant.getEnterpriseId().length()>0){//选择了某企业，创建企业管理员角色
+			Role role = new Role();
+			role.setEnterpriseId(Long.valueOf(tenant.getEnterpriseId()));
+			role.setParentId(0l);
+			role.setRoleName("租户管理员"+tenant.getEnterpriseId());
+			role.setRoleAlias(tenant.getEnterpriseId()+"tenant_administrator");
+			role.setSort(2);
+			role.setIsDeleted(0);
+			roleService.save(role);
 			//	R<UserEnterprise> userEnterpriseR = enterpriseFeign.queryUserEnterpriseInfo(tenant.getEnterpriseId());
 			//	if(userEnterpriseR!=null && userEnterpriseR.getData()!=null && userEnterpriseR.getData().getUserId()!=null){
-					//TODO
-					//设定租户管理员登陆人和role的绑定还是在用户中设定呢
+			//TODO
+			//设定租户管理员登陆人和role的绑定还是在用户中设定呢
 			//	}
-				Enterprise enterprise = new Enterprise();
-				enterprise.setTenantId(tenantId);
-				enterprise.setId(Long.valueOf(tenant.getEnterpriseId()));
-				enterpriseFeign.update(enterprise);
-			}else{
-				tenant.setEnterpriseId("0");
-			}
+			Enterprise enterprise = new Enterprise();
+			enterprise.setTenantId(tenant.getTenantId());
+			enterprise.setId(Long.valueOf(tenant.getEnterpriseId()));
+			enterpriseFeign.update(enterprise);
+		}else{
+			tenant.setEnterpriseId("-1");
 		}
 		return super.saveOrUpdate(tenant);
 	}
