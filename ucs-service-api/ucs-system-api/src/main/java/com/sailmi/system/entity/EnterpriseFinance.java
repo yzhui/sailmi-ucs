@@ -87,11 +87,7 @@ public class EnterpriseFinance implements Serializable {
     @ApiModelProperty(value = "单位地址")
     @TableField("companyAddress")
   private String companyAddress;
-    /**
-     * 状态
-     */
-    @ApiModelProperty(value = "状态")
-    private String status;
+
     /**
      * 创建者
      */

@@ -105,11 +105,7 @@ public class EnterpriseDetails implements Serializable {
     @ApiModelProperty(value = "公司简介")
     @TableField("enterpriseProfile")
   private String enterpriseProfile;
-    /**
-     * 状态
-     */
-    @ApiModelProperty(value = "状态")
-    private String status;
+
     /**
      * 创建者
      */
