@@ -44,4 +44,6 @@ public interface IEnterpriseService extends BaseService<Enterprise> {
 	List<String> enterpriServiceTreeKeys(String enterpriseId);
 
 	boolean grantservices(String enterpriseId, List<Long> serviceIds, AuthUser user);
+
+	Enterprise saveEnterpriseInfo(Enterprise enterprise);
 }

@@ -43,6 +43,8 @@ import com.sailmi.system.vo.EnterpriseVO;
 import com.sailmi.enterprise.wrapper.EnterpriseWrapper;
 import com.sailmi.enterprise.service.IEnterpriseService;
 import com.sailmi.core.boot.ctrl.AppController;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -152,12 +154,17 @@ public class EnterpriseController extends AppController {
 			}
 		}
 			//平台管理员或租户建立企业
-		boolean save = enterpriseService.save(enterprise);
+		Enterprise save = enterpriseService.saveEnterpriseInfo(enterprise);
 		//创建默认user
 		User user = new User();
+		user.setId(null);
 		user.setAccount("admin");
 		user.setTenantId("000000");
 		user.setPassword(DigestUtil.encrypt("123456"));//默认密码
+		user.setDefaultEnterpriseId(save.getId());
+		user.setCreateTime(new Date());
+		user.setCreateUser(authUser.getUserId());
+		user.setIsDeleted(0);
 		R r = iUserClient.submitUserInfo(user);
 
 		//绑定用户 角色（-2，-3）
@@ -167,7 +174,7 @@ public class EnterpriseController extends AppController {
 
 
 
-		return R.status(save);
+		return R.status(true);
 	}
 
 	/**

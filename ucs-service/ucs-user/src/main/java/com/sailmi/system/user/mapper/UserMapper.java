@@ -18,7 +18,6 @@ package com.sailmi.system.user.mapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.sailmi.system.user.vo.UserVO;
 import org.apache.ibatis.annotations.Param;
 import com.sailmi.system.user.entity.User;
 import com.sailmi.system.user.excel.UserExcel;
@@ -86,4 +85,6 @@ public interface UserMapper extends BaseMapper<User> {
 	String getTenantByEnterpriseId(String EnterpriseId); //erro by yzh
 
 	User getConsoleUser(@Param("account")String account, @Param("password")String password);
+
+	User insertUserInfo(User user);
 }

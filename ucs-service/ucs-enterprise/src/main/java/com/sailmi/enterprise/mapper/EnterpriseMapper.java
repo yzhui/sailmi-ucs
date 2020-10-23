@@ -29,6 +29,9 @@ import java.util.List;
  */
 public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 
+
+	 Enterprise insertEnterpriseInfo(Enterprise enterprise);
+
 	/**
 	 * 自定义分页
 	 *

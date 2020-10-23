@@ -86,4 +86,10 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 		return serviceEnterpriseServiceImpl.saveBatch(serviceEnterprises);
 	}
 
+	@Override
+	public Enterprise saveEnterpriseInfo(Enterprise enterprise) {
+
+		return EnterpriseMapper.insertEnterpriseInfo(enterprise);
+	}
+
 }

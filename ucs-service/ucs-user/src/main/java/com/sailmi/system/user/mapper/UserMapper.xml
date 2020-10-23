@@ -142,5 +142,26 @@
         user_birthday AS birthday
         FROM ucs_user ${ew.customSqlSegment}
     </select>
+    <insert id="insertUserInfo" parameterType="com.sailmi.system.user.entity.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO service_products(
+			id,
+			tenant_id,
+			login_name,
+			password,
+			default_enterprise,
+			create_user,
+			create_time,
+			is_deleted
+		) VALUES (
+			#{id},
+			#{tenantId},
+			#{loginName},
+			#{password},
+			#{defaultEnterprise},
+			#{createUser},
+			#{createTime},
+			#{isDeleted}
+		)
+    </insert>
 
 </mapper>
