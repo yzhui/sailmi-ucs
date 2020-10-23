@@ -154,4 +154,6 @@ public interface IUserService extends BaseService<User> {
 	 * @return
 	 */
 	int queryUnikePhone(String userPhone);
+
+	User submitUser(User user);
 }
