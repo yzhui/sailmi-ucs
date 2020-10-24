@@ -38,4 +38,13 @@ public interface EnterpriseDetailsMapper extends BaseMapper<EnterpriseDetails> {
 	 */
 	List<EnterpriseDetailsVO> selectEnterpriseDetailsPage(IPage page, EnterpriseDetailsVO enterpriseDetails);
 
+	/**
+	 * <p>Description: 插入企业详细信息</p>
+	 *
+	 * @param enterpriseDetails:
+	 * @return: com.sailmi.system.entity.EnterpriseDetails
+	 * @Author: syt
+	 * @Date: 2020/10/24/0024 11:01
+	 */
+	EnterpriseDetails insertDetail(EnterpriseDetails enterpriseDetails);
 }

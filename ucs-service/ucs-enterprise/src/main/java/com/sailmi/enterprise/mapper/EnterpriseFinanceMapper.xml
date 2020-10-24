@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="finance.mapper.EnterpriseFinanceMapper">
+<mapper namespace="com.sailmi.enterprise.mapper.EnterpriseFinanceMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="enterpriseFinanceResultMap" type="finance.entity.EnterpriseFinance">
+    <resultMap id="enterpriseFinanceResultMap" type="com.sailmi.system.entity.EnterpriseFinance">
         <id column="id" property="id"/>
         <result column="enterpriseId" property="enterpriseId"/>
         <result column="enterpriseTaxNumber" property="enterpriseTaxNumber"/>
@@ -12,7 +12,7 @@
         <result column="invoicePayable" property="invoicePayable"/>
         <result column="enterprisePhone" property="enterprisePhone"/>
         <result column="companyAddress" property="companyAddress"/>
-        <result column="status" property="status"/>
+        <!--<result column="status" property="status"/>-->
         <result column="createBy" property="createBy"/>
         <result column="createDate" property="createDate"/>
         <result column="updateBy" property="updateBy"/>

@@ -37,4 +37,13 @@ public interface IEnterpriseDetailsService extends IService<EnterpriseDetails> {
 	 */
 	IPage<EnterpriseDetailsVO> selectEnterpriseDetailsPage(IPage<EnterpriseDetailsVO> page, EnterpriseDetailsVO enterpriseDetails);
 
+	/***
+	 * <p>Description: 企业详细信息</p>
+	 *
+	 * @param enterpriseDetails:
+	 * @return: com.sailmi.system.entity.EnterpriseDetails
+	 * @Author: syt
+	 * @Date: 2020/10/23/0023 16:59
+	 */
+	EnterpriseDetails saveDetail(EnterpriseDetails enterpriseDetails);
 }

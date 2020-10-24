@@ -37,4 +37,9 @@ public class EnterpriseFinanceServiceImpl extends ServiceImpl<EnterpriseFinanceM
 		return page.setRecords(baseMapper.selectEnterpriseFinancePage(page, enterpriseFinance));
 	}
 
+	@Override
+	public int saveFiance(EnterpriseFinance enterpriseFinance) {
+		return baseMapper.insert(enterpriseFinance);
+	}
+
 }

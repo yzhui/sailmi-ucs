@@ -37,4 +37,13 @@ public interface IEnterpriseFinanceService extends IService<EnterpriseFinance> {
 	 */
 	IPage<EnterpriseFinanceVO> selectEnterpriseFinancePage(IPage<EnterpriseFinanceVO> page, EnterpriseFinanceVO enterpriseFinance);
 
+	/**
+	 * <p>Description: 企业财务信息</p>
+	 *
+	 * @param enterpriseFinance:
+	 * @return: void
+	 * @Author: syt
+	 * @Date: 2020/10/24/0024 12:58
+	 */
+	int saveFiance(EnterpriseFinance enterpriseFinance);
 }

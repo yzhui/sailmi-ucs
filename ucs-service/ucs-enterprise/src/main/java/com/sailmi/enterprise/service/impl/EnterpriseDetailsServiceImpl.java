@@ -37,4 +37,17 @@ public class EnterpriseDetailsServiceImpl extends ServiceImpl<EnterpriseDetailsM
 		return page.setRecords(baseMapper.selectEnterpriseDetailsPage(page, enterpriseDetails));
 	}
 
+	/**
+	 * <p>Description: 企业详细信息</p>
+	 *
+	 * @param enterpriseDetails:
+	 * @return: com.sailmi.system.entity.EnterpriseDetails
+	 * @Author: syt
+	 * @Date: 2020/10/24/0024 10:24
+	 */
+	@Override
+	public EnterpriseDetails saveDetail(EnterpriseDetails enterpriseDetails) {
+		return baseMapper.insertDetail(enterpriseDetails);
+	}
+
 }

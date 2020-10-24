@@ -18,6 +18,8 @@ package com.sailmi.enterprise.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.core.tool.utils.DigestUtil;
+import com.sailmi.enterprise.service.IEnterpriseDetailsService;
+import com.sailmi.enterprise.service.IEnterpriseFinanceService;
 import com.sailmi.system.entity.EnterpriseDetails;
 import com.sailmi.system.entity.EnterpriseFinance;
 import com.sailmi.system.user.entity.User;
@@ -37,6 +39,7 @@ import com.sailmi.core.tool.api.R;
 import com.sailmi.core.tool.utils.Func;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -63,6 +66,8 @@ public class EnterpriseController extends AppController {
 
 	private IEnterpriseService enterpriseService;
 	private IUserClient iUserClient;
+	private IEnterpriseDetailsService iEnterpriseDetailsService; //企业详细信息yt
+	private IEnterpriseFinanceService iEnterpriseFinanceService;//企业财务信息syt
 	/**
 	* 详情
 	*/
@@ -224,17 +229,40 @@ public class EnterpriseController extends AppController {
 	}
 
 	/**
-	 * <p>Description: </p>
-	 *云测用户创建企业
+	 * <p>Description: 云测用户创建企业</p>
+	 *
 	 * @return: com.sailmi.core.tool.api.R
 	 * @Author: syt
 	 * @Date: 2020/10/23/0023 10:41
 	 */
 	@PostMapping("/create")
+	@Transactional
 	@ApiOperationSupport(order = 8)
 	@ApiOperation(value = "创建企业", notes = "传入企业信息,详细信息,以及财务信息")
-	public R create(@Valid @RequestBody Enterprise enterprise, @Valid @RequestBody EnterpriseDetails enterpriseDetails, @Valid @RequestBody EnterpriseFinance enterpriseFinance){
-		return R.success("操作成功");
+	public R create(AuthUser authUser, /*@Valid @RequestBody*/ Enterprise enterprise, EnterpriseDetails enterpriseDetails, EnterpriseFinance enterpriseFinance){
+//		enterprise.setTenantId(authUser.getTenantId());//设置租户ID
+		enterprise.setTenantId("123321");//设置租户ID
+		Enterprise enterprise1 = enterpriseService.saveEnterpriseInfo(enterprise); //首先插入企业基本信息
+		Long id = enterprise1.getId();
+		//企业基本信息插入后插入企业详细信息
+		if (id != 0 && id != null) {//企业基本信息插入成功后插入企业详细信息
+			enterpriseDetails.setEnterpriseId(id);//企业详细信息关联企业ID
+			EnterpriseDetails saveDetail = iEnterpriseDetailsService.saveDetail(enterpriseDetails);
+			Long deId = saveDetail.getId();
+			if (deId != 0 && deId != null) {//详细信息插入成功后插入财务信息
+				enterpriseFinance.setEnterpriseId(id);
+				int finace = iEnterpriseFinanceService.saveFiance(enterpriseFinance);
+				if (finace > 0) {
+					return R.success("创建企业成功");
+				} else {
+					return R.fail("失败:企业财务信息保存失败");
+				}
+			} else {
+				return R.fail("失败:企业详细信息保存失败");
+			}
+		} else {
+			return R.fail("失败:企业基本信息保存失败");
+		}
 	}
 
 }

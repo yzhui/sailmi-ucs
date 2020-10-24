@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="detail.mapper.EnterpriseDetailsMapper">
+<mapper namespace="com.sailmi.enterprise.mapper.EnterpriseDetailsMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="enterpriseDetailsResultMap" type="detail.entity.EnterpriseDetails">
+    <resultMap id="enterpriseDetailsResultMap" type="com.sailmi.system.entity.EnterpriseDetails">
         <id column="id" property="id"/>
         <result column="enterpriseId" property="enterpriseId"/>
         <result column="logoUrl" property="logoUrl"/>
@@ -15,7 +15,7 @@
         <result column="enterpriseWebsite" property="enterpriseWebsite"/>
         <result column="enterpriseFax" property="enterpriseFax"/>
         <result column="enterpriseProfile" property="enterpriseProfile"/>
-        <result column="status" property="status"/>
+        <!--<result column="status" property="status"/>-->
         <result column="createBy" property="createBy"/>
         <result column="createDate" property="createDate"/>
         <result column="updateBy" property="updateBy"/>
@@ -28,4 +28,31 @@
         select * from ucs_enterprise_details where is_deleted = 0
     </select>
 
+
+    <!--插入企业详情-->
+    <insert id="insertDetail" parameterType="com.sailmi.system.entity.EnterpriseDetails" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO ucs_enterprise_details (
+            enterpriseId,
+            logoUrl,
+            licenseUrl,
+            legalPersonFrontUrl,
+            legalPersonAfterUrl,
+            enterpriseAddress,
+            enterprisePhone,
+            enterpriseWebsite,
+            enterpriseFax,
+            enterpriseProfile
+        ) VALUES(
+         #{enterpriseId},
+         #{logoUrl},
+         #{licenseUrl},
+         #{legalPersonFrontUrl},
+         #{legalPersonAfterUrl},
+         #{enterpriseAddress},
+         #{enterprisePhone},
+         #{enterpriseWebsite},
+         #{enterpriseFax},
+         #{enterpriseProfile}
+        )
+    </insert>
 </mapper>
