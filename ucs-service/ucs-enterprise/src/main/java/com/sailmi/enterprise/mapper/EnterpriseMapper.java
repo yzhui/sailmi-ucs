@@ -41,4 +41,13 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 */
 	List<EnterpriseVO> selectEnterprisePage(IPage page, EnterpriseVO enterprise);
 
+	/**
+	 * <p>Description: 社会统一验证码</p>
+	 *
+
+	 * @return: java.util.List<java.lang.String>
+	 * @Author: syt
+	 * @Date: 2020/10/25/0025 21:39
+	 */
+	List<String> getAll();
 }

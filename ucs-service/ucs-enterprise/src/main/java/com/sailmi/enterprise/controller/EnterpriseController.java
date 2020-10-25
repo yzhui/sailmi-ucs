@@ -66,7 +66,7 @@ public class EnterpriseController extends AppController {
 
 	private IEnterpriseService enterpriseService;
 	private IUserClient iUserClient;
-	private IEnterpriseDetailsService iEnterpriseDetailsService; //企业详细信息yt
+	private IEnterpriseDetailsService iEnterpriseDetailsService; //企业详细信息syt
 	private IEnterpriseFinanceService iEnterpriseFinanceService;//企业财务信息syt
 	/**
 	* 详情
@@ -265,4 +265,11 @@ public class EnterpriseController extends AppController {
 		}
 	}
 
+	@PostMapping("/verifySocial")
+	@ApiOperationSupport(order = 9)
+	@ApiOperation(value = "校验社会统一验证码唯一性", notes = "传入企业社会统一验证码")
+	public R VerifySocialCaptcha(@ApiParam(value = "社会统一验证码", required = true) @Valid String social){
+		String re = enterpriseService.verifySocial(social);
+		return R.success(re);
+	}
 }

@@ -92,4 +92,22 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 		return baseMapper.insertEnterpriseInfo(enterprise);
 	}
 
+	/**
+	 * <p>Description:社会统一验证码 </p>
+	 *
+	 * @param social:
+	 * @return: java.lang.String
+	 * @Author: syt
+	 * @Date: 2020/10/25/0025 20:49
+	 */
+	@Override
+	public String verifySocial(String social) {
+		List<String> all = baseMapper.getAll();
+		boolean con = all.contains(social);
+		if (con) {
+			return "1";//验证码可用
+		}
+		return "2";//已存在不可用
+	}
+
 }

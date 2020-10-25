@@ -72,5 +72,8 @@
 			)
 	</insert>
 
-
+    <!--社会统一验证码-->
+    <select id="getAll" resultType="string">
+        SELECT credit_code FROM ucs_enterprise
+    </select>
 </mapper>
