@@ -164,6 +164,9 @@ public class UserController {
 		QueryWrapper<User> queryWrapper = Condition.getQueryWrapper(user, User.class);
 		ArrayList<Long> userIds = new ArrayList<>();
 		if(authUser!=null) {
+			//逻辑有问题，这里，不需要判断用户是否是平台管理员，只需要按此用户的实际企业获取用户列表
+			//ucs_enterprise_user表要用起来  yzh
+
 			if(authUser.getTenantId().equals("000000")){//平台管理员
 				//查询所有租户的管理员列表
 				if (authUser.getEnterpriseId() != null) {
@@ -186,6 +189,7 @@ public class UserController {
 			}
 
 		}
+		//
 		if(userIds.size()>0){
 			queryWrapper.in("id",userIds);
 		}else{

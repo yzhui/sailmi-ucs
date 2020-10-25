@@ -53,7 +53,7 @@ import java.util.List;
 @RequestMapping("/client")
 @ApiIgnore
 @Api(value = "应用管理", tags = "应用管理接口")
-@PreAuth(RoleConstant.HAS_ROLE_ADMIN)
+@PreAuth(RoleConstant.HAS_ROLE_TENANT_ADMIN)
 public class AuthClientController extends AppController {
 
 	private IAuthClientService clientService;
@@ -80,6 +80,9 @@ public class AuthClientController extends AppController {
 		ArrayList<Long> systemIds = new ArrayList<>();
 		if(user!=null && user.getTenantId()!=null) {
 			QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
+			//此处管理员能管理的租户不应是user.getTenantId();
+			//需要查询租户表，获取此用户企业所管理的租户，然后查询此租户下所有的系统与client
+
 			if(user.getTenantId().equals("000000")){
 
 			}else{

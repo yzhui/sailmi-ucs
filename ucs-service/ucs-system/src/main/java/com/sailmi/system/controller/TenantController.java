@@ -79,13 +79,7 @@ public class TenantController extends AppController {
 	@GetMapping("/list")
 	public R<IPage<TenantVo>> list(AuthUser user,@ApiIgnore @RequestParam Map<String, Object> tenant, Query query) {
 		QueryWrapper<Tenant> queryWrapper = Condition.getQueryWrapper(tenant, Tenant.class);
-		if(user!=null && user.getTenantId()!=null){
-			if(user.getTenantId().equals("000000")) {//平台管理员
-
-			}else{//租户管理员
-				queryWrapper.eq("tenant_id", user.getTenantId());
-			}
-		}
+		//在这里，只有系统超级管理员才有权限管理租户，其它租户是没有权限再管理租户的。
 		IPage<Tenant> pages = tenantService.page(Condition.getPage(query),queryWrapper);
 		IPage<TenantVo> tenantVOIPage = TenantWrapper.build().pageVO(pages);
 		if(tenantVOIPage!=null && tenantVOIPage.getTotal()>0){

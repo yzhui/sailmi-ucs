@@ -59,7 +59,7 @@ public class MenuController extends AppController {
 	 * 详情
 	 */
 	@GetMapping("/detail")
-	@PreAuth(RoleConstant.HAS_ROLE_ADMIN)
+	@PreAuth(RoleConstant.HAS_ROLE_TENANT_ADMIN)
 	@ApiOperationSupport(order = 1)
 	@ApiOperation(value = "详情", notes = "传入menu")
 	public R<MenuVO> detail(Menu menu) {
@@ -75,7 +75,7 @@ public class MenuController extends AppController {
 		@ApiImplicitParam(name = "code", value = "菜单编号", paramType = "query", dataType = "string"),
 		@ApiImplicitParam(name = "name", value = "菜单名称", paramType = "query", dataType = "string")
 	})
-	@PreAuth(RoleConstant.HAS_ROLE_ADMIN)
+	@PreAuth(RoleConstant.HAS_ROLE_TENANT_ADMIN)
 	@ApiOperationSupport(order = 2)
 	@ApiOperation(value = "列表", notes = "传入menu")
 	public R<List<MenuVO>> list(AuthUser user,@ApiIgnore @RequestParam Map<String, Object> menu) {
@@ -115,7 +115,7 @@ public class MenuController extends AppController {
 	 * 新增或修改
 	 */
 	@PostMapping("/submit")
-	@PreAuth(RoleConstant.HAS_ROLE_ADMIN)
+	@PreAuth(RoleConstant.HAS_ROLE_TENANT_ADMIN)
 	@ApiOperationSupport(order = 3)
 	@ApiOperation(value = "新增或修改", notes = "传入menu")
 	public R submit(@Valid @RequestBody Menu menu) {
@@ -127,7 +127,7 @@ public class MenuController extends AppController {
 	 * 删除
 	 */
 	@PostMapping("/remove")
-	@PreAuth(RoleConstant.HAS_ROLE_ADMIN)
+	@PreAuth(RoleConstant.HAS_ROLE_TENANT_ADMIN)
 	@ApiOperationSupport(order = 4)
 	@ApiOperation(value = "删除", notes = "传入ids")
 	public R remove(@ApiParam(value = "主键集合", required = true) @RequestParam String ids) {
