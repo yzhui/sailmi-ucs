@@ -30,5 +30,6 @@ pic/*
 *.jar
 *.war
 *.ear
+*.yml
 
 
