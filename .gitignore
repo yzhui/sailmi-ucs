@@ -30,6 +30,8 @@ pic/*
 *.jar
 *.war
 *.ear
+
+# Setting Files #
 *.yml
 
 
