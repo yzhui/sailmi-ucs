@@ -50,7 +50,7 @@ public class UserClient implements IUserClient {
 
 	@Override
 	@GetMapping(API_PREFIX + "/submit-user")
-	public int  submitUserInfo(@RequestBody(required = false) User user) {
+	public int  submitUserInfo( User user) {
 		return service.submitUser(user);
 	}
 

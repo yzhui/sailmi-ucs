@@ -40,7 +40,7 @@ public class IUserClientFallback implements IUserClient {
 	}
 
 	@Override
-	public int submitUserInfo(@RequestBody User user) {
+	public int submitUserInfo( User user) {
 		return 0;
 	}
 }

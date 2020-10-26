@@ -49,6 +49,8 @@ import com.sailmi.enterprise.wrapper.EnterpriseWrapper;
 import com.sailmi.enterprise.service.IEnterpriseService;
 import com.sailmi.core.boot.ctrl.AppController;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -202,11 +204,11 @@ public class EnterpriseController extends AppController {
 			User user = new User();
 			user.setAccount("admin");
 			//这里的租户应该是创建者的租户,说明创建的这个用户属于创建人的租户
-
 			user.setTenantId("111111");
 			user.setPassword(DigestUtil.encrypt("123456"));//默认密码
 			user.setDefaultEnterpriseId(enterprise.getId());
-			user.setCreateTime(new Date());
+			//DateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			//user.setCreateTime(dateFormat.parse(dateFormat.format(new Date())));
 			user.setCreateUser(222l);
 			user.setIsDeleted(0);
 			userClient.submitUserInfo(user);

@@ -62,5 +62,5 @@ public interface IUserClient {
 	 * @return
 	 */
 	@GetMapping(API_PREFIX + "/submit-user")
-	public int  submitUserInfo(@RequestBody User user);
+	public int  submitUserInfo( User user);
 }
