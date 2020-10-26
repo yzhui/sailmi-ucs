@@ -164,7 +164,7 @@ public class EnterpriseController extends AppController {
 		enterprise.setIsDeleted(0);
 		enterprise.setCreateTime(new Date());
 		enterprise.setCreateUser(authUser.getUserId());
-		Enterprise save = enterpriseService.saveEnterpriseInfo(enterprise);
+		enterpriseService.saveEnterpriseInfo(enterprise);
 		//创建默认user
 		User user = new User();
 		user.setId(null);
@@ -172,7 +172,7 @@ public class EnterpriseController extends AppController {
 		//这里的租户应该是创建者的租户,说明创建的这个用户属于创建人的租户
 		user.setTenantId(authUser.getTenantId());
 		user.setPassword(DigestUtil.encrypt("123456"));//默认密码
-		user.setDefaultEnterpriseId(save.getId());
+		user.setDefaultEnterpriseId(enterprise.getId());
 		user.setCreateTime(new Date());
 		user.setCreateUser(authUser.getUserId());
 		user.setIsDeleted(0);
@@ -243,8 +243,8 @@ public class EnterpriseController extends AppController {
 	public R create(AuthUser authUser, /*@Valid @RequestBody*/ Enterprise enterprise, EnterpriseDetails enterpriseDetails, EnterpriseFinance enterpriseFinance){
 //		enterprise.setTenantId(authUser.getTenantId());//设置租户ID
 		enterprise.setTenantId("123321");//设置租户ID
-		Enterprise enterprise1 = enterpriseService.saveEnterpriseInfo(enterprise); //首先插入企业基本信息
-		Long id = enterprise1.getId();
+		enterpriseService.saveEnterpriseInfo(enterprise); //首先插入企业基本信息
+		Long id = enterprise.getId();
 		//企业基本信息插入后插入企业详细信息
 		if (id != 0 && id != null) {//企业基本信息插入成功后插入企业详细信息
 			enterpriseDetails.setEnterpriseId(id);//企业详细信息关联企业ID

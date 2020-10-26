@@ -45,7 +45,7 @@ public interface IEnterpriseService extends BaseService<Enterprise> {
 
 	boolean grantservices(String enterpriseId, List<Long> serviceIds, AuthUser user);
 
-	Enterprise saveEnterpriseInfo(Enterprise enterprise);
+	int saveEnterpriseInfo(Enterprise enterprise);
 
 	/**
 	 * <p>Description:社会统一验证码 </p>

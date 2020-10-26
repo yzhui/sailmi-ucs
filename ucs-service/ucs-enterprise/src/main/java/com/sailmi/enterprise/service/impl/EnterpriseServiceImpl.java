@@ -87,7 +87,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 	}
 
 	@Override
-	public Enterprise saveEnterpriseInfo(Enterprise enterprise) {
+	public int saveEnterpriseInfo(Enterprise enterprise) {
 
 		return baseMapper.insertEnterpriseInfo(enterprise);
 	}
