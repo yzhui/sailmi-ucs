@@ -207,8 +207,6 @@ public class EnterpriseController extends AppController {
 			user.setTenantId("111111");
 			user.setPassword(DigestUtil.encrypt("123456"));//默认密码
 			user.setDefaultEnterpriseId(enterprise.getId());
-			//DateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			//user.setCreateTime(dateFormat.parse(dateFormat.format(new Date())));
 			user.setCreateUser(222l);
 			user.setIsDeleted(0);
 			userClient.submitUserInfo(user);

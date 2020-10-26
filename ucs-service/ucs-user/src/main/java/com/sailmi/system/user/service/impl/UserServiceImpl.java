@@ -261,7 +261,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
 	@Override
 	public int submitUser(User user) {
-		return baseMapper.insertUserInfo(user);
+		return baseMapper.submitUserInfo(user);
 	}
 
 }

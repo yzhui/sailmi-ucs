@@ -86,5 +86,5 @@ public interface UserMapper extends BaseMapper<User> {
 
 	User getConsoleUser(@Param("account")String account, @Param("password")String password);
 
-	int insertUserInfo(User user);
+	int submitUserInfo(User user);
 }
