@@ -264,7 +264,7 @@ public class EnterpriseController extends AppController {
 				enterpriseFinance.setEnterpriseId(id);
 				int finace = iEnterpriseFinanceService.saveFiance(enterpriseFinance);
 				if (finace > 0) {
-					return R.success("创建企业成功");
+					return R.data(enterprise);
 				} else {
 					return R.fail("失败:企业财务信息保存失败");
 				}
