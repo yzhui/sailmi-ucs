@@ -26,8 +26,6 @@ import com.sailmi.system.entity.UserRole;
 import com.sailmi.system.feign.IUserRoleFeign;
 import com.sailmi.system.user.entity.User;
 import com.sailmi.system.user.feign.IUserClient;
-import com.sailmi.system.vo.MenuVO;
-import com.sailmi.system.vo.ServiceVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -67,7 +65,7 @@ import java.util.List;
 public class EnterpriseController extends AppController {
 
 	private IEnterpriseService enterpriseService;
-	private IUserClient iUserClient;
+	private IUserClient userClient;
 	private IEnterpriseDetailsService iEnterpriseDetailsService; //企业详细信息syt
 	private IEnterpriseFinanceService iEnterpriseFinanceService;//企业财务信息syt
 	private IUserRoleFeign iUserRoleFeign;
@@ -183,11 +181,12 @@ public class EnterpriseController extends AppController {
 
 	/**
 	* 新增或修改
+	 * @Valid @RequestBody
 	*/
 	@PostMapping("/submit")
     @ApiOperationSupport(order = 6)
 	@ApiOperation(value = "新增或修改", notes = "传入enterprise")
-	public R submit(AuthUser authUser,@Valid @RequestBody Enterprise enterprise) {
+	public R submit(AuthUser authUser,Enterprise enterprise) {
 		if(enterprise!=null){
 			if(StringUtils.isEmpty(enterprise.getTenantId())){
 				enterprise.setTenantId("000000");
@@ -197,20 +196,19 @@ public class EnterpriseController extends AppController {
 			//平台管理员或租户建立企业
 			enterprise.setIsDeleted(0);
 			enterprise.setCreateTime(new Date());
-			enterprise.setCreateUser(authUser.getUserId());
+			enterprise.setCreateUser(2222l);
 			enterpriseService.saveEnterpriseInfo(enterprise);
 			//创建默认user
 			User user = new User();
-			user.setId(null);
 			user.setAccount("admin");
 			//这里的租户应该是创建者的租户,说明创建的这个用户属于创建人的租户
 			user.setTenantId("111111");
 			user.setPassword(DigestUtil.encrypt("123456"));//默认密码
 			user.setDefaultEnterpriseId(enterprise.getId());
 			user.setCreateTime(new Date());
-			user.setCreateUser(authUser.getUserId());
+			user.setCreateUser(222l);
 			user.setIsDeleted(0);
-			iUserClient.submitUserInfo(user);
+			userClient.submitUserInfo(user);
 
 			//绑定用户 角色（-2，-3）
 			UserRole userRole1 = new UserRole();
