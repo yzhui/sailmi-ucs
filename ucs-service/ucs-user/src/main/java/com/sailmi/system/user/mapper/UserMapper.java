@@ -91,6 +91,8 @@ public interface UserMapper extends BaseMapper<User> {
 	/**
 	 @Insert({"INSERT INTO ucs_user(tenant_id,login_name,password,default_enterprise,create_user,is_deleted) VALUES (#{tenantId},#{account},#{password},#{defaultEnterpriseId},#{createUser},#{isDeleted})"})
 	 @Options(useGeneratedKeys = true, keyProperty = "id")
+	 @Insert("INSERT INTO ucs_user(tenant_id,login_name,password,default_enterprise,create_user,is_deleted) VALUES (#{user.tenantId},#{user.account},#{user.password},#{user.defaultEnterpriseId},#{user.createUser},#{user.isDeleted})")
+	 @Options(useGeneratedKeys = true, keyProperty = "user.id",keyColumn="id")
 	 * @param user
 	 * @return
 	 */

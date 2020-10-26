@@ -44,6 +44,7 @@ public class User extends TenantEntity {
 	 */
 	@ApiModelProperty(value = "主键")
 	@TableId(value = "id", type = IdType.AUTO)
+	@JsonSerialize(using = ToStringSerializer.class) //将ID序列化为String
 	private Long id;
 	/**
 	 * 编号
