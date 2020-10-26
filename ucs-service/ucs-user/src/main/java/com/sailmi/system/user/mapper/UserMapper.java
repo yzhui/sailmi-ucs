@@ -89,12 +89,11 @@ public interface UserMapper extends BaseMapper<User> {
 	User getConsoleUser(@Param("account")String account, @Param("password")String password);
 
 	/**
-	 *      @Insert("INSERT INTO ucs_user(tenant_id,login_name,password,default_enterprise,create_user,is_deleted) VALUES (#{tenantId},#{account},#{password},#{defaultEnterpriseId},#{createUser},#{isDeleted})")
-	 * 	@Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+	 @Insert({"INSERT INTO ucs_user(tenant_id,login_name,password,default_enterprise,create_user,is_deleted) VALUES (#{tenantId},#{account},#{password},#{defaultEnterpriseId},#{createUser},#{isDeleted})"})
+	 @Options(useGeneratedKeys = true, keyProperty = "id")
 	 * @param user
 	 * @return
 	 */
-	@Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-	@Insert("INSERT INTO ucs_user(tenant_id,login_name,password,default_enterprise,create_user,is_deleted) VALUES (#{tenantId},#{account},#{password},#{defaultEnterpriseId},#{createUser},#{isDeleted})")
+
 	int submitUserInfo(User user);
 }
