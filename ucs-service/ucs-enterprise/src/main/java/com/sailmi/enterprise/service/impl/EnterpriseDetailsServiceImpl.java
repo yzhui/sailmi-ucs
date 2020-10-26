@@ -46,7 +46,7 @@ public class EnterpriseDetailsServiceImpl extends ServiceImpl<EnterpriseDetailsM
 	 * @Date: 2020/10/24/0024 10:24
 	 */
 	@Override
-	public EnterpriseDetails saveDetail(EnterpriseDetails enterpriseDetails) {
+	public int saveDetail(EnterpriseDetails enterpriseDetails) {
 		return baseMapper.insertDetail(enterpriseDetails);
 	}
 

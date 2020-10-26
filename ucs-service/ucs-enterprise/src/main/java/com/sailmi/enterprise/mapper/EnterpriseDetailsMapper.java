@@ -46,5 +46,5 @@ public interface EnterpriseDetailsMapper extends BaseMapper<EnterpriseDetails> {
 	 * @Author: syt
 	 * @Date: 2020/10/24/0024 11:01
 	 */
-	EnterpriseDetails insertDetail(EnterpriseDetails enterpriseDetails);
+	int insertDetail(EnterpriseDetails enterpriseDetails);
 }
