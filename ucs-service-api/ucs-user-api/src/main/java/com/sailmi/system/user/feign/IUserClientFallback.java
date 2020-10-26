@@ -19,6 +19,7 @@ import com.sailmi.core.tool.api.R;
 import com.sailmi.system.user.entity.User;
 import com.sailmi.system.user.entity.UserInfo;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * Feign失败配置
@@ -39,7 +40,7 @@ public class IUserClientFallback implements IUserClient {
 	}
 
 	@Override
-	public int submitUserInfo(User user) {
+	public int submitUserInfo(@RequestBody User user) {
 		return 0;
 	}
 }

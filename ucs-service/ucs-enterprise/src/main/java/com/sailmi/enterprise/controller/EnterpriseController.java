@@ -15,6 +15,7 @@
  */
 package com.sailmi.enterprise.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.core.tool.utils.DigestUtil;
@@ -38,7 +39,6 @@ import com.sailmi.core.mp.support.Query;
 import com.sailmi.core.tool.api.R;
 import com.sailmi.core.tool.utils.Func;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -202,6 +202,7 @@ public class EnterpriseController extends AppController {
 			User user = new User();
 			user.setAccount("admin");
 			//这里的租户应该是创建者的租户,说明创建的这个用户属于创建人的租户
+
 			user.setTenantId("111111");
 			user.setPassword(DigestUtil.encrypt("123456"));//默认密码
 			user.setDefaultEnterpriseId(enterprise.getId());
@@ -209,6 +210,7 @@ public class EnterpriseController extends AppController {
 			user.setCreateUser(222l);
 			user.setIsDeleted(0);
 			userClient.submitUserInfo(user);
+
 
 			//绑定用户 角色（-2，-3）
 			UserRole userRole1 = new UserRole();

@@ -29,7 +29,6 @@
             <groupId>com.sailmi</groupId>
             <artifactId>ucs-system-api</artifactId>
             <version>${ucs.project.version}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.sailmi</groupId>
