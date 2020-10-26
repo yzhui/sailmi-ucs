@@ -18,6 +18,8 @@ package com.sailmi.system.user.mapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import com.sailmi.system.user.entity.User;
 import com.sailmi.system.user.excel.UserExcel;
@@ -86,5 +88,13 @@ public interface UserMapper extends BaseMapper<User> {
 
 	User getConsoleUser(@Param("account")String account, @Param("password")String password);
 
+	/**
+	 *      @Insert("INSERT INTO ucs_user(tenant_id,login_name,password,default_enterprise,create_user,is_deleted) VALUES (#{tenantId},#{account},#{password},#{defaultEnterpriseId},#{createUser},#{isDeleted})")
+	 * 	@Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+	 * @param user
+	 * @return
+	 */
+	@Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+	@Insert("INSERT INTO ucs_user(tenant_id,login_name,password,default_enterprise,create_user,is_deleted) VALUES (#{tenantId},#{account},#{password},#{defaultEnterpriseId},#{createUser},#{isDeleted})")
 	int submitUserInfo(User user);
 }

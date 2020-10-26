@@ -142,14 +142,13 @@
         user_birthday AS birthday
         FROM ucs_user ${ew.customSqlSegment}
     </select>
-    <insert id="submitUserInfo" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    <!--<insert id="submitUserInfo" parameterType="com.sailmi.system.user.entity.User" useGeneratedKeys="true" keyProperty="id" >
         INSERT INTO ucs_user(
 			tenant_id,
 			login_name,
 			password,
 			default_enterprise,
 			create_user,
-			create_time,
 			is_deleted
 		) VALUES (
 			#{tenantId},
@@ -157,9 +156,8 @@
 			#{password},
 			#{defaultEnterpriseId},
 			#{createUser},
-			#{createTime},
 			#{isDeleted}
 		)
-    </insert>
+    </insert>-->
 
 </mapper>
