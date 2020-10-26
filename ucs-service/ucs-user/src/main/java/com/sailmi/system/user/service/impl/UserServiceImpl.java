@@ -260,7 +260,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 	}
 
 	@Override
-	public User submitUser(User user) {
+	public int submitUser(User user) {
 		return baseMapper.insertUserInfo(user);
 	}
 

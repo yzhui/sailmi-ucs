@@ -22,6 +22,8 @@ import com.sailmi.enterprise.service.IEnterpriseDetailsService;
 import com.sailmi.enterprise.service.IEnterpriseFinanceService;
 import com.sailmi.system.entity.EnterpriseDetails;
 import com.sailmi.system.entity.EnterpriseFinance;
+import com.sailmi.system.entity.UserRole;
+import com.sailmi.system.feign.IUserRoleFeign;
 import com.sailmi.system.user.entity.User;
 import com.sailmi.system.user.feign.IUserClient;
 import com.sailmi.system.vo.MenuVO;
@@ -68,6 +70,7 @@ public class EnterpriseController extends AppController {
 	private IUserClient iUserClient;
 	private IEnterpriseDetailsService iEnterpriseDetailsService; //企业详细信息syt
 	private IEnterpriseFinanceService iEnterpriseFinanceService;//企业财务信息syt
+	private IUserRoleFeign iUserRoleFeign;
 	/**
 	* 详情
 	*/
@@ -160,32 +163,7 @@ public class EnterpriseController extends AppController {
 				enterprise.setTenantId("000000");
 			}
 		}
-			//平台管理员或租户建立企业
-		enterprise.setIsDeleted(0);
-		enterprise.setCreateTime(new Date());
-		enterprise.setCreateUser(authUser.getUserId());
-		enterpriseService.saveEnterpriseInfo(enterprise);
-		//创建默认user
-		User user = new User();
-		user.setId(null);
-		user.setAccount("admin");
-		//这里的租户应该是创建者的租户,说明创建的这个用户属于创建人的租户
-		user.setTenantId(authUser.getTenantId());
-		user.setPassword(DigestUtil.encrypt("123456"));//默认密码
-		user.setDefaultEnterpriseId(enterprise.getId());
-		user.setCreateTime(new Date());
-		user.setCreateUser(authUser.getUserId());
-		user.setIsDeleted(0);
-		User r = iUserClient.submitUserInfo(user);
-
-		//绑定用户 角色（-2，-3）
-
-
-		//
-
-
-
-		return R.status(true);
+		return R.status(enterpriseService.save(enterprise));
 	}
 
 	/**
@@ -209,13 +187,45 @@ public class EnterpriseController extends AppController {
 	@PostMapping("/submit")
     @ApiOperationSupport(order = 6)
 	@ApiOperation(value = "新增或修改", notes = "传入enterprise")
-	public R submit(@Valid @RequestBody Enterprise enterprise) {
+	public R submit(AuthUser authUser,@Valid @RequestBody Enterprise enterprise) {
 		if(enterprise!=null){
 			if(StringUtils.isEmpty(enterprise.getTenantId())){
 				enterprise.setTenantId("000000");
 			}
 		}
-		return R.status(enterpriseService.saveOrUpdate(enterprise));
+		try{
+			//平台管理员或租户建立企业
+			enterprise.setIsDeleted(0);
+			enterprise.setCreateTime(new Date());
+			enterprise.setCreateUser(authUser.getUserId());
+			enterpriseService.saveEnterpriseInfo(enterprise);
+			//创建默认user
+			User user = new User();
+			user.setId(null);
+			user.setAccount("admin");
+			//这里的租户应该是创建者的租户,说明创建的这个用户属于创建人的租户
+			user.setTenantId(authUser.getTenantId());
+			user.setPassword(DigestUtil.encrypt("123456"));//默认密码
+			user.setDefaultEnterpriseId(enterprise.getId());
+			user.setCreateTime(new Date());
+			user.setCreateUser(authUser.getUserId());
+			user.setIsDeleted(0);
+			iUserClient.submitUserInfo(user);
+
+			//绑定用户 角色（-2，-3）
+			UserRole userRole1 = new UserRole();
+			userRole1.setUserId(user.getId());
+			userRole1.setRoleId(-2l);
+			iUserRoleFeign.insertRoleUserRealtion(userRole1);
+			UserRole userRole2 = new UserRole();
+			userRole2.setUserId(user.getId());
+			userRole2.setRoleId(-3l);
+			iUserRoleFeign.insertRoleUserRealtion(userRole2);
+		}catch(Exception e){
+			e.printStackTrace();
+			return R.status(false);
+		}
+		return R.status(true);
 	}
 
 

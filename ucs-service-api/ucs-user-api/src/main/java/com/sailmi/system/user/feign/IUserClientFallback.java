@@ -39,7 +39,7 @@ public class IUserClientFallback implements IUserClient {
 	}
 
 	@Override
-	public User submitUserInfo(User user) {
-		return null;
+	public int submitUserInfo(User user) {
+		return 0;
 	}
 }
