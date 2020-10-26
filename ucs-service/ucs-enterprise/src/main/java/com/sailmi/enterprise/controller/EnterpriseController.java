@@ -204,7 +204,7 @@ public class EnterpriseController extends AppController {
 			user.setId(null);
 			user.setAccount("admin");
 			//这里的租户应该是创建者的租户,说明创建的这个用户属于创建人的租户
-			user.setTenantId(authUser.getTenantId());
+			user.setTenantId("111111");
 			user.setPassword(DigestUtil.encrypt("123456"));//默认密码
 			user.setDefaultEnterpriseId(enterprise.getId());
 			user.setCreateTime(new Date());
