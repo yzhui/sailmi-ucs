@@ -51,7 +51,7 @@ public class UserClient implements IUserClient {
 
 	@Override
 	@PostMapping(API_PREFIX + "/submit-user")
-	public int  submitUserInfo( User user) {
+	public int  submitUserInfo(@RequestBody User user) {
 		return service.submitUser(user);
 	}
 
