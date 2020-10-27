@@ -10,6 +10,7 @@
         <result column="enterprise_id" property="enterpriseId"/>
         <result column="sort" property="sort"/>
         <result column="role_alias" property="roleAlias"/>
+        <result column="is_sys" property="isSys"/>
         <result column="is_deleted" property="isDeleted"/>
         <result column="enterprise_id" property="enterpriseId"/>
     </resultMap>

@@ -79,6 +79,12 @@ public class Role implements Serializable {
 	private String roleAlias;
 
 	/**
+	 * 系统角色（1 是，0 不是）
+	 */
+	@ApiModelProperty(value = "系统角色")
+	private String isSys;
+
+	/**
 	 * 是否已删除
 	 */
 	@TableLogic
