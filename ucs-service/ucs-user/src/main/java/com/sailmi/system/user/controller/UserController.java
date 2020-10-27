@@ -166,18 +166,6 @@ public class UserController {
 		if(authUser!=null) {
 			//逻辑有问题，这里，不需要判断用户是否是平台管理员，只需要按此用户的实际企业获取用户列表
 			//ucs_enterprise_user表要用起来  yzh
-
-			if(authUser.getTenantId().equals("000000")){//平台管理员
-				//查询所有租户的管理员列表
-				if (authUser.getEnterpriseId() != null) {
-					R<List<UserEnterprise>> listR = iuserEnterRelationFeign.detailInfo(authUser.getEnterpriseId(),true);
-					if(listR!=null && listR.getData()!=null && listR.getData().size()>0){
-						listR.getData().stream().forEach(userEnter->{
-							userIds.add(userEnter.getUserId());
-						});
-					}
-				}
-			}else{//租户管理员
 				if (authUser.getEnterpriseId() != null) {
 					R<List<UserEnterprise>> listR = iuserEnterRelationFeign.detailInfo(authUser.getEnterpriseId(),false);
 					if(listR!=null && listR.getData()!=null && listR.getData().size()>0){
@@ -186,10 +174,7 @@ public class UserController {
 						});
 					}
 				}
-			}
-
 		}
-		//
 		if(userIds.size()>0){
 			queryWrapper.in("id",userIds);
 		}else{

@@ -185,7 +185,7 @@ public class EnterpriseController extends AppController {
     @ApiOperationSupport(order = 6)
 	@ApiOperation(value = "新增或修改", notes = "传入enterprise")
 	@Transactional
-	public R submit(AuthUser authUser,Enterprise enterprise) {
+	public R submit(AuthUser authUser,@Valid @RequestBody Enterprise enterprise) {
 		try{
 			//平台管理员或租户建立企业
 			if(StringUtils.isEmpty(enterprise.getTenantId())){
@@ -203,6 +203,7 @@ public class EnterpriseController extends AppController {
 			user.setPassword(DigestUtil.encrypt("123456"));//默认密码
 			user.setDefaultEnterpriseId(enterprise.getId());
 			user.setCreateUser(authUser.getUserId());
+			user.setIsInitialpass(0);
 			user.setIsDeleted(0);
 			Long i = userClient.submitUserInfo(user);
 

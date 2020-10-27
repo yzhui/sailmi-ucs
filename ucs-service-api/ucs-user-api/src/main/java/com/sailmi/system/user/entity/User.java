@@ -155,4 +155,10 @@ public class User extends TenantEntity {
 	@TableField("default_enterprise")
 	private Long defaultEnterpriseId;
 
+	/**
+	 * 上次登陆的企业ID
+	 */
+	@ApiModelProperty(value = "是否修改了初始密码")
+	@TableField("is_initialpass")
+	private int isInitialpass;
 }

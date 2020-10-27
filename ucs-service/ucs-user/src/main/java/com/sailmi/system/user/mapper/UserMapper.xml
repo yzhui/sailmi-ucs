@@ -29,6 +29,7 @@
         <result column="email_status" property="emailStatus"/>
         <result column="info_status" property="infoStatus"/>
         <result column="default_enterprise" property="defaultEnterpriseId"/>
+        <result column="is_initialpass" property="isInitialpass"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->

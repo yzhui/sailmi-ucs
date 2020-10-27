@@ -49,6 +49,8 @@
 			remarks,
 			create_user,
 			create_time,
+			update_user,
+			update_time,
 			is_deleted
 			)
 		VALUES
@@ -68,6 +70,8 @@
 			#{remarks},
 			#{createUser},
 			#{createTime},
+			#{updateUser},
+			#{updateTime},
 			#{isDeleted}
 			)
 	</insert>
