@@ -20,9 +20,8 @@ import com.sailmi.core.secure.AuthUser;
 import com.sailmi.core.tool.utils.DigestUtil;
 import com.sailmi.enterprise.service.IEnterpriseDetailsService;
 import com.sailmi.enterprise.service.IEnterpriseFinanceService;
-import com.sailmi.system.entity.EnterpriseDetails;
-import com.sailmi.system.entity.EnterpriseFinance;
-import com.sailmi.system.entity.UserRole;
+import com.sailmi.enterprise.service.IUserEnterpriseService;
+import com.sailmi.system.entity.*;
 import com.sailmi.system.feign.IUserRoleFeign;
 import com.sailmi.system.user.entity.User;
 import com.sailmi.system.user.feign.IUserClient;
@@ -42,7 +41,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.sailmi.system.entity.Enterprise;
 import com.sailmi.system.vo.EnterpriseVO;
 import com.sailmi.enterprise.wrapper.EnterpriseWrapper;
 import com.sailmi.enterprise.service.IEnterpriseService;
@@ -68,6 +66,7 @@ public class EnterpriseController extends AppController {
 	private IEnterpriseDetailsService iEnterpriseDetailsService; //企业详细信息syt
 	private IEnterpriseFinanceService iEnterpriseFinanceService;//企业财务信息syt
 	private IUserRoleFeign iUserRoleFeign;
+	private IUserEnterpriseService userEnterpriseService;
 	/**
 	* 详情
 	*/
@@ -185,38 +184,48 @@ public class EnterpriseController extends AppController {
 	@PostMapping("/submit")
     @ApiOperationSupport(order = 6)
 	@ApiOperation(value = "新增或修改", notes = "传入enterprise")
+	@Transactional
 	public R submit(AuthUser authUser,Enterprise enterprise) {
-		if(enterprise!=null){
-			if(StringUtils.isEmpty(enterprise.getTenantId())){
-				enterprise.setTenantId("000000");
-			}
-		}
 		try{
 			//平台管理员或租户建立企业
+			if(StringUtils.isEmpty(enterprise.getTenantId())){
+				enterprise.setTenantId(authUser.getTenantId());
+			}
 			enterprise.setIsDeleted(0);
 			enterprise.setCreateTime(new Date());
-			enterprise.setCreateUser(2222l);
+			enterprise.setCreateUser(authUser.getUserId());
 			enterpriseService.saveEnterpriseInfo(enterprise);
 			//创建默认user
 			User user = new User();
-			user.setAccount("admin");
+			user.setAccount("admin"+enterprise.getId());
 			//这里的租户应该是创建者的租户,说明创建的这个用户属于创建人的租户
-			user.setTenantId("111111");
+			user.setTenantId(authUser.getTenantId());
 			user.setPassword(DigestUtil.encrypt("123456"));//默认密码
 			user.setDefaultEnterpriseId(enterprise.getId());
-			user.setCreateUser(222l);
+			user.setCreateUser(authUser.getUserId());
 			user.setIsDeleted(0);
 			Long i = userClient.submitUserInfo(user);
 
+			//用户企业关系表信息插入
+			UserEnterprise userEnterprise = new UserEnterprise();
+			userEnterprise.setEnterpriseId(enterprise.getId());
+			userEnterprise.setUserId(i);
+			userEnterprise.setStatus(1);
+			userEnterprise.setIsDeleted(0);
+			userEnterpriseService.save(userEnterprise);
 
 			//绑定用户 角色（-2，-3）
 			UserRole userRole1 = new UserRole();
 			userRole1.setUserId(i);
 			userRole1.setRoleId(-2l);
+			userRole1.setStatus(0);
+			userRole1.setIsDeleted(0);
 			iUserRoleFeign.insertRoleUserRealtion(userRole1);
 			UserRole userRole2 = new UserRole();
 			userRole2.setUserId(i);
 			userRole2.setRoleId(-3l);
+			userRole2.setStatus(0);
+			userRole2.setIsDeleted(0);
 			iUserRoleFeign.insertRoleUserRealtion(userRole2);
 		}catch(Exception e){
 			e.printStackTrace();
