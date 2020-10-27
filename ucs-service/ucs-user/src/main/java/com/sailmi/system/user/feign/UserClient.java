@@ -15,9 +15,9 @@
  */
 package com.sailmi.system.user.feign;
 
+import com.sailmi.system.user.entity.User;
 import lombok.AllArgsConstructor;
 import com.sailmi.core.tool.api.R;
-import com.sailmi.system.user.entity.User;
 import com.sailmi.system.user.entity.UserInfo;
 import com.sailmi.system.user.service.IUserService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +51,7 @@ public class UserClient implements IUserClient {
 
 	@Override
 	@PostMapping(API_PREFIX + "/submit-user")
-	public int  submitUserInfo(@RequestBody User user) {
+	public Long  submitUserInfo(@RequestBody User user) {
 		return service.submitUser(user);
 	}
 

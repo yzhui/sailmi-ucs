@@ -23,7 +23,7 @@ import com.sailmi.system.user.entity.UcsAccountuser;
 import com.sailmi.system.user.entity.User;
 import com.sailmi.system.user.entity.UserInfo;
 import com.sailmi.system.user.excel.UserExcel;
-import com.sailmi.system.user.vo.UserVO;
+
 
 import java.util.List;
 
@@ -155,5 +155,5 @@ public interface IUserService extends BaseService<User> {
 	 */
 	int queryUnikePhone(String userPhone);
 
-	int submitUser(User user);
+	Long submitUser(User user);
 }

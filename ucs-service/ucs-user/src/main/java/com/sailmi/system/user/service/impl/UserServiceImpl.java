@@ -260,8 +260,9 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 	}
 
 	@Override
-	public int submitUser(User user) {
-		return baseMapper.submitUserInfo(user);
+	public Long submitUser(User user) {
+		int i = baseMapper.submitUserInfo(user);
+		return user.getId();
 	}
 
 }

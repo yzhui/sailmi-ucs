@@ -15,6 +15,6 @@ public interface IUserRoleFeign {
 	String API_PREFIX = "/userrole";
 
 	@GetMapping(API_PREFIX + "/user-role-relation")
-	Boolean insertRoleUserRealtion(@RequestBody UserRole userRole);
+	Boolean insertRoleUserRealtion( UserRole userRole);
 
 }

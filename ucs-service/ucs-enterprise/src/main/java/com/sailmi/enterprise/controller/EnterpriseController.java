@@ -15,7 +15,6 @@
  */
 package com.sailmi.enterprise.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.core.tool.utils.DigestUtil;
@@ -49,8 +48,6 @@ import com.sailmi.enterprise.wrapper.EnterpriseWrapper;
 import com.sailmi.enterprise.service.IEnterpriseService;
 import com.sailmi.core.boot.ctrl.AppController;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -209,16 +206,16 @@ public class EnterpriseController extends AppController {
 			user.setDefaultEnterpriseId(enterprise.getId());
 			user.setCreateUser(222l);
 			user.setIsDeleted(0);
-			userClient.submitUserInfo(user);
+			Long i = userClient.submitUserInfo(user);
 
 
 			//绑定用户 角色（-2，-3）
 			UserRole userRole1 = new UserRole();
-			userRole1.setUserId(user.getId());
+			userRole1.setUserId(i);
 			userRole1.setRoleId(-2l);
 			iUserRoleFeign.insertRoleUserRealtion(userRole1);
 			UserRole userRole2 = new UserRole();
-			userRole2.setUserId(user.getId());
+			userRole2.setUserId(i);
 			userRole2.setRoleId(-3l);
 			iUserRoleFeign.insertRoleUserRealtion(userRole2);
 		}catch(Exception e){
