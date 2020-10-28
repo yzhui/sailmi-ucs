@@ -60,7 +60,7 @@ public  class PhoneCodeUtil {
 		String sender = smsSender;
 		String templateId = smsTemplateId;
 		String signature = smsSignature;
-		String receiver =smsReceiver+phone;
+		String receiver ="+"+smsReceiver+phone;
 		String statusCallBack =smsStatusCallBack;
 	System.out.println(url+"--"+appKey+"--"+appSecret+"--"+sender+"--"+templateId+"--"+signature);
 		String code=createCode();
