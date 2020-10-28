@@ -17,6 +17,7 @@ package com.sailmi.system.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
+import com.sailmi.core.secure.AuthUser;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import com.sailmi.core.boot.ctrl.AppController;
@@ -67,7 +68,7 @@ public class ParamController extends AppController {
 	})
 	@ApiOperationSupport(order = 2)
 	@ApiOperation(value = "分页", notes = "传入param")
-	public R<IPage<Param>> list(@ApiIgnore @RequestParam Map<String, Object> param, Query query) {
+	public R<IPage<Param>> list( @ApiIgnore @RequestParam Map<String, Object> param, Query query) {
 		IPage<Param> pages = paramService.page(Condition.getPage(query), Condition.getQueryWrapper(param, Param.class));
 		return R.data(pages);
 	}

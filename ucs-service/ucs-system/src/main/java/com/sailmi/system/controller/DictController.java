@@ -18,7 +18,12 @@ package com.sailmi.system.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.sailmi.core.secure.AuthUser;
+import com.sailmi.system.entity.Enterprise;
+import com.sailmi.system.entity.Tenant;
+import com.sailmi.system.feign.IEnterpriseFeign;
+import com.sailmi.system.service.ITenantService;
 import com.sailmi.system.vo.DictVO;
+import com.sailmi.system.vo.EnterpriseVO;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import com.sailmi.core.boot.ctrl.AppController;
@@ -52,7 +57,7 @@ import static com.sailmi.common.cache.CacheNames.DICT_VALUE;
 public class DictController extends AppController {
 
 	private IDictService dictService;
-
+	private IEnterpriseFeign iEnterpriseFeign;
 	/**
 	 * 详情
 	 */
@@ -76,8 +81,14 @@ public class DictController extends AppController {
 	@ApiOperation(value = "列表", notes = "传入dict")
 	public R<List<INode>> list(AuthUser authUser, @ApiIgnore @RequestParam Map<String, Object> dict) {
 		QueryWrapper<Dict> queryWrapper = Condition.getQueryWrapper(dict, Dict.class);
-		if(authUser!=null && authUser.getTenantId()!=null){
-			queryWrapper.eq("tenant_id",authUser.getTenantId());
+		if(authUser!=null && authUser.getEnterpriseId()!=null){
+			Long aLong = Long.valueOf(authUser.getEnterpriseId());
+			Enterprise enterprise = new Enterprise();
+			enterprise.setId(aLong);
+			R<EnterpriseVO> enterpriseVOR = iEnterpriseFeign.detailInfo(enterprise);
+			if(enterpriseVOR!=null && enterpriseVOR.getData()!=null && enterpriseVOR.getData().getTenantId()!=null){
+				queryWrapper.eq("tenant_id",authUser.getTenantId());
+			}
 		}
 		@SuppressWarnings("unchecked")
 		List<Dict> list = dictService.list(queryWrapper.lambda().orderByAsc(Dict::getSort));
