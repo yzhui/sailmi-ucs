@@ -116,12 +116,7 @@ public class RoleController extends AppController {
 	public R remove(AuthUser authUser,@ApiParam(value = "主键集合", required = true) @RequestParam String ids) {
 		R<String> status=null;
 			if(ids.contains("-2") || ids.contains("-3")){//包含这两个角色，则不能删除
-				if(authUser!=null && authUser.getEnterpriseId().equals("0")) {//系统企业可以删除-2和-3的角色（平台管理员企业），其他企业不可以
-					boolean flag= roleService.removeByIds(Func.toLongList(ids));
-					status = R.data(200, "", "删除成功");
-				}else{
-					status = R.data(400, "", "是系统角色，没有删除权限");
-				}
+				status = R.data(400, "", "是系统角色，没有删除权限");
 			}else{
 				boolean flag= roleService.removeByIds(Func.toLongList(ids));
 				status = R.data(200, "", "删除成功");
@@ -139,10 +134,16 @@ public class RoleController extends AppController {
 	@PostMapping("/grant")
 	@ApiOperationSupport(order = 6)
 	@ApiOperation(value = "权限设置", notes = "传入roleId集合以及menuId集合")
-	public R grant(@ApiParam(value = "roleId集合", required = true) @RequestParam String roleIds,
+	public R grant(AuthUser authUser,@ApiParam(value = "roleId集合", required = true) @RequestParam String roleIds,
 				   @ApiParam(value = "menuId集合", required = true) @RequestParam String menuIds) {
-		boolean temp = roleService.grant(Func.toLongList(roleIds), Func.toLongList(menuIds));
-		return R.status(temp);
+		R<String> status=null;
+		if(roleIds.contains("-2") || roleIds.contains("-3")){
+			status = R.data(400, "", "该角色菜单是固定的，没有修改权限");
+		}else{
+			boolean temp = roleService.grant(Func.toLongList(roleIds), Func.toLongList(menuIds));
+			status = R.data(200, "", "修改成功");
+		}
+		return status;
 	}
 
 }
