@@ -211,6 +211,7 @@ public class EnterpriseController extends AppController {
 	@ApiOperation(value = "新增或修改", notes = "传入enterprise")
 	@Transactional
 	public R submit(AuthUser authUser,@Valid @RequestBody Enterprise enterprise) {
+		ReturnEntity returnEntity = new ReturnEntity();
 		try{
 			//查询当前登陆人的企业的tenantID
 			Enterprise byId = enterpriseService.getById(authUser.getEnterpriseId());
@@ -257,11 +258,18 @@ public class EnterpriseController extends AppController {
 			userRole2.setStatus(0);
 			userRole2.setIsDeleted(0);
 			iUserRoleFeign.insertRoleUserRealtion(userRole2);
+
+
+			returnEntity.setAccount("admin"+enterprise.getId());
+			returnEntity.setPassword("123456");
+			if(StringUtils.isEmpty(byId.getTenantId())) {
+				returnEntity.setTenantId(byId.getTenantId());
+			}
 		}catch(Exception e){
 			e.printStackTrace();
-			return R.status(false);
+			return R.data(500,returnEntity,"添加失败");
 		}
-		return R.status(true);
+		return R.data(200,returnEntity,"添加成功");
 	}
 
 
