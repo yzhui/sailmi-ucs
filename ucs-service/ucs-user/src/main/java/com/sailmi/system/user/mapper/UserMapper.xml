@@ -92,7 +92,7 @@
         LEFT JOIN ucs_role b ON a.role_id = b.id
         WHERE
             a.user_id = #{id}
-        AND b.enterprise_id = #{defaultEnterpriseId}
+       /* AND b.enterprise_id = #{defaultEnterpriseId}*/
     </select>
     <select id="getRoleName" resultType="java.lang.String">
         SELECT
