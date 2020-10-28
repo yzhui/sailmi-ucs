@@ -19,8 +19,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.system.entity.ServiceEntity;
 import com.sailmi.system.entity.SystemEntity;
+import com.sailmi.system.entity.Tenant;
 import com.sailmi.system.service.IServiceService;
 import com.sailmi.system.service.ISystemService;
+import com.sailmi.system.service.ITenantService;
 import com.sailmi.system.user.entity.UserInfo;
 import com.sailmi.system.user.feign.IUserClient;
 import com.sailmi.system.vo.ServiceVO;
@@ -43,6 +45,7 @@ import com.sailmi.core.boot.ctrl.AppController;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 可提供的服务清单，企业可以通过服务清单 控制器
@@ -59,6 +62,7 @@ public class ServiceController extends AppController {
 	private IServiceService serviceService;
 	private ISystemService systemService;
 	private IUserClient userClient;
+	private ITenantService tenantService;
 
 
 	/**
@@ -82,12 +86,20 @@ public class ServiceController extends AppController {
 	public R<IPage<ServiceVO>> list(AuthUser user,ServiceEntity service, Query query) {
 		//获取该tenantId下的所有system，根据system查询所有service
 		ArrayList<Long> systemIds = new ArrayList<>();
-		if(user!=null && user.getTenantId()!=null) {
-			QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
-			if(user.getTenantId().equals("000000")) {//平台管理员
+		if(user!=null && user.getEnterpriseId()!=null) {
+			QueryWrapper<Tenant> tenantQueryWrapper = new QueryWrapper<>();
+			tenantQueryWrapper.eq("enterprise_id",user.getEnterpriseId());//查询改企业管理的所有的租户
+			List<Tenant> tenantList = tenantService.list(tenantQueryWrapper);
+			ArrayList<String> longs = new ArrayList<>();
+			if(tenantList!=null && tenantList.size()>0){
+				tenantList.stream().forEach(teant->{
+					longs.add(teant.getTenantId());
+				});
 
-			}else{
-				systemEntityQueryWrapper.eq("tenant_id", user.getTenantId());
+			}
+			QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
+			if(longs.size()>0) {
+				systemEntityQueryWrapper.in("tenant_id", longs);
 			}
 			List<SystemEntity> list = systemService.list(systemEntityQueryWrapper);
 			if(list!=null && list.size()>0){
