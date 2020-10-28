@@ -149,7 +149,6 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 				User user = baseMapper.getUser(tenantId, account, password);
 				if(user!=null){
 					userVO = BeanUtil.copy(user, UserVO.class);//用户信息封装
-					//if(user.getDefaultEnterpriseId()!=null ) {//有默认企业（加入企业或创建企业）
 						List<String> roles = baseMapper.queryUserRoles(user.getId().toString(), user.getDefaultEnterpriseId().toString());
 						if (roles != null && roles.size() > 0) {
 							String roleIds = Joiner.on(",").join(roles);
@@ -162,7 +161,6 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 								userVO.setRoleId(roleIds);
 							}
 						}
-					//}
 				}
 				userInfo.setUser(userVO);
 				return userInfo;
