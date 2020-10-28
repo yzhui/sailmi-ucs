@@ -216,7 +216,7 @@ public class EnterpriseController extends AppController {
 			//查询当前登陆人的企业的tenantID
 			Enterprise byId = enterpriseService.getById(authUser.getEnterpriseId());
 			//平台管理员或租户建立企业
-			if(StringUtils.isEmpty(byId.getTenantId())){
+			if(!StringUtils.isEmpty(byId.getTenantId())){
 				enterprise.setTenantId(byId.getTenantId());
 			}
 			enterprise.setIsDeleted(0);
@@ -262,7 +262,7 @@ public class EnterpriseController extends AppController {
 
 			returnEntity.setAccount("admin"+enterprise.getId());
 			returnEntity.setPassword("123456");
-			if(StringUtils.isEmpty(byId.getTenantId())) {
+			if(!StringUtils.isEmpty(byId.getTenantId())) {
 				returnEntity.setTenantId(byId.getTenantId());
 			}
 		}catch(Exception e){
