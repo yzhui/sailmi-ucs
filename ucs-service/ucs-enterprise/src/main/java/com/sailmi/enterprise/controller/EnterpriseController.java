@@ -212,9 +212,11 @@ public class EnterpriseController extends AppController {
 	@Transactional
 	public R submit(AuthUser authUser,@Valid @RequestBody Enterprise enterprise) {
 		try{
+			//查询当前登陆人的企业的tenantID
+			Enterprise byId = enterpriseService.getById(authUser.getEnterpriseId());
 			//平台管理员或租户建立企业
-			if(StringUtils.isEmpty(enterprise.getTenantId())){
-				enterprise.setTenantId(authUser.getTenantId());
+			if(StringUtils.isEmpty(byId.getTenantId())){
+				enterprise.setTenantId(byId.getTenantId());
 			}
 			enterprise.setIsDeleted(0);
 			enterprise.setCreateTime(new Date());
