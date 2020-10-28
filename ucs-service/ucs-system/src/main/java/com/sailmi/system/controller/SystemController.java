@@ -20,7 +20,9 @@ import com.sailmi.core.secure.AuthUser;
 import com.sailmi.core.secure.annotation.PreAuth;
 import com.sailmi.core.tool.constant.RoleConstant;
 import com.sailmi.system.entity.SystemEntity;
+import com.sailmi.system.entity.Tenant;
 import com.sailmi.system.service.ISystemService;
+import com.sailmi.system.service.ITenantService;
 import com.sailmi.system.user.entity.UserInfo;
 import com.sailmi.system.user.feign.IUserClient;
 import com.sailmi.system.vo.SystemVO;
@@ -40,6 +42,8 @@ import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import com.sailmi.core.boot.ctrl.AppController;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,7 +60,7 @@ public class SystemController extends AppController {
 
 	private ISystemService systemService;
 	private IUserClient userClient;
-
+	private ITenantService tenantService;
 	/**
 	* 详情
 	*/
@@ -77,11 +81,18 @@ public class SystemController extends AppController {
 	@PreAuth(RoleConstant.HAS_ROLE_TENANT_ADMIN)
 	public R<IPage<SystemVO>> list(AuthUser user, SystemEntity system, Query query) {
 		QueryWrapper<SystemEntity> queryWrapper = Condition.getQueryWrapper(system);
-		if(user!=null && user.getTenantId()!=null){
-			if(user.getTenantId().equals("000000")) {//平台管理员
-
-			}else{
-				queryWrapper.eq("tenant_id", user.getTenantId());
+		if(user!=null && user.getEnterpriseId()!=null){
+			QueryWrapper<Tenant> tenantQueryWrapper = new QueryWrapper<>();
+			tenantQueryWrapper.eq("enterprise_id",user.getEnterpriseId());//查询改企业管理的所有的租户
+			List<Tenant> tenantList = tenantService.list(tenantQueryWrapper);
+			ArrayList<String> longs = new ArrayList<>();
+			if(tenantList!=null && tenantList.size()>0){
+				tenantList.stream().forEach(teant->{
+					longs.add(teant.getTenantId());
+				});
+			}
+			if(longs.size()>0) {
+				queryWrapper.in("tenant_id", longs);
 			}
 		}
 		IPage<SystemEntity> pages = systemService.page(Condition.getPage(query), queryWrapper);
