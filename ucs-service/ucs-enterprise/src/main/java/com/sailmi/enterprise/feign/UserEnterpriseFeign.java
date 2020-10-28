@@ -23,9 +23,9 @@ public class UserEnterpriseFeign implements IuserEnterRelationFeign {
 	public R<List<UserEnterprise>> detailInfo(String enterpriseId,Boolean flag) {
 		QueryWrapper<UserEnterprise> userEnterpriseQueryWrapper = new QueryWrapper<>();
 		userEnterpriseQueryWrapper.eq("enterprise_id",enterpriseId);
-		if(flag){
-			userEnterpriseQueryWrapper.eq("status",1);//查询管理员列表
-		}
+//		if(flag){
+//			userEnterpriseQueryWrapper.eq("status",1);//查询管理员列表
+//		}
 		List<UserEnterprise> list = userEnterpriseServiceImpl.list(userEnterpriseQueryWrapper);
 		return R.data(list);
 	}

@@ -155,7 +155,7 @@ public class EnterpriseController extends AppController {
 				});
 			}
 			if(strings.size()>0) {
-				enterpriseQueryWrapper.eq("tenant_id", "000000");
+				enterpriseQueryWrapper.in("tenant_id", strings);
 			}
 		}
 		List<Enterprise> enterLists = enterpriseService.list(enterpriseQueryWrapper);
@@ -226,7 +226,9 @@ public class EnterpriseController extends AppController {
 			User user = new User();
 			user.setAccount("admin"+enterprise.getId());
 			//这里的租户应该是创建者的租户,说明创建的这个用户属于创建人的租户
-			user.setTenantId(authUser.getTenantId());
+			if(StringUtils.isEmpty(byId.getTenantId())) {
+				user.setTenantId(byId.getTenantId());
+			}
 			user.setPassword(DigestUtil.encrypt("123456"));//默认密码
 			user.setDefaultEnterpriseId(enterprise.getId());
 			user.setCreateUser(authUser.getUserId());
