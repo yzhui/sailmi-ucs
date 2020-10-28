@@ -93,10 +93,9 @@ public class AuthClientController extends AppController {
 					strings.add(tenant.getTenantId());
 				});
 			}
-
-			systemEntityQueryWrapper.eq("tenant_id",user.getTenantId());
-
-
+			if(strings.size()>0) {
+				systemEntityQueryWrapper.in("tenant_id", strings);
+			}
 			List<SystemEntity> list = systemService.list(systemEntityQueryWrapper);
 			if(list!=null && list.size()>0){
 				list.stream().forEach(sysEntity->{
