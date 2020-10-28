@@ -137,6 +137,7 @@ public class RoleController extends AppController {
 	public R grant(AuthUser authUser,@ApiParam(value = "roleId集合", required = true) @RequestParam String roleIds,
 				   @ApiParam(value = "menuId集合", required = true) @RequestParam String menuIds) {
 		R<String> status=null;
+
 		if(roleIds.contains("-2") || roleIds.contains("-3")){
 			status = R.data(400, "", "该角色菜单是固定的，没有修改权限");
 		}else{
