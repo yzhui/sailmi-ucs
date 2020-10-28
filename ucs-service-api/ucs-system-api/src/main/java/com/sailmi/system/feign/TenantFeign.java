@@ -4,7 +4,6 @@ import com.sailmi.core.launch.constant.LaunchConstant;
 import com.sailmi.core.tool.api.R;
 import com.sailmi.system.entity.Tenant;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
