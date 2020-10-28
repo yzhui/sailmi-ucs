@@ -18,7 +18,9 @@ package com.sailmi.system.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.sailmi.system.entity.SystemEntity;
+import com.sailmi.system.entity.Tenant;
 import com.sailmi.system.service.ISystemService;
+import com.sailmi.system.service.ITenantService;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import com.sailmi.core.boot.ctrl.AppController;
@@ -54,7 +56,7 @@ public class MenuController extends AppController {
 
 	private IMenuService menuService;
 	private ISystemService systemService;
-
+	private ITenantService tenantService;
 	/**
 	 * 详情
 	 */
@@ -79,16 +81,22 @@ public class MenuController extends AppController {
 	@ApiOperationSupport(order = 2)
 	@ApiOperation(value = "列表", notes = "传入menu")
 	public R<List<MenuVO>> list(AuthUser user,@ApiIgnore @RequestParam Map<String, Object> menu) {
-
+		//查询登陆人企业下租户的所有菜单
 		ArrayList<Long> systemIds = new ArrayList<>();
-		if(user!=null && user.getTenantId()!=null ){
-			QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
-			if(user.getTenantId().equals("000000")){//平台管理员
-
-			}else{
-				systemEntityQueryWrapper.eq("tenant_id",user.getTenantId());
+		QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
+		if(user!=null && user.getEnterpriseId()!=null ){
+			QueryWrapper<Tenant> tenantQueryWrapper = new QueryWrapper<>();
+			tenantQueryWrapper.eq("enterprise_id",user.getEnterpriseId());
+			List<Tenant> tenantList = tenantService.list(tenantQueryWrapper);//查询登陆人下的所有租户
+			ArrayList<String> strings = new ArrayList<>();
+			if(tenantList!=null && tenantList.size()>0){
+				tenantList.stream().forEach(tenant -> {
+					strings.add(tenant.getTenantId());
+				});
 			}
-
+			if(strings.size()>0) {
+				systemEntityQueryWrapper.in("tenant_id", strings);
+			}
 			List<SystemEntity> list = systemService.list(systemEntityQueryWrapper);
 			if(list!=null && list.size()>0){
 				list.stream().forEach(sysEntity->{

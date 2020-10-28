@@ -23,6 +23,7 @@ import com.sailmi.enterprise.service.IEnterpriseFinanceService;
 import com.sailmi.enterprise.service.IUserEnterpriseService;
 import com.sailmi.system.entity.*;
 import com.sailmi.system.feign.IUserRoleFeign;
+import com.sailmi.system.feign.TenantFeign;
 import com.sailmi.system.user.entity.User;
 import com.sailmi.system.user.feign.IUserClient;
 import io.swagger.annotations.Api;
@@ -46,6 +47,7 @@ import com.sailmi.enterprise.wrapper.EnterpriseWrapper;
 import com.sailmi.enterprise.service.IEnterpriseService;
 import com.sailmi.core.boot.ctrl.AppController;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -67,6 +69,8 @@ public class EnterpriseController extends AppController {
 	private IEnterpriseFinanceService iEnterpriseFinanceService;//企业财务信息syt
 	private IUserRoleFeign iUserRoleFeign;
 	private IUserEnterpriseService userEnterpriseService;
+	private TenantFeign tenantFeign;
+
 	/**
 	* 详情
 	*/
@@ -115,11 +119,19 @@ public class EnterpriseController extends AppController {
 	@ApiOperation(value = "分页", notes = "传入enterprise")
 	public R<IPage<EnterpriseVO>> list(AuthUser user,Enterprise enterprise, Query query) {
 		QueryWrapper<Enterprise> queryWrapper = Condition.getQueryWrapper(enterprise);
-		if(user!=null && user.getTenantId()!=null){
-			if(user.getTenantId().equals("000000")) {//平台管理员
-
-			}else{
-				queryWrapper.eq("tenant_id", user.getTenantId());
+		//查询该企业下的租户管理的所有企业列表
+		if(user!=null && user.getEnterpriseId()!=null){
+			//查询该企业下的所有租户
+			R<List<Tenant>> tList = tenantFeign.queryLoginUserTeants(user.getEnterpriseId());
+			ArrayList<String> strings = new ArrayList<>();
+			if(tList!=null && tList.getData()!=null && tList.getData().size()>0){
+				tList.getData().stream().forEach(tenant -> {
+					strings.add(tenant.getTenantId());
+				});
+			}
+			//查询租户下的所有企业
+			if(strings.size()>0) {
+				queryWrapper.in("tenant_id", strings);
 			}
 		}
 		IPage<Enterprise> pages = enterpriseService.page(Condition.getPage(query), queryWrapper);
@@ -132,11 +144,20 @@ public class EnterpriseController extends AppController {
 	@ApiOperation(value = "分页", notes = "传入enterprise")
 	public R<List<Enterprise>> list(AuthUser authUser) {
 		//查询该企业管理的租户下的企业列表
-		if(authUser.getEnterpriseId()!=null){
-
-		}
 		QueryWrapper<Enterprise> enterpriseQueryWrapper = new QueryWrapper<>();
-		enterpriseQueryWrapper.eq("tenant_id","000000");
+		if(authUser.getEnterpriseId()!=null){
+			//查询该企业下的所有租户
+			R<List<Tenant>> tList = tenantFeign.queryLoginUserTeants(authUser.getEnterpriseId());
+			ArrayList<String> strings = new ArrayList<>();
+			if(tList!=null && tList.getData()!=null && tList.getData().size()>0){
+				tList.getData().stream().forEach(tenant -> {
+					strings.add(tenant.getTenantId());
+				});
+			}
+			if(strings.size()>0) {
+				enterpriseQueryWrapper.eq("tenant_id", "000000");
+			}
+		}
 		List<Enterprise> enterLists = enterpriseService.list(enterpriseQueryWrapper);
 		return R.data(enterLists);
 	}

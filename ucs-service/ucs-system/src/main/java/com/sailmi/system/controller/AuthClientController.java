@@ -20,7 +20,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.system.entity.SystemEntity;
+import com.sailmi.system.entity.Tenant;
 import com.sailmi.system.service.ISystemService;
+import com.sailmi.system.service.ITenantService;
 import com.sailmi.system.vo.AuthClientVo;
 import com.sailmi.system.wrapper.AuthClientWrapper;
 import io.swagger.annotations.Api;
@@ -58,6 +60,7 @@ public class AuthClientController extends AppController {
 
 	private IAuthClientService clientService;
 	private ISystemService systemService;
+	private ITenantService tenantService;
 	/**
 	* 详情
 	*/
@@ -78,16 +81,21 @@ public class AuthClientController extends AppController {
 	@ApiOperation(value = "分页", notes = "传入client")
 	public R<IPage<AuthClientVo>> list(AuthUser user, AuthClient authClient, Query query) {
 		ArrayList<Long> systemIds = new ArrayList<>();
-		if(user!=null && user.getTenantId()!=null) {
+		if(user!=null && user.getEnterpriseId()!=null) {
 			QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
-			//此处管理员能管理的租户不应是user.getTenantId();
 			//需要查询租户表，获取此用户企业所管理的租户，然后查询此租户下所有的系统与client
-
-			if(user.getTenantId().equals("000000")){
-
-			}else{
-				systemEntityQueryWrapper.eq("tenant_id",user.getTenantId());
+			QueryWrapper<Tenant> tenantQueryWrapper = new QueryWrapper<>();
+			tenantQueryWrapper.eq("enterprise_id",user.getEnterpriseId());
+			List<Tenant> tenalist = tenantService.list(tenantQueryWrapper);
+			ArrayList<String> strings = new ArrayList<>();
+			if(tenalist!=null && tenalist.size()>0){
+				tenalist.stream().forEach(tenant -> {
+					strings.add(tenant.getTenantId());
+				});
 			}
+
+			systemEntityQueryWrapper.eq("tenant_id",user.getTenantId());
+
 
 			List<SystemEntity> list = systemService.list(systemEntityQueryWrapper);
 			if(list!=null && list.size()>0){
