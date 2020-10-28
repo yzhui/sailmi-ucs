@@ -130,7 +130,11 @@ public class EnterpriseController extends AppController {
 	@GetMapping("/enterpriselist")
 	@ApiOperationSupport(order = 2)
 	@ApiOperation(value = "分页", notes = "传入enterprise")
-	public R<List<Enterprise>> list() {
+	public R<List<Enterprise>> list(AuthUser authUser) {
+		//查询该企业管理的租户下的企业列表
+		if(authUser.getEnterpriseId()!=null){
+
+		}
 		QueryWrapper<Enterprise> enterpriseQueryWrapper = new QueryWrapper<>();
 		enterpriseQueryWrapper.eq("tenant_id","000000");
 		List<Enterprise> enterLists = enterpriseService.list(enterpriseQueryWrapper);
