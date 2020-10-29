@@ -87,7 +87,7 @@ public class DictController extends AppController {
 			enterprise.setId(aLong);
 			R<EnterpriseVO> enterpriseVOR = iEnterpriseFeign.detailInfo(enterprise);
 			if(enterpriseVOR!=null && enterpriseVOR.getData()!=null && enterpriseVOR.getData().getTenantId()!=null){
-				queryWrapper.eq("tenant_id",authUser.getTenantId());
+				queryWrapper.eq("tenant_id",enterpriseVOR.getData().getTenantId());
 			}
 		}
 		@SuppressWarnings("unchecked")
