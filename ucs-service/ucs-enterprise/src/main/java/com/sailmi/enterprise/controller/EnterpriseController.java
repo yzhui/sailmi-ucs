@@ -49,6 +49,7 @@ import com.sailmi.core.boot.ctrl.AppController;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -327,4 +328,47 @@ public class EnterpriseController extends AppController {
 		String re = enterpriseService.verifySocial(social);
 		return R.success(re);
 	}
+
+	/**
+	 * 企业名称模糊查找
+	 *
+	 * @return Result
+	 */
+	@PostMapping(value = "enterpriseNameFuzzySearch")
+	public Result enterpriseNameFuzzySearch() {
+		Result result = new Result();
+		List<Object> resu = new ArrayList<Object>();
+		try {
+			List<String> enterpriseName = enterpriseService.enterpriseNameFuzzySearch();
+			if (enterpriseName.size() > 0) {
+				for (int j = 0; j < enterpriseName.size(); j++) {
+					HashMap<String, Object> put = new HashMap<String, Object>();
+					put.put("value", enterpriseName.get(j));
+					resu.add(put);
+					put = null;
+					// 清除map中元素,用于下次使用
+//                    for (Iterator<String> iterator = put.keySet().iterator(); iterator.hasNext(); ) {
+//                        String key = iterator.next();
+//                        if (key != null || key != "") {
+//                            iterator.remove();
+//                        }
+//                    }
+				}
+				result.setCode(ResponseMessage.SUCCESS);
+				result.setMsg("查询成功");
+				result.setData(resu);
+				return result;
+			}
+			result.setCode(ResponseMessage.SUCCESS);
+			result.setMsg("查询成功");
+			result.setData(enterpriseName);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setCode(ResponseMessage.FAILE);
+			result.setMsg("系统异常");
+			return result;
+		}
+	}
+
 }

@@ -44,10 +44,17 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	/**
 	 * <p>Description: 社会统一验证码</p>
 	 *
-
 	 * @return: java.util.List<java.lang.String>
 	 * @Author: syt
 	 * @Date: 2020/10/25/0025 21:39
 	 */
 	List<String> getAll();
+	/**
+	 * <p>Description: 企业名称模糊查找</p>
+	 *
+	 * @return: java.util.List<java.lang.String>
+	 * @Author: syt
+	 * @Date: 2020/10/30/0030 14:11
+	 */
+	List<String> enterpriseNameFuzzySearch();
 }

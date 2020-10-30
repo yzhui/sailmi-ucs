@@ -80,4 +80,13 @@
     <select id="getAll" resultType="string">
         SELECT credit_code FROM ucs_enterprise
     </select>
+    <!-- 企业名称模糊查询 -->
+    <select id="enterpriseNameFuzzySearch" resultType="String">
+        SELECT
+        enterprise_name
+        FROM
+        ucs_enterprise
+        <!-- WHERE
+            enterpriseName LIKE "%"#{search}"%" -->
+    </select>
 </mapper>

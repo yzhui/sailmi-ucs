@@ -110,4 +110,9 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 		return "2";//已存在不可用
 	}
 
+	@Override
+	public List<String> enterpriseNameFuzzySearch() {
+		return baseMapper.enterpriseNameFuzzySearch();
+	}
+
 }

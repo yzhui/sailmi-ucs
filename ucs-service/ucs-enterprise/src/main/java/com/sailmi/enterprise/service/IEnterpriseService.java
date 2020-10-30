@@ -56,4 +56,13 @@ public interface IEnterpriseService extends BaseService<Enterprise> {
 	 * @Date: 2020/10/25/0025 20:22
 	 */
 	String verifySocial(String social);
+
+	/**
+	 * <p>Description: 企业名称模糊查找</p>
+	 *
+	 * @return: java.util.List<java.lang.String>
+	 * @Author: syt
+	 * @Date: 2020/10/30/0030 14:08
+	 */
+	List<String> enterpriseNameFuzzySearch();
 }
