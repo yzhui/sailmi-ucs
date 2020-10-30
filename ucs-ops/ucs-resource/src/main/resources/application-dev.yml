@@ -2,6 +2,15 @@
 server:
   port: 8010
 
+mongodb-oss:
+  enable: true
+  name: mongo
+  localrepo: /data/local/file     #file stored in local path
+  endpoint: http://xxxxx/file/    #monog visit urls
+  bucket-name: mongo             #本地库分类目录
+  access-key: VkmGKxgATNJI7fUR02m3c62mgz4wWHN4S8fCCt23
+  secret-key: pL0wM5jCDjtSWmEdGifgeRm8CqIHPeGt_lmctJr5
+
 
 qiniu-oss:
   enable: true

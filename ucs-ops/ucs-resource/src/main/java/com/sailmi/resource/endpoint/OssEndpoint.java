@@ -16,14 +16,13 @@
 package com.sailmi.resource.endpoint;
 
 import com.sailmi.core.oss.props.OssProperties;
+import com.sailmi.core.oss.provider.OssProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
-import com.sailmi.core.oss.operator.OssOperatorFactory;
-import com.sailmi.core.oss.operator.IOssOperator;
 import com.sailmi.core.oss.model.GeneralFile;
 import com.sailmi.core.oss.model.OssFile;
 import com.sailmi.core.tool.api.R;
@@ -41,52 +40,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/oss/endpoint")
 @Api(value = "对象存储端点", tags = "对象存储端点")
 public class OssEndpoint {
-	private OssOperatorFactory ossOperatorFactory;
+	private OssProvider ossProvider;
 
-	/**
-	 * 创建存储桶
-	 *
-	 * @param bucketName 存储桶名称
-	 * @return Bucket
-	 */
-	@SneakyThrows
-	@PostMapping("/make-bucket")
-	@ApiOperation(value = "创建空间", notes = "参数为空间名称")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "bucketName", value = "空间名字", defaultValue = "pub_temp", required = true)
-	})
-	public R makeBucket(@RequestParam String bucketName) {
-		ossOperatorFactory.getInstance().makeBucket(bucketName);
-		return R.success("创建成功");
-	}
 
-	/**
-	 * 创建存储桶
-	 *
-	 * @param bucketName 存储桶名称
-	 * @return R
-	 */
-	@SneakyThrows
-	@PostMapping("/remove-bucket")
-	public R removeBucket(@RequestParam String bucketName) {
-		ossOperatorFactory.getInstance().removeBucket(bucketName);
-		return R.success("删除成功");
-	}
-
-	/**
-	 * 拷贝文件
-	 *
-	 * @param fileName       存储桶对象名称
-	 * @param destBucketName 目标存储桶名称
-	 * @param destFileName   目标存储桶对象名称
-	 * @return R
-	 */
-	@SneakyThrows
-	@PostMapping("/copy-file")
-	public R copyFile(@RequestParam String fileName, @RequestParam String destBucketName, String destFileName) {
-		ossOperatorFactory.getInstance().copyFile(fileName, destBucketName, destFileName);
-		return R.success("操作成功");
-	}
 
 	/**
 	 * 获取文件信息
@@ -97,8 +53,7 @@ public class OssEndpoint {
 	@SneakyThrows
 	@GetMapping("/stat-file")
 	public R<OssFile> statFile(@RequestParam String fileName) {
-		IOssOperator ossOperator= ossOperatorFactory.getInstance();
-		return R.data(ossOperator.statFile(fileName));
+		return R.data(ossProvider.statFile(fileName));
 	}
 
 	/**
@@ -110,8 +65,7 @@ public class OssEndpoint {
 	@SneakyThrows
 	@GetMapping("/file-path")
 	public R<String> filePath(@RequestParam String fileName) {
-		IOssOperator ossOperator= ossOperatorFactory.getInstance();
-		return R.data(ossOperator.filePath(fileName));
+		return R.data(ossProvider.filePath(fileName));
 	}
 
 
@@ -128,8 +82,7 @@ public class OssEndpoint {
 		@ApiImplicitParam(name = "fileName", value = "文件名字", required = true)
 	})
 	public R<String> fileLink(@RequestParam String fileName) {
-		IOssOperator ossOperator= ossOperatorFactory.getInstance();
-		return R.data(ossOperator.fileLink(fileName));
+		return R.data(ossProvider.fileLink(fileName));
 	}
 
 	/**
@@ -146,8 +99,7 @@ public class OssEndpoint {
 	})
 	public R<GeneralFile> putFile(@RequestParam MultipartFile file) {
 		GeneralFile generalFile = null;
-		IOssOperator ossOperator= ossOperatorFactory.getInstance();
-		generalFile = ossOperator.putFile(file.getOriginalFilename(), file.getInputStream());
+		generalFile = ossProvider.putFile(file.getOriginalFilename(), (MultipartFile) file.getInputStream());
 		return R.data(generalFile);
 	}
 
@@ -167,8 +119,7 @@ public class OssEndpoint {
 	})
 	public R<GeneralFile> putFile(@RequestParam String fileName, @RequestParam MultipartFile file) {
 		GeneralFile generalFile = null;
-		IOssOperator ossOperator= ossOperatorFactory.getInstance();
-		generalFile = ossOperator.putFile(file.getOriginalFilename(), file.getInputStream());
+		generalFile = ossProvider.putFile(file.getOriginalFilename(), (MultipartFile) file.getInputStream());
 		return R.data(generalFile);
 	}
 
@@ -181,8 +132,7 @@ public class OssEndpoint {
 	@SneakyThrows
 	@PostMapping("/remove-file")
 	public R removeFile(@RequestParam String fileName) {
-		IOssOperator ossOperator= ossOperatorFactory.getInstance();
-		ossOperator.removeFile(fileName);
+		ossProvider.removeFile(fileName);
 		return R.success("操作成功");
 	}
 
@@ -195,8 +145,7 @@ public class OssEndpoint {
 	@SneakyThrows
 	@PostMapping("/remove-files")
 	public R removeFiles(@RequestParam String fileNames) {
-		IOssOperator ossOperator= ossOperatorFactory.getInstance();
-		ossOperator.removeFiles(Func.toStrList(fileNames));
+		ossProvider.removeFiles(Func.toStrList(fileNames));
 		return R.success("操作成功");
 	}
 }
