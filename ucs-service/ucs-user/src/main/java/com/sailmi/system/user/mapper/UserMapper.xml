@@ -159,5 +159,14 @@
 			#{isDeleted}
 		)
     </insert>
+    <update id="resetUserPass" parameterType="map">
+        UPDATE ucs_user
+        <set>
+            <if test="pass!=null and pass!=''">
+                password=#{pass}
+            </if>
+         </set>
+        WHERE id = #{id}
+    </update>
 
 </mapper>

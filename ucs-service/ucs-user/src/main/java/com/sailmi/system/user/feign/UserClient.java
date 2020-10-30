@@ -55,4 +55,14 @@ public class UserClient implements IUserClient {
 		return service.submitUser(user);
 	}
 
+	@Override
+	public Boolean resetUserPass(String id) {
+		boolean flag=false;
+		int i=service.resetUserPassById(id);
+		if(i>0){
+			flag=true;
+		}
+		return flag;
+	}
+
 }

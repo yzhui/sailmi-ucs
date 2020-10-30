@@ -284,6 +284,23 @@ public class EnterpriseController extends AppController {
 		return R.status(enterpriseService.deleteLogic(Func.toLongList(ids)));
 	}
 
+	@GetMapping("/")
+	@ApiOperationSupport(order = 7)
+	@ApiOperation(value = "重置密码", notes = "传入id")
+	public R resetPass(@ApiParam(value = "主键", required = true) @RequestParam String id) {
+		//查询该企业管理员的userId
+		QueryWrapper<UserEnterprise> userEnterpriseQueryWrapper = new QueryWrapper<>();
+		userEnterpriseQueryWrapper.eq("enterprise_id",id);
+		userEnterpriseQueryWrapper.eq("status",1);
+		UserEnterprise one = userEnterpriseService.getOne(userEnterpriseQueryWrapper);
+		Boolean flag=false;
+		if(one !=null && one.getUserId()!=null ){
+			flag=userClient.resetUserPass(one.getUserId().toString());
+		}
+		//重置密码
+		return R.status(flag);
+	}
+
 	/**
 	 * <p>Description: 云测用户创建企业</p>
 	 *

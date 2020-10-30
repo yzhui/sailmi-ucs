@@ -156,4 +156,6 @@ public interface IUserService extends BaseService<User> {
 	int queryUnikePhone(String userPhone);
 
 	Long submitUser(User user);
+
+	int resetUserPassById(String id);
 }

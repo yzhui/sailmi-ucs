@@ -64,4 +64,8 @@ public interface IUserClient {
 	 */
 	@PostMapping(API_PREFIX + "/submit-user")
 	public Long  submitUserInfo(@RequestBody User user);
+
+
+	@PostMapping(API_PREFIX + "/reset-userpass")
+	public Boolean  resetUserPass(@RequestParam("id") String id);
 }

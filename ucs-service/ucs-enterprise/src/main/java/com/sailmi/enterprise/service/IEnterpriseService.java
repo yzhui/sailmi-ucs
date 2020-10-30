@@ -65,4 +65,5 @@ public interface IEnterpriseService extends BaseService<Enterprise> {
 	 * @Date: 2020/10/30/0030 14:08
 	 */
 	List<String> enterpriseNameFuzzySearch();
+
 }

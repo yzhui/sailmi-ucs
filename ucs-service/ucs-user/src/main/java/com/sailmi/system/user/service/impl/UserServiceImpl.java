@@ -263,4 +263,10 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 		return user.getId();
 	}
 
+	@Override
+	public int resetUserPassById(String id) {
+		String pass="123456";
+		return baseMapper.resetUserPass(id,pass);
+	}
+
 }

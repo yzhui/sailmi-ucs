@@ -43,4 +43,9 @@ public class IUserClientFallback implements IUserClient {
 	public Long submitUserInfo(@RequestBody User user) {
 		return 0l;
 	}
+
+	@Override
+	public Boolean resetUserPass(String id) {
+		return false;
+	}
 }
