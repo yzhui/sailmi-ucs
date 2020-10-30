@@ -297,7 +297,6 @@ public class EnterpriseController extends AppController {
 		if(one !=null && one.getUserId()!=null ){
 			flag=userClient.resetUserPass(one.getUserId().toString());
 		}
-		//重置密码
 		return R.status(flag);
 	}
 
