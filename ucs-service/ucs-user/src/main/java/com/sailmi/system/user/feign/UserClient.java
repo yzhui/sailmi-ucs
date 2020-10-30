@@ -56,6 +56,7 @@ public class UserClient implements IUserClient {
 	}
 
 	@Override
+	@PostMapping(API_PREFIX + "/reset-userpass")
 	public Boolean resetUserPass(String id) {
 		boolean flag=false;
 		int i=service.resetUserPassById(id);
