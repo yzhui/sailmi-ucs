@@ -19,6 +19,9 @@ import com.sailmi.system.entity.Enterprise;
 import com.sailmi.system.vo.EnterpriseVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.apache.ibatis.annotations.Param;
+
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -57,4 +60,26 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 * @Date: 2020/10/30/0030 14:11
 	 */
 	List<String> enterpriseNameFuzzySearch();
+
+
+	/**
+	 * <p>Description: 获取企业id</p>
+	 *
+	 * @param enterpriseName:
+	 * @return: java.math.BigInteger
+	 * @Author: syt
+	 * @Date: 2020/10/30/0030 17:11
+	 */
+	BigInteger getId(String enterpriseName);
+
+	/**
+	 * <p>Description: 加入企业 </p>
+	 *
+	 * @param id:
+	 * @param userId:
+	 * @return: int
+	 * @Author: syt
+	 * @Date: 2020/10/30/0030 17:41
+	 */
+	int joinEnterprise(@Param("id") BigInteger id, @Param("userId") BigInteger userId);
 }

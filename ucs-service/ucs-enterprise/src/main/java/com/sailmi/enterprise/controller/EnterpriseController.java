@@ -15,6 +15,7 @@
  */
 package com.sailmi.enterprise.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.core.tool.utils.DigestUtil;
@@ -47,6 +48,7 @@ import com.sailmi.enterprise.wrapper.EnterpriseWrapper;
 import com.sailmi.enterprise.service.IEnterpriseService;
 import com.sailmi.core.boot.ctrl.AppController;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -385,6 +387,47 @@ public class EnterpriseController extends AppController {
 			result.setMsg("系统异常");
 			return result;
 		}
+	}
+
+	/**
+	 * 加入企业:验证要加入的企业是否存在,当企业存在时用户加入企业,用户已存在于该企业时不可重复加入
+	 *
+	 * @param enterpriseName 企业名称
+	 * @param userId         用户ID
+	 * @return
+	 *         <p>
+	 *         { "msg": "返回信息", "status": 状态码 }
+	 *         </p>
+	 */
+	@PostMapping(value = "/checkEnterExist")
+	public String checkEnterExist(String enterpriseName, BigInteger userId) {
+		HashMap<String, Object> hashMap = new HashMap<>();
+		if (enterpriseName == null) {
+			hashMap.put("status", 0);
+			hashMap.put("msg", "企业名称为空,重新输入");
+			return JSON.toJSONString(hashMap);
+		}
+		if (userId == null) {
+			hashMap.put("status", 0);
+			hashMap.put("msg", "用户ID为空,重新输入");
+			return JSON.toJSONString(hashMap);
+		}
+//		int checkSta = accountUserService.checkEnterExist(enterpriseName,userId);
+		int checkSta = enterpriseService.joinEnterprise(enterpriseName, userId);
+		if (checkSta == 1) {
+			hashMap.put("status", 1);
+			hashMap.put("msg", "该企业存在,加入成功");
+			return JSON.toJSONString(hashMap);
+		}
+		if (checkSta == 2) {
+			hashMap.put("status", 2);
+			hashMap.put("msg", "已在该企业中,不可重复加入");
+			return JSON.toJSONString(hashMap);
+		}
+		hashMap.put("status", 0);
+		hashMap.put("msg", "该企业不存在");
+
+		return JSON.toJSONString(hashMap);
 	}
 
 }

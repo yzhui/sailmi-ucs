@@ -89,4 +89,11 @@
         <!-- WHERE
             enterpriseName LIKE "%"#{search}"%" -->
     </select>
+    <select id="getId" resultType="int">
+        SELECT id FROM ucs_enterprise WHERE enterprise_name=#{enterpriseName}
+    </select>
+    <!--加入企业-->
+    <insert id="joinEnterprise" >
+        INSERT INTO ucs_user_enterprise(user_id,enterprise_id) VALUES(#{userId}, #{id})
+    </insert>
 </mapper>
