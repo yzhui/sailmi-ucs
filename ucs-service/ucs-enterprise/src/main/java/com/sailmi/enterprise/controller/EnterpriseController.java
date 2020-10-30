@@ -284,7 +284,7 @@ public class EnterpriseController extends AppController {
 		return R.status(enterpriseService.deleteLogic(Func.toLongList(ids)));
 	}
 
-	@GetMapping("/")
+	@PostMapping("/resetpass")
 	@ApiOperationSupport(order = 7)
 	@ApiOperation(value = "重置密码", notes = "传入id")
 	public R resetPass(@ApiParam(value = "主键", required = true) @RequestParam String id) {
