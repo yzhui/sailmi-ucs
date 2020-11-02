@@ -80,6 +80,7 @@
     <select id="getAll" resultType="string">
         SELECT credit_code FROM ucs_enterprise
     </select>
+
     <!-- 企业名称模糊查询 -->
     <select id="enterpriseNameFuzzySearch" resultType="String">
         SELECT
@@ -92,8 +93,21 @@
     <select id="getId" resultType="int">
         SELECT id FROM ucs_enterprise WHERE enterprise_name=#{enterpriseName}
     </select>
+
     <!--加入企业-->
     <insert id="joinEnterprise" >
         INSERT INTO ucs_user_enterprise(user_id,enterprise_id) VALUES(#{userId}, #{id})
     </insert>
+
+    <!--用户的企业列表-->
+    <select id="enterpriseList" resultType="com.sailmi.system.entity.Enterprise">
+        SELECT id, enterprise_name
+        FROM ucs_enterprise
+        WHERE id IN (
+            SELECT enterprise_id
+            FROM ucs_user_enterprise
+            WHERE user_id = #{userId}
+            AND is_deleted = 0
+        ) AND is_deleted = 0
+    </select>
 </mapper>

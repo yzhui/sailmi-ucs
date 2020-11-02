@@ -137,5 +137,18 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 		return 0;
 	}
 
+	/**
+	 * <p>Description: 用户企业列表</p>
+	 *
+	 * @param userId :
+	 * @return: java.util.List<com.sailmi.system.entity.Enterprise>
+	 * @Author: syt
+	 * @Date: 2020/11/1/0002 15:32
+	 */
+	@Override
+	public List<Enterprise> enterpriseList(Long userId) {
+		return baseMapper.enterpriseList(userId);
+	}
+
 
 }
