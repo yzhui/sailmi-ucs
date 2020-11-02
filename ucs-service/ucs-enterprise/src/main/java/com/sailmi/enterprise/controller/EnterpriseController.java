@@ -401,6 +401,7 @@ public class EnterpriseController extends AppController {
 	 */
 	@PostMapping(value = "/checkEnterExist")
 	public String checkEnterExist(AuthUser authUser, String enterpriseName, Long userId) {
+		userId = authUser.getUserId();
 		HashMap<String, Object> hashMap = new HashMap<>();
 		if (enterpriseName == null) {
 			hashMap.put("status", 0);
