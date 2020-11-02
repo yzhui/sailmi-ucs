@@ -19,6 +19,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.core.tool.utils.Func;
 import com.sailmi.system.entity.Enterprise;
+import com.sailmi.system.entity.ResponseMessage;
+import com.sailmi.system.entity.Result;
 import com.sailmi.system.entity.ServiceEnterprise;
 import com.sailmi.system.vo.EnterpriseVO;
 import com.sailmi.enterprise.mapper.EnterpriseMapper;
@@ -28,9 +30,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -110,11 +114,28 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 		return "2";//已存在不可用
 	}
 
+	/**
+	 * <p>Description: 企业模糊查找</p>
+	 *
+	 * @return: java.util.List<java.lang.String>
+	 * @Author: syt
+	 * @Date: 2020/10/30/0030 17:00
+	 */
 	@Override
 	public List<String> enterpriseNameFuzzySearch() {
 		return baseMapper.enterpriseNameFuzzySearch();
 	}
 
+	@Override
+	public int joinEnterprise(String enterpriseName, BigInteger userId) {
+		//用户加入企业
+		BigInteger id = baseMapper.getId(enterpriseName);
+		int r = baseMapper.joinEnterprise(id,userId);
+		if(r > 0){
+			return 1;
+		}
+		return 0;
+	}
 
 
 }

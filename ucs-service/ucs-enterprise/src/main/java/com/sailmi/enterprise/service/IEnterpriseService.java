@@ -21,6 +21,7 @@ import com.sailmi.system.vo.EnterpriseVO;
 import com.sailmi.core.mp.base.BaseService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -66,4 +67,14 @@ public interface IEnterpriseService extends BaseService<Enterprise> {
 	 */
 	List<String> enterpriseNameFuzzySearch();
 
+	/**
+	 * <p>Description: 加入企业</p>
+	 *
+	 * @param enterpriseName:
+	 * @param userId:
+	 * @return: int
+	 * @Author: syt
+	 * @Date: 2020/10/30/0030 16:53
+	 */
+	int joinEnterprise(String enterpriseName, BigInteger userId);
 }

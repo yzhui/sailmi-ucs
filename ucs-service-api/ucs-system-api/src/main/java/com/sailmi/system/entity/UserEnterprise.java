@@ -71,7 +71,6 @@ public class UserEnterprise implements Serializable {
      * 加入时间
      */
     @ApiModelProperty(value = "加入时间")
-    @TableField("createTimes")
   private String createTimes;
     /**
      * 该成员在本企业中的状态0关 ，1开
