@@ -70,7 +70,7 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 * @Author: syt
 	 * @Date: 2020/10/30/0030 17:11
 	 */
-	BigInteger getId(String enterpriseName);
+	Integer getId(String enterpriseName);
 
 	/**
 	 * <p>Description: 加入企业 </p>
@@ -81,5 +81,5 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 * @Author: syt
 	 * @Date: 2020/10/30/0030 17:41
 	 */
-	int joinEnterprise(@Param("id") BigInteger id, @Param("userId") Long userId);
+	int joinEnterprise(@Param("id") Long id, @Param("userId") Long userId);
 }
