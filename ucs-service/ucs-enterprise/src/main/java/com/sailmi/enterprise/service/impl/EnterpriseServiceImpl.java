@@ -127,7 +127,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 	}
 
 	@Override
-	public int joinEnterprise(String enterpriseName, BigInteger userId) {
+	public int joinEnterprise(String enterpriseName, Long userId) {
 		//用户加入企业
 		BigInteger id = baseMapper.getId(enterpriseName);
 		int r = baseMapper.joinEnterprise(id,userId);

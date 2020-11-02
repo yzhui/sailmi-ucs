@@ -76,5 +76,5 @@ public interface IEnterpriseService extends BaseService<Enterprise> {
 	 * @Author: syt
 	 * @Date: 2020/10/30/0030 16:53
 	 */
-	int joinEnterprise(String enterpriseName, BigInteger userId);
+	int joinEnterprise(String enterpriseName, Long userId);
 }

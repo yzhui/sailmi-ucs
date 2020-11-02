@@ -400,7 +400,7 @@ public class EnterpriseController extends AppController {
 	 *         </p>
 	 */
 	@PostMapping(value = "/checkEnterExist")
-	public String checkEnterExist(String enterpriseName, BigInteger userId) {
+	public String checkEnterExist(AuthUser authUser, String enterpriseName, Long userId) {
 		HashMap<String, Object> hashMap = new HashMap<>();
 		if (enterpriseName == null) {
 			hashMap.put("status", 0);
