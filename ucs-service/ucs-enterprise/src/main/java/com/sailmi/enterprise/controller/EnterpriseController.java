@@ -353,6 +353,8 @@ public class EnterpriseController extends AppController {
 	 * @return Result
 	 */
 	@PostMapping(value = "enterpriseNameFuzzySearch")
+	@ApiOperationSupport(order = 10)
+	@ApiOperation(value = "企业名称模糊查找", notes = "无")
 	public Result enterpriseNameFuzzySearch() {
 		Result result = new Result();
 		List<Object> resu = new ArrayList<Object>();
@@ -400,7 +402,10 @@ public class EnterpriseController extends AppController {
 	 *         </p>
 	 */
 	@PostMapping(value = "/checkEnterExist")
-	public String checkEnterExist(String enterpriseName, BigInteger userId) {
+	@ApiOperationSupport(order = 11)
+	@ApiOperation(value = "加入企业", notes = "企业名称")
+	public String checkEnterExist(AuthUser authUser, @ApiParam(value = "企业名称", required = true) String enterpriseName, Long userId) {
+		userId = authUser.getUserId();
 		HashMap<String, Object> hashMap = new HashMap<>();
 		if (enterpriseName == null) {
 			hashMap.put("status", 0);
@@ -428,6 +433,22 @@ public class EnterpriseController extends AppController {
 		hashMap.put("msg", "该企业不存在");
 
 		return JSON.toJSONString(hashMap);
+	}
+
+	/**
+	 * <p>Description: 用户已拥有企业的列表</p>
+	 *
+	 * @param authUser:
+	 * @return: com.sailmi.core.tool.api.R
+	 * @Author: syt
+	 * @Date: 2020/11/1/0002 15:30
+	 */
+	@GetMapping("enterList")
+	@ApiOperationSupport(order = 9)
+	@ApiOperation(value = "用户已有的企业列表", notes = "无")
+	public R enterpriseList(AuthUser authUser){
+		List<Enterprise> enlist = enterpriseService.enterpriseList(authUser.getUserId());
+		return R.data(enlist);
 	}
 
 }

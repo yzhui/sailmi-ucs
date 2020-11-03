@@ -127,14 +127,27 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 	}
 
 	@Override
-	public int joinEnterprise(String enterpriseName, BigInteger userId) {
+	public int joinEnterprise(String enterpriseName, Long userId) {
 		//用户加入企业
-		BigInteger id = baseMapper.getId(enterpriseName);
-		int r = baseMapper.joinEnterprise(id,userId);
+		Integer id = baseMapper.getId(enterpriseName);
+		int r = baseMapper.joinEnterprise(Long.valueOf(id.toString()),userId);
 		if(r > 0){
 			return 1;
 		}
 		return 0;
+	}
+
+	/**
+	 * <p>Description: 用户企业列表</p>
+	 *
+	 * @param userId :
+	 * @return: java.util.List<com.sailmi.system.entity.Enterprise>
+	 * @Author: syt
+	 * @Date: 2020/11/1/0002 15:32
+	 */
+	@Override
+	public List<Enterprise> enterpriseList(Long userId) {
+		return baseMapper.enterpriseList(userId);
 	}
 
 
