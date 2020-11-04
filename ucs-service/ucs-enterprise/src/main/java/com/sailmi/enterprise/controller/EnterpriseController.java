@@ -49,10 +49,7 @@ import com.sailmi.enterprise.service.IEnterpriseService;
 import com.sailmi.core.boot.ctrl.AppController;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  *  控制器
@@ -316,7 +313,7 @@ public class EnterpriseController extends AppController {
 	public R create(AuthUser authUser, /*@Valid @RequestBody*/ Enterprise enterprise, EnterpriseDetails enterpriseDetails, EnterpriseFinance enterpriseFinance){
 		enterprise.setTenantId(authUser.getTenantId());//设置租户ID
 //		enterprise.setTenantId("123321");//设置租户ID
-		enterpriseService.saveEnterpriseInfo(enterprise); //首先插入企业基本信息
+		enterpriseService.saveEnterpriseInfo(enterprise);//首先插入企业基本信息
 		Long id = enterprise.getId();
 		//企业基本信息插入后插入企业详细信息
 		if (id != 0 && id != null) {//企业基本信息插入成功后插入企业详细信息
@@ -327,6 +324,8 @@ public class EnterpriseController extends AppController {
 				enterpriseFinance.setEnterpriseId(id);
 				int finace = iEnterpriseFinanceService.saveFiance(enterpriseFinance);
 				if (finace > 0) {
+					//企业用户关系
+					enterpriseService.saveUserEnterprise(id, authUser.getUserId());
 					return R.data(enterprise);
 				} else {
 					return R.fail("失败:企业财务信息保存失败");
@@ -451,4 +450,28 @@ public class EnterpriseController extends AppController {
 		return R.data(enlist);
 	}
 
+	/**
+	 * 根据用户ID查询企业信息
+	 *
+	 * @param userId id
+	 * @return
+	 */
+	@RequestMapping(value = "getEnterprise", method = RequestMethod.POST)
+	public String selectEnterprise(AuthUser authUser, BigInteger userId, BigInteger enterpriseId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		userId = BigInteger.valueOf(authUser.getUserId());
+		try {
+			Enterprise enterprise = enterpriseService.selectEnterprise(userId, enterpriseId);
+			map.put("status", 1);
+			map.put("msg", "SUCCESS");
+			map.put("result", enterprise);
+		} catch (Exception e) {
+			e.printStackTrace();
+//			LOG.error("企业信息查询失败" + e);
+			map.put("status", 0);
+			map.put("msg", "ERROR");
+			map.put("result", "企业信息查询失败");
+		}
+		return JSON.toJSONString(map);
+	}
 }

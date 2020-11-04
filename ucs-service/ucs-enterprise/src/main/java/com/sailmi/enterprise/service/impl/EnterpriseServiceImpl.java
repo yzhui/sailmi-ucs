@@ -32,10 +32,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -155,5 +152,26 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 		return baseMapper.enterpriseList(userId);
 	}
 
+	public Enterprise selectEnterprise(BigInteger userId, BigInteger enterpriseId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("enterpriseId", enterpriseId);
+		// 查询企业基本信息
+		Enterprise enterprise = baseMapper.selectEnterprise(map);
+		return enterprise;
+	}
 
+	/**
+	 * <p>Description: 企业用户关系</p>
+	 *
+	 * @param id:
+	 * @param userId:
+	 * @return: void
+	 * @Author: syt
+	 * @Date: 2020/11/4/0004 14:37
+	 */
+	@Override
+	public void saveUserEnterprise(Long id, Long userId) {
+		baseMapper.insertUserEnterprise(id, userId);
+	}
 }
