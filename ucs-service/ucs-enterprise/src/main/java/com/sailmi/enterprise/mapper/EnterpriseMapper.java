@@ -90,4 +90,15 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 * @Date: 2020/11/1/0002 15:52
 	 */
 	List<Enterprise> enterpriseList(Long userId);
+
+	/**
+	 * <p>Description: 是否存在</p>
+	 *
+	 * @param id:
+	 * @param userId:
+	 * @return: int
+	 * @Author: syt
+	 * @Date: 2020/11/4/0004 9:15
+	 */
+	int exist(@Param("id") Integer id, @Param("userId") Long userId);
 }
