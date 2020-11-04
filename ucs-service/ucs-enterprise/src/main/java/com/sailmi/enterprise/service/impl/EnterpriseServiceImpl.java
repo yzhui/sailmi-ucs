@@ -128,8 +128,13 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 
 	@Override
 	public int joinEnterprise(String enterpriseName, Long userId) {
-		//用户加入企业
 		Integer id = baseMapper.getId(enterpriseName);
+		//用户是否已在该企业中
+		int ex = baseMapper.exist(id, userId);
+		if (ex > 0){
+			return 2;
+		}
+		//用户加入企业
 		int r = baseMapper.joinEnterprise(Long.valueOf(id.toString()),userId);
 		if(r > 0){
 			return 1;
