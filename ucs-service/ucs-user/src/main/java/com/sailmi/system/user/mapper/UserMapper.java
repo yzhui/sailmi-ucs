@@ -98,4 +98,10 @@ public interface UserMapper extends BaseMapper<User> {
 	int submitUserInfo(User user);
 
 	int resetUserPass(@Param("id")String id,@Param("pass")String pass);
+
+	String queryUserIdByPhone(String userPhone);
+
+	String queryUserIdByEmail(String userEmail);
+
+	int updateUserPass(@Param("userId")String userId,@Param("password") String password);
 }

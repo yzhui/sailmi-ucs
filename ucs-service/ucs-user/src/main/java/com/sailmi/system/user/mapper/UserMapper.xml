@@ -169,4 +169,15 @@
         WHERE id = #{id}
     </update>
 
+    <update id="updateUserPass" >
+		UPDATE ucs_user SET
+		password = #{password}
+		WHERE id = #{userId}
+	</update>
+    <select id="queryUserIdByPhone" parameterType="String" resultType="String">
+		SELECT id FROM ucs_user WHERE user_phone=#{userPhone}
+	</select>
+    <select id="queryUserIdByEmail" parameterType="String" resultType="String">
+		SELECT id FROM ucs_user WHERE user_email=#{userEmail}
+	</select>
 </mapper>
