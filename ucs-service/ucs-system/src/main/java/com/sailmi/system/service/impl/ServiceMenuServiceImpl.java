@@ -17,12 +17,16 @@ package com.sailmi.system.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sailmi.core.secure.AuthUser;
+import com.sailmi.system.entity.Menu;
 import com.sailmi.system.entity.ServiceMenu;
 import com.sailmi.system.mapper.ServiceMenuMapper;
 import com.sailmi.system.service.IServiceMenuService;
 import com.sailmi.system.vo.ServiceMenuVO;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+
+import java.util.List;
 
 /**
  * 服务功能包设定，表明此功能属于哪个服务包，只有享受此服务包的用户才能访问这个功能 服务实现类
@@ -37,5 +41,4 @@ public class ServiceMenuServiceImpl extends ServiceImpl<ServiceMenuMapper, Servi
 	public IPage<ServiceMenuVO> selectServiceMenuPage(IPage<ServiceMenuVO> page, ServiceMenuVO serviceMenu) {
 		return page.setRecords(baseMapper.selectServiceMenuPage(page, serviceMenu));
 	}
-
 }
