@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sailmi.system.user.mapper.RealUserMapper">
+
+	<sql id="realinfoColumns">
+		a.id AS "id",
+		a.realName AS "realName",
+		<!-- a.address AS "address",
+		a.papers AS "papers", -->
+		a.papersNum AS "papersNum",
+		<!-- a.area AS "area",
+		a.postCode AS "postCode",
+		a.imgInfo AS "imgInfo",
+		a.imgInfo2 AS "imgInfo2",
+		a.imgInfo3 AS "imgInfo3",
+		a.bankName AS "bankName",
+		a.bankNum AS "bankNum", -->
+		a.userId AS "userId"
+	</sql>
+
+	<sql id="realinfoJoins">
+	</sql>
+
+	<!-- <select id="get" resultType="com.linose.common.entity.RealUserEntity">
+		SELECT
+			<include refid="realinfoColumns"/>
+		FROM service_realInfo a
+		<include refid="realinfoJoins"/>
+		WHERE a.id = #{id}
+	</select> -->
+
+	<select id="query" resultType="com.sailmi.system.user.entity.RealUserEntity">
+		SELECT
+			<include refid="realinfoColumns"/>
+		FROM ucs_realInfo a
+		<include refid="realinfoJoins"/>
+		<where>
+		a.userId = #{userId} AND
+			a.del_flag = 0
+		</where>
+	</select>
+
+	<!-- <select id="findAllList" resultType="com.linose.common.entity.RealUserEntity">
+		SELECT
+			<include refid="realinfoColumns"/>
+		FROM service_realInfo a
+		<include refid="realinfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select> -->
+
+	<insert id="insert">
+		INSERT INTO ucs_realInfo(
+			realName,
+			address,
+			papers,
+			papersNum,
+			area,
+			postCode,
+			bankName,
+			bankNum,
+			userId,
+			del_flag
+		) VALUES (
+			#{realName},
+			#{address},
+			#{papers},
+			#{papersNum},
+			#{area},
+			#{postCode},
+			#{bankName},
+			#{bankNum},
+			#{userId},
+			'0'
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE ucs_realInfo SET
+			realName = #{realName},
+			address = #{address},
+			papers = #{papers},
+			papersNum = #{papersNum},
+			area = #{area},
+			postCode = #{postCode},
+			bankName = #{bankName},
+			bankNum = #{bankNum},
+			userId = #{userId},
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		DELETE FROM  ucs_realInfo
+		WHERE userId = #{userId}
+	</update>
+
+	<!-- 将实名认证状态改为已认证 -->
+	<update id="realStatus">
+		UPDATE  ucs_accountuser SET
+		realStatus = '1'
+		WHERE id = #{userId}
+	</update>
+
+	<!-- 上传图片路径 -->
+	<update id="insertImgUrl">
+		UPDATE   ucs_realInfo SET
+			<if test = "imgInfo != null and imgInfo != '' ">
+				imgInfo = #{imgInfo}
+			</if>
+			<if test = "imgInfo2 != null and imgInfo2 != '' ">
+				imgInfo2 = #{imgInfo2}
+			</if>
+			<if test = "imgInfo3 != null and imgInfo3 != '' ">
+				imgInfo3 = #{imgInfo3}
+			</if>
+		WHERE id = #{userId}
+	</update>
+
+	<!-- 真实姓名同步到用户表 -->
+	<update id="insertAccount">
+		UPDATE ucs_user
+		SET real_name = #{realName}
+		WHERE
+			id = #{id}
+	</update>
+</mapper>

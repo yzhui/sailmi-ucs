@@ -344,4 +344,5 @@ public class UserController {
 		return userService.updatePassword1(userPhone,userEmail,password);
 
 	}
+
 }
