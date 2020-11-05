@@ -164,8 +164,10 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 								userVO.setRoleId(roleIds);
 							}
 						}
+					userInfo.setUser(userVO);
+				}else{
+					return null;
 				}
-				userInfo.setUser(userVO);
 				return userInfo;
 			}
 
