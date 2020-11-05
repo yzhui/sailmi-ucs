@@ -146,7 +146,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 			public UserInfo userInfo(String tenantId,String account, String password) {
 				UserInfo userInfo = new UserInfo();
 				UserVO userVO = new UserVO();
-				User user = baseMapper.getUser(tenantId, account, password);
+				//User user = baseMapper.getUser(tenantId, account, password);
+				User user = baseMapper.getConsoleUser(account,password);
 				if(user!=null){
 					userVO = BeanUtil.copy(user, UserVO.class);//用户信息封装
 						List<String> roles = baseMapper.queryUserRoles(user.getId().toString(), user.getDefaultEnterpriseId().toString());

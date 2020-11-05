@@ -1,0 +1,763 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="com.sailmi.system.user.mapper.AccountUserMapper">
+
+    <resultMap id="enterpriseResult" type="java.util.HashMap">
+        <result property="id" column="id"/>
+        <result property="enterpriseName" column="enterpriseName"/>
+    </resultMap>
+
+    <select id="get"
+            resultType="com.sailmi.system.user.entity.AccountUserEntity">
+		SELECT a.id AS "id",
+		a.login_name AS "loginName",
+		a.login_name AS "username",
+		a.user_phone AS "userPhone",
+		a.user_email AS "userEmail",
+		a.user_sex AS "userSex",
+		a.user_brithday AS "userBrithday",
+		a.real_status AS "realStatus",
+		a.register_date AS "registerDate",
+		a.enterprise_status AS "enterpriseStatus",
+		a.phone_sta AS "phoneSta",
+		a.email_sta AS "emailSta",
+		a.info_sta AS "infoSta",
+		a.real_name AS "realName",
+		a.last_login AS "lastLogin",
+		a.head_img AS "headImgUrl"
+		FROM service_accountuser a
+		where
+		a.id =#{id}
+		AND
+		a.is_deleted = 0
+
+	</select>
+
+
+   <!-- <select id="query"
+            resultType="com.linose.common.entity.AccountUserEntity">
+        SELECT a.id AS "id",
+        a.username AS "username",
+        a.loginName AS "loginName",
+        a.userPhone AS "userPhone",
+        a.userEmail AS "userEmail",
+        a.userSex AS "userSex",
+        a.userBrithday AS "userBrithday",
+        a.realStatus AS "realStatus",
+        a.registerDate AS "registerDate",
+        a.enterpriseStatus AS "enterpriseStatus",
+        a.remarks AS "remarks",
+        a.phoneSta AS "phoneSta",
+        a.emailSta AS "emailSta",
+        a.infoSta AS "infoSta",
+        a.del_flag AS "delFlag",
+        a.realName AS "realName",
+        a.lastLogin AS "lastLogin",
+        a.headImgUrl AS "headImgUrl"
+        FROM
+        service_accountuser a
+        <where>
+			<if test="enterpriseId == null">1 = 0     </if>
+            <if test="enterpriseId != null">
+               and a.id IN (
+                SELECT d.userId
+                FROM service_user_enterprise d
+                WHERE
+                d.enterpriseId = #{enterpriseId}
+                )
+            </if>
+            <if test="departmentId != null ">
+                and a.id IN(
+                SELECT userId
+                FROM service_user_enterprise
+                WHERE departmentId = #{departmentId}
+                )
+            </if>
+            <if test="search != null and search != '' ">
+                AND concat(loginName,userEmail,realName) like
+                concat('%',#{search},'%')
+            </if>
+            ORDER BY a.id desc
+        </where>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+		INSERT INTO service_accountuser(
+		loginName,
+		password,
+		userPhone,
+		userEmail,
+		userSex,
+		userBrithday,
+		realStatus,
+		registerDate,
+		enterpriseStatus,
+		remarks,
+		del_flag,
+		realName,
+		lastEnterpriseId,
+		safeCode
+		) VALUES (
+		#{loginName},
+		#{password},
+		#{userPhone},
+		#{userEmail},
+		#{userSex},
+		#{userBrithday},
+		'0',
+		#{registerDate},
+		#{enterpriseStatus},
+		#{remarks},
+		'0',
+		#{realName},
+		#{lastEnterpriseId},
+		#{safeCode}
+		)
+	</insert>
+
+    <update id="update">
+        UPDATE service_accountuser
+        <set>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="userPhone != null and userPhone != ''">
+                userPhone = #{userPhone},
+            </if>
+            <if test="userBrithday != null and userBrithday != ''">
+                userBrithday = #{userBrithday},
+            </if>
+            <if test="realName != null and realName != ''">
+                realName = #{realName},
+            </if>
+            <if test="userEmail != null and userEmail != ''">
+                userEmail =#{userEmail},
+            </if>
+            <if test="userSex != null and userSex != ''">
+                userSex = #{userSex},
+            </if>
+            <if test="remarks != null and remarks != ''">
+                remarks = #{remarks},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update> -->
+
+	<!-- 根据手机或邮箱查ID -->
+	<!--<select id="getIdByUserPhoneOrEmail" resultType="java.math.BigInteger">
+		SELECT
+			id
+		FROM
+			service_accountuser
+		WHERE
+			userPhone = #{userPhoneOrEmail}
+		OR userEmail = #{userPhoneOrEmail}
+	</select>-->
+
+    <!-- 用户在对应企业中的启用状态 -->
+   <!-- <update id="updateIsOpen" parameterType="map">
+		UPDATE
+		service_user_enterprise
+		SET isOpen = #{isOpen}
+		WHERE
+		userId = #{userId}
+		AND enterpriseId = #{enterpriseId}
+	</update>-->
+
+    <!-- 删除用户 -->
+   <!-- <delete id="delete" parameterType="BigInteger">
+		DELETE FROM
+		service_accountuser
+		WHERE id = #{id}
+	</delete>-->
+
+    <!-- checkPhoneOnlyOne -->
+<!--    <select id="selectAllPhone" resultType="java.lang.String">-->
+<!--		select userPhone from-->
+<!--		service_accountuser;-->
+<!--	</select>-->
+
+    <!-- checkLoginName -->
+<!--    <select id="selectAllLoginName" resultType="java.lang.String">-->
+<!--		select loginName from-->
+<!--		service_accountuser;-->
+<!--	</select>-->
+
+	<!-- 验证邮箱是否存在 是则返回1，否则返回0-->
+	<!--<select id="selectAllEmail" resultType="int">
+		SELECT
+		isnull(
+			(
+				SELECT
+					a.userPhone
+				FROM
+					service_accountuser a
+				WHERE
+					a.userPhone = #{email}
+				LIMIT 1
+			)
+		)
+	</select> -->
+
+    <!-- 显示企业 -->
+    <select id="getEnterpriseName"
+            resultType="com.sailmi.system.entity.Enterprise">
+		SELECT
+		ucs_enterprise.id,
+		ucs_enterprise.enterpriseName
+		FROM
+		ucs_enterprise
+		WHERE
+		ucs_enterprise.id IN(
+		SELECT
+		ucs_user_enterprise.enterpriseId
+		FROM
+		ucs_user_enterprise
+		WHERE
+		ucs_user_enterprise.userId = #{id}
+		AND isOpen = 1
+		)
+	</select>
+
+    <!-- 用户添加(企业部门中间表) -->
+  <!--  <insert id="insertRelation" parameterType="map" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into
+		service_user_enterprise
+		(userId,enterpriseId,departmentId,status,createTime,isOpen)
+		VALUES
+		(
+		#{userId},
+		#{enterpriseId},
+		#{departmentId},
+		'2',
+		#{createTime},
+		1
+		)
+	</insert>-->
+
+    <!-- 用户修改(企业部门中间表) -->
+  <!--  <update id="updateRealtion">
+		UPDATE service_user_enterprise
+		SET departmentId =
+		#{departmentId}
+		WHERE
+		userId =#{id}
+		AND enterpriseId =#{enterpriseId}
+	</update>-->
+
+    <!-- 部门名称 -->
+   <!-- <select id="selDepName" resultType="java.lang.String">
+		SELECT departmentName FROM
+		service_department WHERE id IN(
+		SELECT
+		departmentId
+		FROM
+		service_user_enterprise
+		WHERE
+		userId = #{userId} AND enterpriseId =
+		#{enterpriseId}
+		)
+	</select>-->
+
+    <!-- 用户在该企业下启用状态 -->
+   <!-- <select id="getUseIsOpen" parameterType="map"
+            resultType="java.lang.String">
+		SELECT
+		service_user_enterprise.isOpen
+		FROM
+		service_user_enterprise
+		WHERE enterpriseId = #{enterpriseId}
+		AND userId
+		= #{userId}
+	</select>-->
+
+    <!-- 删除用户企业关系表 -->
+   <!-- <delete id="deleteRelation">
+		delete from
+		service_user_enterprise
+		WHERE userId =#{id}
+		and enterpriseId = #{enterpriseId}
+	</delete>-->
+
+    <!-- 更改资料完善状态 -->
+   <!-- <update id="updateSta">
+		UPDATE service_accountuser
+		SET infoSta = '1'
+		WHERE id =
+		#{id}
+	</update>-->
+
+    <!-- 企业的信息 -->
+<!--    <select id="getEnterInfo"-->
+<!--            resultType="com.linose.common.entity.TreeEntity">-->
+<!--		SELECT-->
+<!--		id,-->
+<!--		0 AS pid,-->
+<!--		enterpriseName AS label,-->
+<!--		1 AS 'status'-->
+<!--		FROM-->
+<!--		service_enterprise-->
+<!--		WHERE-->
+<!--		id = #{enterId}-->
+<!--	</select>-->
+
+    <!-- 企业下的部门 -->
+  <!--  <select id="queryDepartList"
+            resultType="com.linose.common.entity.TreeEntity">
+		SELECT
+		id,
+		#{id} AS "pid",
+		departmentName AS "label",
+		2 AS
+		"status"
+		FROM
+		service_department
+		WHERE
+		id IN (
+		SELECT DISTINCT
+		departmentId
+		FROM
+		service_user_enterprise
+		WHERE
+		enterpriseId = #{id}
+		AND departmentId
+		IS NOT NULL
+		)
+	</select>-->
+
+    <!-- 部门下的人员 -->
+   <!-- <select id="queryUserList"
+            resultType="com.linose.common.entity.TreeEntity">
+
+		SELECT
+		id,
+		#{id} AS "pid",
+		realName AS "label",
+		3 AS "status"
+		FROM
+		service_accountuser
+		WHERE
+		id IN (
+		SELECT
+		userId
+		FROM
+		service_user_enterprise
+		WHERE
+		departmentId = #{id}
+		AND isExits = '0'
+		)
+	</select>
+-->
+    <!-- 总用户 -->
+    <!--<select id="getCount" resultType="int">
+		SELECT COUNT(id) FROM
+		service_accountuser;
+	</select>
+-->
+    <!-- 相应用户添加到测试平台 -->
+   <!-- <select id="toCloud"
+            resultType="com.linose.common.entity.UserAddToCloudPlatEntity">
+        SELECT DISTINCT
+        b.id,
+        b.realName,
+        a.departmentId,
+        c.departmentName
+        FROM
+        service_user_enterprise a
+        LEFT JOIN service_accountuser b ON a.userId =
+        b.id
+        LEFT JOIN
+        service_department c ON c.id = a.departmentId
+        WHERE
+        a.userId IN
+        <foreach collection="list" item="ids" index="index" open="("
+                 separator="," close=")">
+            #{ids}
+        </foreach>
+        AND a.enterpriseId = #{enterpriseId} AND isExits = '0'
+    </select>-->
+
+    <!-- 改变用户在该企业测中心添加状态 -->
+    <!--<update id="exits">
+        UPDATE service_user_enterprise
+        SET isExits = 1
+        WHERE
+        userId IN
+        <foreach collection="list" item="ids" index="index" open="("
+                 separator="," close=")">
+            #{ids}
+        </foreach>
+        AND enterpriseId = #{enterpriseId}
+    </update>-->
+
+    <!-- 统计部门人数 -->
+   <!-- <select id="countDepMemberNum" resultType="int">
+		SELECT
+		COUNT(userId)
+		FROM
+		service_user_enterprise
+		WHERE
+		enterpriseId = #{enterpriseId}
+		AND
+		departmentId = #{departmentId}
+	</select>-->
+
+    <!-- 修改部门人数 -->
+    <!--<update id="updateDepMemberNum">
+		UPDATE service_department
+		SET memberNumber =
+		#{memberNumber}
+		WHERE
+		id = #{id}
+	</update>-->
+
+    <!-- 获取部门ID -->
+   <!-- <select id="getDepId" parameterType="map"
+            resultType="java.math.BigInteger">
+		SELECT
+		departmentId
+		FROM
+		service_user_enterprise
+		WHERE
+		userId =
+		#{id}
+		AND enterpriseId = #{enterpriseId}
+	</select>-->
+
+    <!-- 记录上次操作企业ID -->
+   <!-- <update id="lastEnterpriseId"> &lt;!&ndash; parameterType="map" &ndash;&gt;
+        UPDATE
+        service_accountuser
+        SET lastEnterpriseId =
+        #{enterpriseId}
+        WHERE
+        id =
+        #{userId}
+    </update>-->
+
+    <!-- 查询上次操作的企业的信息 -->
+   <!-- <select id="getLastEnter"
+            resultType="com.linose.common.entity.LastEnterpriseEntity">
+		SELECT
+		enterpriseName AS "lastEnterpriseName",
+		id AS
+		"lastEnterpriseId"
+		FROM
+		service_enterprise
+		WHERE id = (
+		SELECT
+		lastEnterpriseId FROM service_accountuser WHERE id
+		= #{id}
+		)
+	</select>-->
+
+    <!-- 验证企业是否存在 -->
+   <!-- <select id="checkEnterExist" resultType="string">
+		SELECT
+		enterpriseName
+		FROM
+		service_enterprise
+		WHERE
+		enterpriseName = #{enterpriseName}
+	</select>
+-->
+    <!-- 查询企业ID -->
+   <!-- <select id="getEnterpriseId" resultType="java.math.BigInteger">
+		SELECT
+		id
+		FROM
+		service_enterprise
+		WHERE
+		enterpriseName = #{enterpriseName}
+	</select>-->
+
+    <!-- 验证用户是否已存在于该企业 -->
+   <!-- <select id="checkUserIsExistEnterprise" parameterType="map"
+            resultType="int">
+		SELECT
+		COUNT(id)
+		FROM
+		service_user_enterprise
+		WHERE
+		userId =
+		#{userId}
+		AND enterpriseId = #{enterpriseId}
+	</select>-->
+
+    <!-- 用户加入企业,默认状态未审核 -->
+   <!-- <insert id="personJoinEnterprise" parameterType="map">
+		INSERT INTO
+		service_user_enterprise (
+		userId,
+		enterpriseId,
+		departmentId,
+		status,
+		createTime,
+		isOpen
+		)VALUES(
+		#{userId},
+		#{enterpriseId},
+		NULL,
+		'2',
+		#{createTime},
+		'1'
+		)
+	</insert>-->
+
+   <!-- <update id="updateUserRole" parameterType="map">
+        UPDATE
+        access_role_userrelation
+        SET
+        <if test="enterpriseId != null">
+            roleId=3,
+            companId = #{enterpriseId}
+        </if>
+
+        WHERE
+        userId = #{userId}
+    </update>-->
+
+  <!--  <select id="queryEnterUser" parameterType="String"
+            resultType="Integer">
+		SELECT
+		count(*)
+		FROM
+		access_role_userrelation a
+		LEFT JOIN
+		access_role b ON a.roleId = b.id
+		WHERE
+		userId = #{userId}
+		AND b.roleType
+		= 2
+	</select>
+    <insert id="insertUserRole" parameterType="map">
+		INSERT INTO
+		access_role_userrelation (
+		userId,
+		companId,
+		roleId
+		)VALUES(
+		#{userId},
+		#{enterpriseId},
+		3
+		)
+	</insert>
+    <select id="queryUserRoleList" parameterType="map" resultType="String">
+	SELECT
+		b.roleType
+	FROM
+		access_role_userrelation a
+	LEFT JOIN access_role b ON a.roleId = b.id
+	where userId=#{userId} AND companId=#{companyId}
+	</select>-->
+
+    <!-- 用户在测试平台被删除后状态置为未被添加 -->
+  <!--  <update id="exitsOff">
+		UPDATE service_user_enterprise
+		SET isExits = 0
+		WHERE
+			userId = #{id}
+		AND enterpriseId = #{enterpriseId}
+	</update>-->
+
+    <!-- 验证企业是否存在(结合消息) -->
+   <!-- <select id="checkEnteriseExist" resultType="com.linose.common.entity.Enterprise">
+	SELECT
+		id,
+		enterpriseName
+	FROM
+		service_enterprise
+	WHERE
+		enterpriseName = #{enterpriseName}
+	</select>-->
+
+    <!-- 用户是否存在某个企业内 -->
+   <!-- <select id="userExitsEnterprise" parameterType="Map" resultType="int">
+	SELECT
+		count(userId)
+	FROM
+		service_user_enterprise
+	WHERE
+		userId = #{userId}
+	AND enterpriseId = #{enterpriseId}
+	AND isOpen = '1'
+	</select>-->
+
+    <!-- 用户在该企业状态是否冻结 -->
+    <!--<select id="freeze" parameterType="Map" resultType="String">
+	SELECT
+		isOpen
+	FROM
+		service_user_enterprise
+	WHERE
+		userId = #{userId}
+	AND enterpriseId = #{enterpriseId}
+	</select>-->
+
+    <!-- 解冻被冻结的用户 -->
+   <!-- <update id="unFreeze">
+	UPDATE service_user_enterprise
+	SET isOpen = 1
+	WHERE
+		userId = #{userId}
+	AND enterpriseId = #{enterpriseId}
+	</update>-->
+
+    <!-- 新用户加入企业 -->
+    <!--<insert id="adminCheckJoin" parameterType="Map">
+	INSERT INTO service_user_enterprise (
+		userId,
+		enterpriseId,
+		`status`,
+		createTime,
+		isOpen,
+		isExits
+	)VALUES(
+		#{userId},
+		#{enterpriseId},
+		#{status},
+		#{createTime},
+		#{isOpen},
+		#{isExits}
+		)
+
+	</insert>-->
+
+    <!-- 企业名称 -->
+    <!--<select id="getEnterpriseNameById" resultType="String">
+		SELECT
+			enterpriseName
+		FROM
+			service_enterprise
+		WHERE
+			id = #{enterpriseId}
+	</select>-->
+
+    <!-- 管理员删除用户 -->
+    <!--<update id="adminDelUser">
+        UPDATE service_user_enterprise
+        SET isOpen = '0'
+        WHERE
+        userId IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND enterpriseId = #{enterpriseId}
+    </update>-->
+
+    <!-- 一个企业中所有管理员 -->
+   <!-- <select id="getAdminByEnterpriseId" resultType="java.lang.Integer">
+	SELECT
+		userId
+	FROM
+		access_role_userrelation
+	WHERE
+		companId = #{enterpriseId}
+	AND roleId = 1
+	</select>-->
+
+    <!-- 用户被管理删除后最后操作企业ID置为空 -->
+   <!-- <update id="lastEnterpriseIdSetZero">
+	UPDATE service_accountuser
+	SET lastenterpriseId = NULL
+	WHERE
+		id = #{id}
+	</update>
+-->
+    <!-- 管理员批量导入成员 -->
+  <!--  <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+	INSERT INTO service_accountuser (
+		userPhone,
+		userEmail,
+		loginName,
+		password,
+		realName,
+		enterpriseStatus,
+		registerDate,
+		realStatus,
+		userSex
+	)VALUES(
+		#{userPhone},
+		#{userEmail},
+		#{loginName},
+		#{password},
+		#{realName},
+		#{enterpriseStatus},
+		#{registerDate},
+		#{realStatus},
+		#{userSex}
+		)
+	</insert>-->
+
+    <!-- 判断上次操作企业是否为空 -->
+   <!-- <select id="lastEnterpriseIdIsEmpty" resultType="BigInteger">
+		SELECT
+			lastEnterpriseId
+		FROM
+			service_accountuser
+		WHERE
+			id = #{userId}
+	</select>-->
+
+    <!-- 企业名称模糊查询 -->
+<!--    <select id="enterpriseNameFuzzySearch" resultType="String">-->
+<!--        SELECT-->
+<!--        enterpriseName-->
+<!--        FROM-->
+<!--        service_enterprise-->
+        <!-- WHERE
+            enterpriseName LIKE "%"#{search}"%" -->
+<!--    </select>-->
+
+    <!-- 管理员同意用户加入企业时防止重复添加 -->
+   <!-- <select id="userIsExitEnterpriseByUserIdAndEnterpriseId" resultType="int">
+	  	SELECT
+			count(*)
+		FROM
+			service_user_enterprise
+		WHERE
+			userId = #{userId}
+		AND enterpriseId =#{enterpriseId}
+    </select>
+    <select id="queryEnterByUserId"  parameterType="String"  resultType="String">
+    	SELECT a.lastEnterpriseId from service_accountuser a  where a.id=#{userId}
+    </select>
+    <select id="queryApprovedList" parameterType="String"  resultType="com.linose.common.entity.AccountUserEntity">
+    SELECT
+		b.id,
+		b.loginName,
+		b.realName,
+		b.emailSta,
+		b.userPhone,
+		b.userEmail,
+		b.lastLogin,
+		a.applyTime
+		from service_authstr a
+		LEFT JOIN service_accountuser b  on  b.id=a.accountId
+		 WHERE a.enterpriseId=#{enterpriseId}
+    </select>
+-->
+    <!-- 插入待审核表 -->
+   <!-- <insert id="insertAuthstr">
+	    INSERT INTO service_authstr (
+		enterpriseId,
+		accountId,
+		applyTime
+		)VALUES(
+		#{enterpriseId},
+		#{userId},
+		#{date}
+		)
+    </insert>-->
+
+    <!-- 管理员审核用户是否加入企业,审核完毕删除该条记录 -->
+   <!-- <delete id="delApplyInfo">
+	    DELETE FROM
+			service_authstr
+		WHERE
+			accountId = #{userId}
+		AND enterpriseId = #{enterpriseId}
+    </delete>-->
+</mapper>

@@ -23,6 +23,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 /**
  *  Mapper 接口
@@ -101,4 +102,23 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 * @Date: 2020/11/4/0004 9:15
 	 */
 	int exist(@Param("id") Integer id, @Param("userId") Long userId);
+
+	/**
+	 * 根据用户ID查询企业基本信息
+	 *
+	 * @param map
+	 * @return
+	 */
+	Enterprise selectEnterprise(Map<String, Object> map);
+
+	/**
+	 * <p>Description:企业用户关系 </p>
+	 *
+	 * @param id:
+	 * @param userId:
+	 * @return: int
+	 * @Author: syt
+	 * @Date: 2020/11/4/0004 14:39
+	 */
+	int insertUserEnterprise(@Param("id") Long id, @Param("userId") Long userId);
 }

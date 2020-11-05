@@ -118,4 +118,25 @@
         AND enterprise_id = #{id}
         AND is_deleted = 0
     </select>
+
+    <!-- 根据用户ID查询企业基本信息 -->
+    <select id="selectEnterprise" parameterType="Map" resultType="com.sailmi.system.entity.Enterprise">
+		SELECT
+			se.*
+		FROM
+			ucs_enterprise se
+		LEFT JOIN
+			ucs_user_enterprise sue
+		ON
+			se.id = sue.enterprise_id
+		WHERE
+			sue.user_id = #{userId}
+		AND
+			se.id = #{enterpriseId}
+	</select>
+
+    <!--企业用户关系-->
+    <insert id="insertUserEnterprise" >
+        INSERT INTO ucs_user_enterprise(user_id, enterprise_id) VALUES (#{userId}, #{id})
+    </insert>
 </mapper>

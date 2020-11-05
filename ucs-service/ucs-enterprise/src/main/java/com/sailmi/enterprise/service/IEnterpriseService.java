@@ -87,4 +87,8 @@ public interface IEnterpriseService extends BaseService<Enterprise> {
 	 * @Date: 2020/11/1/0002 15:32
 	 */
 	List<Enterprise> enterpriseList(Long userId);
+
+	Enterprise selectEnterprise(BigInteger userId, BigInteger enterpriseId);
+
+	void saveUserEnterprise(Long id, Long userId);
 }
