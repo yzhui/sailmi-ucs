@@ -31,7 +31,7 @@ public class UploadController {
 		// String path =
 		// request.getSession().getServletContext().getRealPath("D:\\home\\ftpuser\\");
 //		String path = "/var/www/html/ftpuser";
-		String path = "/usr/share/nginx/html/test_ucs/ftpuser/";
+		String path = "/usr/share/nginx/html/ucs/ftpuser";
 		File filePath = new File(path);
 		System.out.println("文件的保存路径：" + path);
 		if (!filePath.exists() && !filePath.isDirectory()) {
