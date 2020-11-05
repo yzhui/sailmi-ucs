@@ -7,7 +7,6 @@ import com.sailmi.system.user.entity.AccountUserEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +18,7 @@ public interface AccountUserMapper {
     /**
      * 查询用户信息列表
      */
-    AccountUserEntity get(BigInteger id);
+//    AccountUserEntity get(BigInteger id);
 
     /**
      * 查询用户信息列表
@@ -62,7 +61,7 @@ public interface AccountUserMapper {
      *
      * @return
      */
-    List<Enterprise> getEnterpriseName(BigInteger id);
+//    List<Enterprise> getEnterpriseName(BigInteger id);
 
     /**
      * 用户在对应企业中的启用状态
