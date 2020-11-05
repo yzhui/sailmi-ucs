@@ -17,10 +17,7 @@ package com.sailmi.system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sailmi.core.secure.AuthUser;
-import com.sailmi.system.entity.Menu;
-import com.sailmi.system.entity.ServiceEntity;
-import com.sailmi.system.entity.ServiceMenu;
-import com.sailmi.system.entity.SystemEntity;
+import com.sailmi.system.entity.*;
 import com.sailmi.system.service.IMenuService;
 import com.sailmi.system.service.IServiceMenuService;
 import com.sailmi.system.service.IServiceService;
@@ -79,8 +76,8 @@ public class ServiceMenuController extends AppController {
 	@GetMapping("/serviceMenus")
 	@ApiOperationSupport(order = 1)
 	@ApiOperation(value = "获取服务包的菜单列表", notes = "传入AuthUser")
-	public R<List<Menu>> queryServiceMenus(AuthUser authUser) {
-		List<Menu> menuList =new ArrayList<>();
+	public R<List<MenuTreeResultEntity>> queryServiceMenus(AuthUser authUser) {
+		List<MenuTreeResultEntity> menuList =new ArrayList<>();
 		if(authUser!=null && authUser.getTenantId()!=null){
 			//获取该用户登陆的企业的tenantId
 			//查询该tenan下的授权的system
@@ -116,7 +113,7 @@ public class ServiceMenuController extends AppController {
 								if(menuIds.size()>0) {
 									QueryWrapper<Menu> menuQueryWrapper = new QueryWrapper<>();
 									menuQueryWrapper.in("id", menuIds);
-									menuList = menuService.list(menuQueryWrapper);
+									menuList = menuService.queryUserMenus(menuQueryWrapper);
 								}
 							}
 						}
