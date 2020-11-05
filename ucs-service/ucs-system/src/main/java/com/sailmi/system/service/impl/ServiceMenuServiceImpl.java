@@ -26,6 +26,7 @@ import com.sailmi.system.mapper.ServiceMenuMapper;
 import com.sailmi.system.service.IMenuService;
 import com.sailmi.system.service.IServiceMenuService;
 import com.sailmi.system.vo.ServiceMenuVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
@@ -40,8 +41,8 @@ import java.util.List;
  */
 @Service
 public class ServiceMenuServiceImpl extends ServiceImpl<ServiceMenuMapper, ServiceMenu> implements IServiceMenuService {
-
-	IMenuService menuService;
+	@Autowired
+	private IMenuService menuService;
 
 	@Override
 	public IPage<ServiceMenuVO> selectServiceMenuPage(IPage<ServiceMenuVO> page, ServiceMenuVO serviceMenu) {
