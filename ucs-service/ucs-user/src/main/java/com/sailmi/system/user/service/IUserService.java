@@ -19,6 +19,7 @@ package com.sailmi.system.user.service;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sailmi.core.mp.base.BaseService;
+import com.sailmi.system.entity.Result;
 import com.sailmi.system.user.entity.UcsAccountuser;
 import com.sailmi.system.user.entity.User;
 import com.sailmi.system.user.entity.UserInfo;
@@ -158,4 +159,6 @@ public interface IUserService extends BaseService<User> {
 	Long submitUser(User user);
 
 	int resetUserPassById(String id);
+
+	Result updatePassword1(String userPhone, String userEmail, String password);
 }

@@ -21,6 +21,7 @@ import com.alibaba.excel.read.builder.ExcelReaderBuilder;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
+import com.sailmi.system.entity.Result;
 import com.sailmi.system.entity.UserEnterprise;
 import com.sailmi.system.feign.IuserEnterRelationFeign;
 import com.sailmi.system.user.entity.UcsAccountuser;
@@ -336,4 +337,11 @@ public class UserController {
 	}
 
 
+	@RequestMapping(value="updatePass",method=RequestMethod.POST)
+	@ResponseBody
+	public Result updatePassword(String userPhone, String userEmail, String password) {
+
+		return userService.updatePassword1(userPhone,userEmail,password);
+
+	}
 }

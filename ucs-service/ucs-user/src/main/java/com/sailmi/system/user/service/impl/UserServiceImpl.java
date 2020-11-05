@@ -21,6 +21,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.exceptions.ApiException;
 import com.google.common.base.Joiner;
+import com.sailmi.system.entity.ResponseMessage;
+import com.sailmi.system.entity.Result;
 import com.sailmi.system.user.entity.UcsAccountuser;
 import com.sailmi.system.user.excel.MD5Tools;
 import com.sailmi.system.user.excel.PhoneCodeUtil;
@@ -268,6 +270,30 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 	public int resetUserPassById(String id) {
 		String pass="123456";
 		return baseMapper.resetUserPass(id,DigestUtil.encrypt(pass));
+	}
+
+	@Override
+	public Result updatePassword1(String userPhone, String userEmail, String password) {
+//		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//		String hashPass = passwordEncoder.encode(password);
+		Result result = new Result();
+		String userId="";
+		if(userPhone!=null && userPhone.length()>0) {
+			userId=baseMapper.queryUserIdByPhone(userPhone);
+		}
+		if(userEmail!=null && userEmail.length()>0){
+			userId=baseMapper.queryUserIdByEmail(userEmail);
+		}
+
+		int status=baseMapper.updateUserPass(userId,DigestUtil.encrypt(password));
+		if(status>0) {
+			result.setCode(ResponseMessage.SUCCESS);
+			result.setMsg("修改密码成功");
+		}else {
+			result.setCode(ResponseMessage.SUCCESS);
+			result.setMsg("修改密码失败");
+		}
+		return result;
 	}
 
 }
