@@ -51,6 +51,7 @@ public class AuthProvider {
 		defaultSkipUrl.add("/error/**");
 		defaultSkipUrl.add("/assets/**");
 		defaultSkipUrl.add("/updatePass");
+		defaultSkipUrl.add("/upload/uploadPicture");
 	}
 
 	/**

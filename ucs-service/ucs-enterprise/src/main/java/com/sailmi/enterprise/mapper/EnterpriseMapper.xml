@@ -107,8 +107,8 @@
             SELECT enterprise_id
             FROM ucs_user_enterprise
             WHERE user_id = #{userId}
-            AND is_deleted = 0
-        ) AND is_deleted = 0
+
+        )
     </select>
 
     <!--是否存在企业中-->
