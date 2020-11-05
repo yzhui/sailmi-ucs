@@ -113,7 +113,7 @@ public class ServiceMenuController extends AppController {
 								if(menuIds.size()>0) {
 									QueryWrapper<Menu> menuQueryWrapper = new QueryWrapper<>();
 									menuQueryWrapper.in("id", menuIds);
-									menuList = menuService.queryUserMenus(menuQueryWrapper);
+									menuList = serviceMenuService.queryUserMenus(menuQueryWrapper);
 								}
 							}
 						}

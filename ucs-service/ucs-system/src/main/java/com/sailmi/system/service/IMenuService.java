@@ -91,5 +91,5 @@ public interface IMenuService extends IService<Menu> {
 
 	List<MenuVO> grantServiceMenuTree(AuthUser user);
 
-	List<MenuTreeResultEntity> queryUserMenus(QueryWrapper<Menu> menuQueryWrapper);
+
 }

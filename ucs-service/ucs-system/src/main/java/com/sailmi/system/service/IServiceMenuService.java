@@ -15,8 +15,10 @@
  */
 package com.sailmi.system.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.system.entity.Menu;
+import com.sailmi.system.entity.MenuTreeResultEntity;
 import com.sailmi.system.entity.ServiceMenu;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -40,4 +42,6 @@ public interface IServiceMenuService extends IService<ServiceMenu> {
 	 * @return
 	 */
 	IPage<ServiceMenuVO> selectServiceMenuPage(IPage<ServiceMenuVO> page, ServiceMenuVO serviceMenu);
+
+	List<MenuTreeResultEntity> queryUserMenus(QueryWrapper<Menu> menuQueryWrapper);
 }

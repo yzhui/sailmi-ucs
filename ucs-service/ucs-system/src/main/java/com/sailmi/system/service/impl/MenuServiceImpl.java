@@ -54,7 +54,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
 	IRoleMenuService roleMenuService;
 	ISystemService iSystemService;
-	IMenuService menuService;
+
 
 	@Override
 	public IPage<MenuVO> selectMenuPage(IPage<MenuVO> page, MenuVO menu) {
@@ -137,51 +137,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 		return ForestNodeMerger.merge(menuWrapper.listNodeVO(menus));
 	}
 
-	@Override
-	public List<MenuTreeResultEntity> queryUserMenus(QueryWrapper<Menu> menuQueryWrapper) {
-		ArrayList<MenuTreeResultEntity> menuTreeResultEntities = new ArrayList<>();
-		ArrayList<MenuTreeResultEntity> menuTrees = new ArrayList<>();
-		List<Menu> list = menuService.list(menuQueryWrapper);
-		if(list!=null && list.size()>0){
-			list.stream().forEach(Menu->{
-				MenuTreeResultEntity menuTreeResultEntity = new MenuTreeResultEntity();
-				menuTreeResultEntity.setId(Menu.getId().toString());//id
-				if(Menu.getParentId()!=null) {
-					menuTreeResultEntity.setPid(Menu.getParentId().toString());//pid
-				}else{
-					menuTreeResultEntity.setPid("0");
-				}
-				menuTreeResultEntity.setIconUrl(Menu.getSource());//icon
-				menuTreeResultEntity.setMenuName(Menu.getName());//name
-				menuTreeResultEntity.setMenuUrl(Menu.getPath());//url
-				menuTreeResultEntity.setMenuSort(Menu.getSort().toString());//sort
-				menuTreeResultEntities.add(menuTreeResultEntity);
-			});
-		}
-		if(menuTreeResultEntities.size()>0){
-			 menuTrees = sortMenus(menuTreeResultEntities, "0");
-		}
 
-		return menuTrees;
-	}
-
-	private ArrayList<MenuTreeResultEntity> sortMenus(ArrayList<MenuTreeResultEntity> menuTreeResultEntities,String parentId) {
-		ArrayList<MenuTreeResultEntity> childList = new ArrayList<MenuTreeResultEntity>();
-		for (MenuTreeResultEntity tree : menuTreeResultEntities) {
-			String id = tree.getId();
-			String pid = tree.getPid();
-			if (parentId.equals(pid)) {
-				List<MenuTreeResultEntity> trees=sortMenus(menuTreeResultEntities, id);
-				if(tree.getMenuChild()!=null) {
-					tree.getMenuChild().addAll(trees);
-				}else {
-					tree.setMenuChild(trees);
-				}
-				childList.add(tree);
-			}
-		}
-		return childList;
-	}
 
 	private List<Long> tenantMenuIds(String tenantId,List<Long> longs) {
 		QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
