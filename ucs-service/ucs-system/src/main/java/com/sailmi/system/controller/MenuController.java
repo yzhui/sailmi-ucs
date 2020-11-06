@@ -83,6 +83,7 @@ public class MenuController extends AppController {
 	public R<List<MenuVO>> list(AuthUser user,@ApiIgnore @RequestParam Map<String, Object> menu) {
 		//查询登陆人企业下租户的所有菜单
 		List<Menu> lists=null;
+		List<MenuVO> menuVOS=null;
 		QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
 		if(user!=null && user.getEnterpriseId()!=null ){
 			QueryWrapper<Tenant> tenantQueryWrapper = new QueryWrapper<>();
@@ -111,11 +112,13 @@ public class MenuController extends AppController {
 				}
 			}
 		}
-		List<MenuVO> menuVOS = MenuWrapper.build().listNodeVO(lists);
-		if(menuVOS!=null && menuVOS.size()>0){
-			menuVOS.stream().forEach(menuVO->{
-				menuVO.setSystemName(systemService.getById(menuVO.getSystemId()).getSystemName());
-			});
+		if(lists!=null && lists.size()>0) {
+			 menuVOS = MenuWrapper.build().listNodeVO(lists);
+			if (menuVOS != null && menuVOS.size() > 0) {
+				menuVOS.stream().forEach(menuVO -> {
+					menuVO.setSystemName(systemService.getById(menuVO.getSystemId()).getSystemName());
+				});
+			}
 		}
 		return R.data(menuVOS);
 	}

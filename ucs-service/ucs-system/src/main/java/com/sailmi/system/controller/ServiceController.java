@@ -86,6 +86,7 @@ public class ServiceController extends AppController {
 	public R<IPage<ServiceVO>> list(AuthUser user,ServiceEntity service, Query query) {
 		//获取该tenantId下的所有system，根据system查询所有service
 		IPage<ServiceEntity> pages=null;
+		IPage<ServiceVO> serviceVOIPage =null;
 		if(user!=null && user.getEnterpriseId()!=null) {
 			QueryWrapper<Tenant> tenantQueryWrapper = new QueryWrapper<>();
 			tenantQueryWrapper.eq("enterprise_id",user.getEnterpriseId());//查询改企业管理的所有的租户
@@ -115,27 +116,29 @@ public class ServiceController extends AppController {
 				}
 			}
 		}
-		IPage<ServiceVO> serviceVOIPage = ServiceWrapper.build().pageVO(pages);
-		if(serviceVOIPage!=null && serviceVOIPage.getTotal()>0){
-			serviceVOIPage.getRecords().stream().forEach(serviceVO->{
-				SystemEntity sysInfo = systemService.getById(serviceVO.getSystemId());
-				if(sysInfo!=null && sysInfo.getSystemName()!=null) {
-					serviceVO.setSystemName(sysInfo.getSystemName());
-				}
-				if(serviceVO.getServiceType()==0) {
-					serviceVO.setServiceTypeName("公共授权");
-				}else{
-					serviceVO.setServiceTypeName("收费授权");
-				}
-				R<UserInfo> userInfoR = userClient.userInfo(serviceVO.getCreateUser());
-				if(userInfoR!=null && userInfoR.getData()!=null && userInfoR.getData().getUser()!=null && userInfoR.getData().getUser().getRealName()!=null) {
-					serviceVO.setCreateName(userInfoR.getData().getUser().getRealName());
-				}
-				R<UserInfo> userInfoU = userClient.userInfo(serviceVO.getUpdateUser());
-				if(userInfoU!=null && userInfoU.getData()!=null && userInfoU.getData().getUser()!=null && userInfoU.getData().getUser().getRealName()!=null) {
-					serviceVO.setUpdateName(userInfoU.getData().getUser().getRealName());
-				}
-			});
+		if(pages!=null && pages.getTotal()>0) {
+			 serviceVOIPage = ServiceWrapper.build().pageVO(pages);
+			if (serviceVOIPage != null && serviceVOIPage.getTotal() > 0) {
+				serviceVOIPage.getRecords().stream().forEach(serviceVO -> {
+					SystemEntity sysInfo = systemService.getById(serviceVO.getSystemId());
+					if (sysInfo != null && sysInfo.getSystemName() != null) {
+						serviceVO.setSystemName(sysInfo.getSystemName());
+					}
+					if (serviceVO.getServiceType() == 0) {
+						serviceVO.setServiceTypeName("公共授权");
+					} else {
+						serviceVO.setServiceTypeName("收费授权");
+					}
+					R<UserInfo> userInfoR = userClient.userInfo(serviceVO.getCreateUser());
+					if (userInfoR != null && userInfoR.getData() != null && userInfoR.getData().getUser() != null && userInfoR.getData().getUser().getRealName() != null) {
+						serviceVO.setCreateName(userInfoR.getData().getUser().getRealName());
+					}
+					R<UserInfo> userInfoU = userClient.userInfo(serviceVO.getUpdateUser());
+					if (userInfoU != null && userInfoU.getData() != null && userInfoU.getData().getUser() != null && userInfoU.getData().getUser().getRealName() != null) {
+						serviceVO.setUpdateName(userInfoU.getData().getUser().getRealName());
+					}
+				});
+			}
 		}
 		return R.data(serviceVOIPage);
 	}

@@ -82,6 +82,7 @@ public class SystemController extends AppController {
 	public R<IPage<SystemVO>> list(AuthUser user, SystemEntity system, Query query) {
 		QueryWrapper<SystemEntity> queryWrapper = Condition.getQueryWrapper(system);
 		IPage<SystemEntity> pages=null;
+		IPage<SystemVO> systemVOIPage=null;
 		if(user!=null && user.getEnterpriseId()!=null){
 			QueryWrapper<Tenant> tenantQueryWrapper = new QueryWrapper<>();
 			tenantQueryWrapper.eq("enterprise_id",user.getEnterpriseId());//查询改企业管理的所有的租户
@@ -97,18 +98,20 @@ public class SystemController extends AppController {
 				pages = systemService.page(Condition.getPage(query), queryWrapper);
 			}
 		}
-		IPage<SystemVO> systemVOIPage = SystemWrapper.build().pageVO(pages);
-		if(systemVOIPage!=null && systemVOIPage.getTotal()>0){
-			systemVOIPage.getRecords().stream().forEach(systemVO->{
-				R<UserInfo> userInfoR = userClient.userInfo(systemVO.getCreateUser());
-				if(userInfoR!=null && userInfoR.getData()!=null && userInfoR.getData().getUser()!=null && userInfoR.getData().getUser().getRealName()!=null) {
-					systemVO.setCreateName(userInfoR.getData().getUser().getRealName());
-				}
-				R<UserInfo> userInfoU = userClient.userInfo(systemVO.getUpdateUser());
-				if(userInfoU!=null && userInfoU.getData()!=null && userInfoU.getData().getUser()!=null && userInfoU.getData().getUser().getRealName()!=null) {
-					systemVO.setUpdateName(userInfoU.getData().getUser().getRealName());
-				}
-			});
+		if(pages!=null && pages.getTotal()>0) {
+			 systemVOIPage = SystemWrapper.build().pageVO(pages);
+			if (systemVOIPage != null && systemVOIPage.getTotal() > 0) {
+				systemVOIPage.getRecords().stream().forEach(systemVO -> {
+					R<UserInfo> userInfoR = userClient.userInfo(systemVO.getCreateUser());
+					if (userInfoR != null && userInfoR.getData() != null && userInfoR.getData().getUser() != null && userInfoR.getData().getUser().getRealName() != null) {
+						systemVO.setCreateName(userInfoR.getData().getUser().getRealName());
+					}
+					R<UserInfo> userInfoU = userClient.userInfo(systemVO.getUpdateUser());
+					if (userInfoU != null && userInfoU.getData() != null && userInfoU.getData().getUser() != null && userInfoU.getData().getUser().getRealName() != null) {
+						systemVO.setUpdateName(userInfoU.getData().getUser().getRealName());
+					}
+				});
+			}
 		}
 		return R.data(systemVOIPage);
 	}
