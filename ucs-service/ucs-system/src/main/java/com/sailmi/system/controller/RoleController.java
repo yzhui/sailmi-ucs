@@ -127,7 +127,7 @@ public class RoleController extends AppController {
 	public R remove(AuthUser authUser,@ApiParam(value = "主键集合", required = true) @RequestParam String ids) {
 		R<String> status=null;
 			if(ids.contains("-2") || ids.contains("-3")){//包含这两个角色，则不能删除
-				status = R.data(400, "", "是系统角色，没有删除权限");
+				status = R.data(400, "", "是系统公共角色，没有删除权限");
 			}else{
 				boolean flag= roleService.removeByIds(Func.toLongList(ids));
 				status = R.data(200, "", "删除成功");
@@ -148,9 +148,8 @@ public class RoleController extends AppController {
 	public R grant(AuthUser authUser,@ApiParam(value = "roleId集合", required = true) @RequestParam String roleIds,
 				   @ApiParam(value = "menuId集合", required = true) @RequestParam String menuIds) {
 		R<String> status=null;
-
 		if(roleIds.contains("-2") || roleIds.contains("-3")){
-			status = R.data(400, "", "该角色菜单是固定的，没有修改权限");
+			status = R.data(400, "", "该角色菜单是系统公共的，没有修改权限");
 		}else{
 			boolean temp = roleService.grant(Func.toLongList(roleIds), Func.toLongList(menuIds));
 			status = R.data(200, "", "修改成功");
