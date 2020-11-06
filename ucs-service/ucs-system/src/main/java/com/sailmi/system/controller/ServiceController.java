@@ -85,34 +85,36 @@ public class ServiceController extends AppController {
 	@ApiOperation(value = "分页", notes = "传入service")
 	public R<IPage<ServiceVO>> list(AuthUser user,ServiceEntity service, Query query) {
 		//获取该tenantId下的所有system，根据system查询所有service
-		ArrayList<Long> systemIds = new ArrayList<>();
+		IPage<ServiceEntity> pages=null;
 		if(user!=null && user.getEnterpriseId()!=null) {
 			QueryWrapper<Tenant> tenantQueryWrapper = new QueryWrapper<>();
 			tenantQueryWrapper.eq("enterprise_id",user.getEnterpriseId());//查询改企业管理的所有的租户
 			List<Tenant> tenantList = tenantService.list(tenantQueryWrapper);
-			ArrayList<String> longs = new ArrayList<>();
-			if(tenantList!=null && tenantList.size()>0){
-				tenantList.stream().forEach(teant->{
+			if(tenantList!=null && tenantList.size()>0) {
+				ArrayList<String> longs = new ArrayList<>();
+				tenantList.stream().forEach(teant -> {
 					longs.add(teant.getTenantId());
 				});
+				QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
+				if (longs.size() > 0) {
+					systemEntityQueryWrapper.in("tenant_id", longs);
+				}
+				List<SystemEntity> list = systemService.list(systemEntityQueryWrapper);
+				if (list != null && list.size() > 0) {
+					ArrayList<Long> systemIds = new ArrayList<>();
+					list.stream().forEach(sysEntity -> {
+						systemIds.add(sysEntity.getId());
+					});
 
-			}
-			QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
-			if(longs.size()>0) {
-				systemEntityQueryWrapper.in("tenant_id", longs);
-			}
-			List<SystemEntity> list = systemService.list(systemEntityQueryWrapper);
-			if(list!=null && list.size()>0){
-				list.stream().forEach(sysEntity->{
-					systemIds.add(sysEntity.getId());
-				});
+					final QueryWrapper<ServiceEntity> queryWrapper = Condition.getQueryWrapper(service);
+					if (systemIds != null && systemIds.size() > 0) {
+						queryWrapper.in("system_id", systemIds);
+					}
+					pages = serviceService.page(Condition.getPage(query), queryWrapper);
+				}
 			}
 		}
-		final QueryWrapper<ServiceEntity> queryWrapper = Condition.getQueryWrapper(service);
-		if(systemIds!=null && systemIds.size()>0){
-			queryWrapper.in("system_id",systemIds);
-		}
-		IPage<ServiceEntity> pages = serviceService.page(Condition.getPage(query), queryWrapper);
+
 		IPage<ServiceVO> serviceVOIPage = ServiceWrapper.build().pageVO(pages);
 		if(serviceVOIPage!=null && serviceVOIPage.getTotal()>0){
 			serviceVOIPage.getRecords().stream().forEach(serviceVO->{
