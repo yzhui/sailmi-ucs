@@ -82,7 +82,7 @@ public class RoleController extends AppController {
 
 		QueryWrapper<Role> roleQueryWrapper = new QueryWrapper<>();
 		roleQueryWrapper.eq("is_sys",1);
-		List<Role> commonList = roleService.list(queryWrapper);//查询该公司的角色列表
+		List<Role> commonList = roleService.list(roleQueryWrapper);//查询该公司的角色列表
 		if(commonList!=null && commonList.size()>0){
 			list.addAll(commonList);
 		}
