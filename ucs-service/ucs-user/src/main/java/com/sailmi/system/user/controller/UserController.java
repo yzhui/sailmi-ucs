@@ -170,8 +170,8 @@ public class UserController {
 				if (authUser.getEnterpriseId() != null) {
 					R<List<UserEnterprise>> listR = iuserEnterRelationFeign.detailInfo(authUser.getEnterpriseId(),false);
 					if(listR!=null && listR.getData()!=null && listR.getData().size()>0){
-						listR.getData().stream().forEach(userEnter->{
-							userIds.add(userEnter.getUserId());
+						listR.getData().stream().forEach(UserEnterprise->{
+							userIds.add(UserEnterprise.getUserId());
 						});
 					}
 				}
