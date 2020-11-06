@@ -114,7 +114,6 @@ public class ServiceController extends AppController {
 				}
 			}
 		}
-
 		IPage<ServiceVO> serviceVOIPage = ServiceWrapper.build().pageVO(pages);
 		if(serviceVOIPage!=null && serviceVOIPage.getTotal()>0){
 			serviceVOIPage.getRecords().stream().forEach(serviceVO->{
