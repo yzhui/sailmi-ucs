@@ -178,6 +178,7 @@ public class UserController {
 			if(userIds.size()>0){
 				queryWrapper.in("id",userIds);
 			}
+
 				pages = userService.page(Condition.getPage(query),  queryWrapper);
 		}
 			return R.data(UserWrapper.build().pageVO(pages));
