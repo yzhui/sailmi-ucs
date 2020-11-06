@@ -163,9 +163,9 @@ public class UserController {
 	@ApiOperation(value = "列表", notes = "传入account和realName")
 	public R<IPage<UserVO>> list(@ApiIgnore @RequestParam Map<String, Object> user, Query query, AuthUser authUser) {
 		QueryWrapper<User> queryWrapper = Condition.getQueryWrapper(user, User.class);
-		ArrayList<Long> userIds = new ArrayList<>();
+		IPage<User>	pages=null;
 		if(authUser!=null) {
-			//逻辑有问题，这里，不需要判断用户是否是平台管理员，只需要按此用户的实际企业获取用户列表
+			ArrayList<Long> userIds = new ArrayList<>();
 			//ucs_enterprise_user表要用起来  yzh
 				if (authUser.getEnterpriseId() != null) {
 					R<List<UserEnterprise>> listR = iuserEnterRelationFeign.detailInfo(authUser.getEnterpriseId(),false);
@@ -175,13 +175,12 @@ public class UserController {
 						});
 					}
 				}
+			if(userIds.size()>0){
+				queryWrapper.in("id",userIds);
+			}
+				pages = userService.page(Condition.getPage(query),  queryWrapper);
 		}
-		if(userIds.size()>0){
-			queryWrapper.in("id",userIds);
-		}else{
-			queryWrapper.in("id",0);
-		}
-			IPage<User>	pages = userService.page(Condition.getPage(query),  queryWrapper);
+
 			return R.data(UserWrapper.build().pageVO(pages));
 	}
 
