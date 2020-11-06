@@ -20,7 +20,7 @@ public class UserEnterpriseFeign implements IuserEnterRelationFeign {
 
 	@Override
 	@GetMapping(API_PREFIX + "/userenterlist")
-	public R<List<UserEnterprise>> detailInfo(String enterpriseId,Boolean flag) {
+	public R<List<UserEnterprise>> detailInfo(String enterpriseId) {
 		QueryWrapper<UserEnterprise> userEnterpriseQueryWrapper = new QueryWrapper<>();
 		userEnterpriseQueryWrapper.eq("enterprise_id",enterpriseId);
 //		if(flag){
