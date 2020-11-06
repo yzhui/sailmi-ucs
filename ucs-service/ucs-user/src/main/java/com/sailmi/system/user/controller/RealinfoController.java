@@ -33,8 +33,10 @@ public class RealinfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "query", method = RequestMethod.POST)
-	public String list(RealUserEntity realinfo) {
+	public String list(AuthUser authUser, RealUserEntity realinfo) {
 		HashMap<String,Object> hashMap = new HashMap<String,Object>();
+		BigInteger b = BigInteger.valueOf(authUser.getUserId());
+		realinfo.setUserId(b);
 		List<RealUserEntity> query = realUserService.query(realinfo);
 		if(query.size() > 0 ) {
 			hashMap.put("status", 1);
@@ -56,8 +58,9 @@ public class RealinfoController {
 	@RequestMapping(value = "upsert", method = RequestMethod.POST)
 	public String save(AuthUser authUser, RealUserEntity realinfo) {
 		HashMap<String,Object> hashMap = new HashMap<String,Object>();
-		BigInteger b = BigInteger.valueOf(1301788793255452676L);
-		realinfo.setId(b);
+		BigInteger b = BigInteger.valueOf(authUser.getUserId());
+//		realinfo.setId(b);
+		realinfo.setUserId(b);
 		int upsert = realUserService.upsert(realinfo);
 		if(upsert == 1) {
 			hashMap.put("status", 1);

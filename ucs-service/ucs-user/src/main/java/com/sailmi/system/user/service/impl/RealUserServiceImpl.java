@@ -62,9 +62,9 @@ public class RealUserServiceImpl implements RealUserService {
 		reUser.setImgInfo2(url2);
 		reUser.setImgInfo3(url3);
 		status = realUserMapper.insert(reUser);
-		acSta = realUserMapper.insertAccount(reUser.getRealName(), reUser.getId());
+		acSta = realUserMapper.insertAccount(reUser.getRealName(), reUser.getUserId());
 		if (status == 1 & acSta == 1) {
-			realUserMapper.realStatus(reUser.getId());
+			realUserMapper.realStatus(reUser.getUserId());
 			return 1;
 		}
 		return 0;
