@@ -136,8 +136,11 @@ public class EnterpriseController extends AppController {
 				 pages = enterpriseService.page(Condition.getPage(query), queryWrapper);
 			}
 		}
-
-		return R.data(EnterpriseWrapper.build().pageVO(pages));
+		if(pages!=null && pages.getTotal()>0) {
+			return R.data(EnterpriseWrapper.build().pageVO(pages));
+		}else{
+			return R.data(null);
+		}
 	}
 
 

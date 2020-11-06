@@ -179,10 +179,12 @@ public class UserController {
 				queryWrapper.in("id",userIds);
 				pages = userService.page(Condition.getPage(query),  queryWrapper);
 			}
-
-
 		}
+		if(pages!=null && pages.getTotal()>0) {
 			return R.data(UserWrapper.build().pageVO(pages));
+		}else{
+			return R.data(null);
+		}
 	}
 
 	/**
