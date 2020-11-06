@@ -109,8 +109,9 @@ public class ServiceController extends AppController {
 					final QueryWrapper<ServiceEntity> queryWrapper = Condition.getQueryWrapper(service);
 					if (systemIds != null && systemIds.size() > 0) {
 						queryWrapper.in("system_id", systemIds);
+						pages = serviceService.page(Condition.getPage(query), queryWrapper);
 					}
-					pages = serviceService.page(Condition.getPage(query), queryWrapper);
+
 				}
 			}
 		}

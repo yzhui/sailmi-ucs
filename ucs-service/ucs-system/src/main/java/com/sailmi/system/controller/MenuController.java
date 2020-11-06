@@ -82,7 +82,7 @@ public class MenuController extends AppController {
 	@ApiOperation(value = "列表", notes = "传入menu")
 	public R<List<MenuVO>> list(AuthUser user,@ApiIgnore @RequestParam Map<String, Object> menu) {
 		//查询登陆人企业下租户的所有菜单
-		ArrayList<Long> systemIds = new ArrayList<>();
+		List<Menu> lists=null;
 		QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
 		if(user!=null && user.getEnterpriseId()!=null ){
 			QueryWrapper<Tenant> tenantQueryWrapper = new QueryWrapper<>();
@@ -96,21 +96,22 @@ public class MenuController extends AppController {
 			}
 			if(strings.size()>0) {
 				systemEntityQueryWrapper.in("tenant_id", strings);
-			}
-			List<SystemEntity> list = systemService.list(systemEntityQueryWrapper);
-			if(list!=null && list.size()>0){
-				list.stream().forEach(sysEntity->{
-					systemIds.add(sysEntity.getId());
-				});
+				List<SystemEntity> list = systemService.list(systemEntityQueryWrapper);
+				if(list!=null && list.size()>0){
+					ArrayList<Long> systemIds = new ArrayList<>();
+					list.stream().forEach(sysEntity->{
+						systemIds.add(sysEntity.getId());
+					});
+
+					QueryWrapper<Menu> queryWrapper = Condition.getQueryWrapper(menu, Menu.class);
+					if(systemIds!=null && systemIds.size()>0){
+						queryWrapper.in("system_id",systemIds);
+					}
+					 lists = menuService.list(queryWrapper.lambda().orderByAsc(Menu::getSort));
+				}
 			}
 		}
-		QueryWrapper<Menu> queryWrapper = Condition.getQueryWrapper(menu, Menu.class);
-		if(systemIds!=null && systemIds.size()>0){
-			queryWrapper.in("system_id",systemIds);
-		}
-		@SuppressWarnings("unchecked")
-		List<Menu> list = menuService.list(queryWrapper.lambda().orderByAsc(Menu::getSort));
-		List<MenuVO> menuVOS = MenuWrapper.build().listNodeVO(list);
+		List<MenuVO> menuVOS = MenuWrapper.build().listNodeVO(lists);
 		if(menuVOS!=null && menuVOS.size()>0){
 			menuVOS.stream().forEach(menuVO->{
 				menuVO.setSystemName(systemService.getById(menuVO.getSystemId()).getSystemName());

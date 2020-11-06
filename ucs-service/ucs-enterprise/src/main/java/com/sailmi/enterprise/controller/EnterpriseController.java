@@ -119,6 +119,7 @@ public class EnterpriseController extends AppController {
 	@ApiOperation(value = "分页", notes = "传入enterprise")
 	public R<IPage<EnterpriseVO>> list(AuthUser user,Enterprise enterprise, Query query) {
 		QueryWrapper<Enterprise> queryWrapper = Condition.getQueryWrapper(enterprise);
+		IPage<Enterprise> pages =null;
 		//查询该企业下的租户管理的所有企业列表
 		if(user!=null && user.getEnterpriseId()!=null){
 			//查询该企业下的所有租户
@@ -132,9 +133,10 @@ public class EnterpriseController extends AppController {
 			//查询租户下的所有企业
 			if(strings.size()>0) {
 				queryWrapper.in("tenant_id", strings);
+				 pages = enterpriseService.page(Condition.getPage(query), queryWrapper);
 			}
 		}
-		IPage<Enterprise> pages = enterpriseService.page(Condition.getPage(query), queryWrapper);
+
 		return R.data(EnterpriseWrapper.build().pageVO(pages));
 	}
 

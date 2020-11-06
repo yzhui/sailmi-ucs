@@ -81,6 +81,7 @@ public class SystemController extends AppController {
 	@PreAuth(RoleConstant.HAS_ROLE_TENANT_ADMIN)
 	public R<IPage<SystemVO>> list(AuthUser user, SystemEntity system, Query query) {
 		QueryWrapper<SystemEntity> queryWrapper = Condition.getQueryWrapper(system);
+		IPage<SystemEntity> pages=null;
 		if(user!=null && user.getEnterpriseId()!=null){
 			QueryWrapper<Tenant> tenantQueryWrapper = new QueryWrapper<>();
 			tenantQueryWrapper.eq("enterprise_id",user.getEnterpriseId());//查询改企业管理的所有的租户
@@ -93,9 +94,9 @@ public class SystemController extends AppController {
 			}
 			if(longs.size()>0) {
 				queryWrapper.in("tenant_id", longs);
+				pages = systemService.page(Condition.getPage(query), queryWrapper);
 			}
 		}
-		IPage<SystemEntity> pages = systemService.page(Condition.getPage(query), queryWrapper);
 		IPage<SystemVO> systemVOIPage = SystemWrapper.build().pageVO(pages);
 		if(systemVOIPage!=null && systemVOIPage.getTotal()>0){
 			systemVOIPage.getRecords().stream().forEach(systemVO->{
