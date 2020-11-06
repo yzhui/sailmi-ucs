@@ -16,6 +16,7 @@
 package com.sailmi.enterprise.mapper;
 
 import com.sailmi.system.entity.Enterprise;
+import com.sailmi.system.entity.UserEnterpriseDepartment;
 import com.sailmi.system.vo.EnterpriseVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -121,4 +122,13 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 * @Date: 2020/11/4/0004 14:39
 	 */
 	int insertUserEnterprise(@Param("id") Long id, @Param("userId") Long userId);
+
+	/**
+	 * 根据用户ID查询用户下的企业信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	List<UserEnterpriseDepartment> getUserEnterpriseByUserId(BigInteger userId);
+
 }
