@@ -78,8 +78,8 @@ public class RealUserServiceImpl implements RealUserService {
 		HashMap<String, Object> uploadData;
 		try {
 			if (reUser.getFile() != null) {
-//				uploadData = UploadUtil.uploadData(reUser.getFile(), "D:/IDCard/" + reUser.getRealName() + "/uuser/", 0);
-				uploadData = UploadUtil.uploadData(reUser.getFile(), "/opt/microservice/update_file/" + reUser.getRealName() + "/uuserIDCard/", 0);
+				uploadData = UploadUtil.uploadData(reUser.getFile(), "/usr/share/nginx/html/ucs/ftpuser", 0);
+//				uploadData = UploadUtil.uploadData(reUser.getFile(), "/opt/microservice/update_file/" + reUser.getRealName() + "/uuserIDCard/", 0);
 				url = (String)uploadData.get("name");
 				if(uploadData.get("status").toString().equals("1")) {
 					reUser.setImgInfo(uploadData.get("url").toString());
