@@ -485,9 +485,9 @@ public class EnterpriseController extends AppController {
 	 * @return
 	 */
 	@RequestMapping(value = "getUserEnterpriseByUserId", method = RequestMethod.GET)
-	public String getUserEnterpriseByUserId(BigInteger userId) {
+	public String getUserEnterpriseByUserId(AuthUser authuser, BigInteger userId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-
+		userId = BigInteger.valueOf(authuser.getUserId());
 		try {
 			List<UserEnterpriseDepartment> userEnterpriseDepartmentList = enterpriseService
 				.getUserEnterpriseByUserId(userId);
