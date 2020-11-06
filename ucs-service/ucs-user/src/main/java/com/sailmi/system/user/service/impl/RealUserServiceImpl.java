@@ -57,14 +57,14 @@ public class RealUserServiceImpl implements RealUserService {
 	@Override
 	public int upsert(RealUserEntity reUser) {
 
-		int status,acSta;
+		int status,acSta = 0;
 		reUser.setImgInfo(url);
 		reUser.setImgInfo2(url2);
 		reUser.setImgInfo3(url3);
 		status = realUserMapper.insert(reUser);
-		acSta = realUserMapper.insertAccount(reUser.getRealName(),reUser.getUserId());
+		acSta = realUserMapper.insertAccount(reUser.getRealName(), reUser.getId());
 		if (status == 1 & acSta == 1) {
-			realUserMapper.realStatus(reUser.getUserId());
+			realUserMapper.realStatus(reUser.getId());
 			return 1;
 		}
 		return 0;
@@ -90,7 +90,7 @@ public class RealUserServiceImpl implements RealUserService {
 			}
 			if (reUser.getFile2() != null) {
 //				uploadData = UploadUtil.uploadData(reUser.getFile2(), "D:/IDCard/" + reUser.getRealName() + "/uuserIDCard/", 0);
-				uploadData = UploadUtil.uploadData(reUser.getFile(), "/opt/microservice/update_file/" + reUser.getRealName() + "/uuserIDCard/", 0);
+				uploadData = UploadUtil.uploadData(reUser.getFile(), "/usr/share/nginx/html/ucs/ftpuser" + reUser.getRealName() + "/uuserIDCard/", 0);
 				url2 = (String)uploadData.get("name");
 				if(uploadData.get("status").toString().equals("1")) {
 					return 1;
@@ -99,7 +99,7 @@ public class RealUserServiceImpl implements RealUserService {
 			}
 			if (reUser.getFile3() != null) {
 //				uploadData = UploadUtil.uploadData(reUser.getFile3(), "D:/IDCard/" + reUser.getRealName() + "/uuserIDCard/", 0);
-				uploadData = UploadUtil.uploadData(reUser.getFile(), "/opt/microservice/update_file/" + reUser.getRealName() + "/uuserIDCard/", 0);
+				uploadData = UploadUtil.uploadData(reUser.getFile(), "/usr/share/nginx/html/ucs/ftpuser" + reUser.getRealName() + "/uuserIDCard/", 0);
 				url3 = (String)uploadData.get("name");
 				if(uploadData.get("status").toString().equals("1")) {
 					return 1;

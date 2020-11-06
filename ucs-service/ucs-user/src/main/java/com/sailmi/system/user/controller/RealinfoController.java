@@ -1,6 +1,7 @@
 package com.sailmi.system.user.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.sailmi.core.secure.AuthUser;
 import com.sailmi.system.user.entity.RealUserEntity;
 import com.sailmi.system.user.service.RealUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,8 +54,10 @@ public class RealinfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "upsert", method = RequestMethod.POST)
-	public String save(RealUserEntity realinfo) {
+	public String save(AuthUser authUser, RealUserEntity realinfo) {
 		HashMap<String,Object> hashMap = new HashMap<String,Object>();
+		BigInteger b = BigInteger.valueOf(1301788793255452676L);
+		realinfo.setId(b);
 		int upsert = realUserService.upsert(realinfo);
 		if(upsert == 1) {
 			hashMap.put("status", 1);
