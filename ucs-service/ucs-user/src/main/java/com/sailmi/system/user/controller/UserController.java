@@ -180,7 +180,6 @@ public class UserController {
 			}
 				pages = userService.page(Condition.getPage(query),  queryWrapper);
 		}
-
 			return R.data(UserWrapper.build().pageVO(pages));
 	}
 
