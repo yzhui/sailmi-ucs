@@ -105,8 +105,8 @@
 
 	<!-- 将实名认证状态改为已认证 -->
 	<update id="realStatus">
-		UPDATE  ucs_accountuser SET
-		realStatus = '1'
+		UPDATE  ucs_user SET
+		real_status = '1'
 		WHERE id = #{userId}
 	</update>
 
@@ -126,7 +126,7 @@
 	</update>
 
 	<!-- 真实姓名同步到用户表 -->
-	<update id="insertAccount">
+	<update id="insertAccount" keyProperty="id">
 		UPDATE ucs_user
 		SET real_name = #{realName}
 		WHERE
