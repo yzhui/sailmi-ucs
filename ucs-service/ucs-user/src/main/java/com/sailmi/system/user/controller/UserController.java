@@ -168,7 +168,8 @@ public class UserController {
 			ArrayList<Long> userIds = new ArrayList<>();
 			//ucs_enterprise_user表要用起来  yzh
 				if (authUser.getEnterpriseId() != null) {
-					R<List<UserEnterprise>> listR = iuserEnterRelationFeign.detailInfo(authUser.getEnterpriseId());
+					String enterpriseId = authUser.getEnterpriseId();
+					R<List<UserEnterprise>> listR = iuserEnterRelationFeign.detailInfo(enterpriseId);
 					if(listR!=null && listR.getData()!=null && listR.getData().size()>0){
 						listR.getData().stream().forEach(UserEnterprise->{
 							userIds.add(UserEnterprise.getUserId());
