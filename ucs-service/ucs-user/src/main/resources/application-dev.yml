@@ -8,6 +8,25 @@ spring:
     url: ${ucs.datasource.dev.url}
     username: ${ucs.datasource.dev.username}
     password: ${ucs.datasource.dev.password}
+  mail:
+    host: smtp.qq.com
+    username: 331975548@qq.com
+    password: jvucugdupskfbghc
+    default-encoding: UTF-8
+    port: 465
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+            socketFactory:
+            fallback: false
+            class: com.fintech.modules.base.util.mail.MailSSLSocketFactory
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 
 #SMS
 sms:
@@ -19,3 +38,13 @@ sms:
   signature: 莱诺斯科技
   receiver: +86
   statusCallBack:
+
+#自定义邮件主题
+sendEmail:
+  title: 工业测试云
+
+#自定义头像上传路径
+headimg:
+  uploadPath: /var/www/html/png/
+  #头像访问地址
+  readPath: test.iitplat.com
