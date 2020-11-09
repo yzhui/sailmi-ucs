@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sailmi.system.user.mapper.SecurityMapper">
+
+	<!--<resultMap id="enterpriseResult" type="java.util.HashMap">
+		<result property="id" column="id" />
+		<result property="enterpriseName" column="enterpriseName" />
+	</resultMap>-->
+
+	<!-- 头像路径 -->
+	<update id="saveHeadImg" parameterType="map">
+		UPDATE ucs_user
+		SET head_img = #{headImg}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 验证邮箱是否唯一 -->
+	<select id="eMailOnlyOne" resultType="int">
+		SELECT
+			count(user_email)
+		FROM
+			ucs_user
+		WHERE
+			user_email = #{eMailAddr}
+	</select>
+	<update id="updatePassword" parameterType="map" >
+		UPDATE ucs_user
+		<set>
+			<if test="newpassword!=null and newpassword.length()>0">
+				password=#{newpassword},
+			</if>
+		</set>
+		WHERE id = #{userId}
+
+	</update>
+	<insert id="insertAppeal" parameterType="com.sailmi.system.user.entity.SecurityAppealEntity">
+		INSERT ucs_security_appeal (
+			appealType,
+			realName,
+			userIdNum,
+			userPhone,
+			userEmail,
+			accountId,
+			appealDate
+		)
+		VALUES
+			(
+			#{reason},
+			#{realName},
+			#{IDcard},
+			#{userPhone},
+			#{userEmail},
+			#{accountId},
+			#{appealDate}
+		)
+</insert>
+
+	<update id="updateUserEmail" parameterType="map" >
+		UPDATE ucs_user
+		<set>
+			<if test="userEmail!=null and userEmail.length()>0">
+                user_email=#{userEmail},
+			</if>
+		</set>
+		WHERE id = #{userId}
+
+	</update>
+
+	<update id="updateUserPhone" parameterType="map" >
+		UPDATE ucs_user
+		<set>
+			<if test="userPhone!=null and userPhone.length()>0">
+                user_phone=#{userPhone},
+			</if>
+		</set>
+		WHERE id = #{userId}
+
+	</update>
+
+	<!-- 修改邮箱 -->
+	<update id="updateUserEmaila">
+	UPDATE ucs_user
+	SET user_email=#{eMailAddr}
+	WHERE id = #{id}
+	</update>
+</mapper>
