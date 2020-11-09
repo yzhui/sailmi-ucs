@@ -5,6 +5,7 @@ import com.sailmi.core.tool.api.R;
 import com.sailmi.system.entity.Tenant;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -17,6 +18,6 @@ public interface TenantFeign {
 	String API_PREFIX = "/tenant";
 
 	@PostMapping(API_PREFIX + "/tenatinfo-list")
-	R<List<Tenant>> queryLoginUserTeants(String enterpriseId);
+	R<List<Tenant>> queryLoginUserTeants(@RequestParam(value = "enterpriseId",required = true) String enterpriseId);
 
 }
