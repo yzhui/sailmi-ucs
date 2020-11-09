@@ -28,7 +28,7 @@ module.exports = {
     // 反向代理配置
     proxy: {
       '/ucs/api': {
-        target: 'http://47.93.23.120:90',
+        target: 'http://localhost:90',
         ws: true,
         pathRewrite: {
           '^/ucs/api': '/'

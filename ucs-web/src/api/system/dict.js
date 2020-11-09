@@ -1,8 +1,8 @@
 import request from '@/router/axios';
-
+import {apiUrl} from '@/config/env';
 export const getList = (current, size, params) => {
   return request({
-    url: '/api/sailmi-system/dict/list',
+    url: apiUrl+'/sailmi-system/dict/list',
     method: 'get',
     params: {
       ...params,
@@ -13,7 +13,7 @@ export const getList = (current, size, params) => {
 }
 export const remove = (ids) => {
   return request({
-    url: '/api/sailmi-system/dict/remove',
+    url: apiUrl+'/sailmi-system/dict/remove',
     method: 'post',
     params: {
       ids,
@@ -23,7 +23,7 @@ export const remove = (ids) => {
 
 export const add = (row) => {
   return request({
-    url: '/api/sailmi-system/dict/submit',
+    url: apiUrl+'/sailmi-system/dict/submit',
     method: 'post',
     data: row
   })
@@ -31,7 +31,7 @@ export const add = (row) => {
 
 export const update = (row) => {
   return request({
-    url: '/api/sailmi-system/dict/submit',
+    url: apiUrl+'/sailmi-system/dict/submit',
     method: 'post',
     data: row
   })
@@ -40,7 +40,7 @@ export const update = (row) => {
 
 export const getDict = (id) => {
   return request({
-    url: '/api/sailmi-system/dict/detail',
+    url: apiUrl+'/sailmi-system/dict/detail',
     method: 'get',
     params: {
       id,
@@ -49,7 +49,7 @@ export const getDict = (id) => {
 }
 export const getDictTree = () => {
   return request({
-    url: '/api/sailmi-system/dict/tree?code=DICT',
+    url: apiUrl+'/sailmi-system/dict/tree?code=DICT',
     method: 'get'
   })
 }

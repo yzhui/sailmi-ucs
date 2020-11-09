@@ -2,37 +2,44 @@
 server:
   port: 8010
 
-mongodb-oss:
-  enable: true
-  name: mongo
-  localrepo: /data/local/file     #file stored in local path
-  endpoint: http://xxxxx/file/    #monog visit urls
-  bucket-name: mongo             #本地库分类目录
-  access-key: VkmGKxgATNJI7fUR02m3c62mgz4wWHN4S8fCCt23
-  secret-key: pL0wM5jCDjtSWmEdGifgeRm8CqIHPeGt_lmctJr5
 
-
-qiniu-oss:
-  enable: true
-  name: qiniu
-  tenant-mode: true
-  endpoint: http://sailmi.s3-cn-south-1.qiniucs.com
-  access-key: VkmGKxgATNJI7fUR02m3c62mgz4wWHN4S8fCCt23
-  secret-key: pL0wM5jCDjtSWmEdGifgeRm8CqIHPeGt_lmctJr5
-  bucket-name: sailmi
-
-#oss-alioss:
-oss:
-  enable: true
-  name: alioss
-  endpoint: http://oss-cn-beijing.aliyuncs.com
-  access-key: LTAI4G64fM2RanntFTx12WXN
-  secret-key: pEV1xwUcL9i9NWvpNGwuyPSLiViuaj
-  bucket-name: test-yudorm
-
+sailmi:
+  fss:
+    provider: mongooss
+    enabled: true
+    tenantMode: true
+    alioss:
+      keyId: <your alioss key id>
+      keySecret: <your alioss key secret>
+      endpoint: oss-cn-shenzhen.aliyuncs.com
+      defaultBucket: testfss
+      clientConfiguration:
+        socketTimeout: 5000
+        connectionTimeout: 5000
+    mongooss:
+      enable: true
+      name: mongo
+    localoss:
+      store-path: <your local file store path>
+    qiniuoss:
+      accessKey: <your qiniu access key>
+      secretKey: <your qiniu secret ky>
+      host: <your qiniu subdomain>.bkt.clouddn.com
+      defaultBucket: testfss
+    webdavoss:
+      username: alice
+      password: secret1234
+      endpoint: http://127.0.0.1
+logging:
+  level:
+    in.clouthink: debug
+    com.github.sardine: debug
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${ucs.datasource.dev.url}
     username: ${ucs.datasource.dev.username}
     password: ${ucs.datasource.dev.password}
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/sailmi-fss

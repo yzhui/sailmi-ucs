@@ -27,8 +27,11 @@ import com.sailmi.core.oss.model.GeneralFile;
 import com.sailmi.core.oss.model.OssFile;
 import com.sailmi.core.tool.api.R;
 import com.sailmi.core.tool.utils.Func;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
 
 /**
  * 对象存储端点
@@ -40,9 +43,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/oss/endpoint")
 @Api(value = "对象存储端点", tags = "对象存储端点")
 public class OssEndpoint {
+	//初始化OSSProperties
 	private OssProvider ossProvider;
-
-
 
 	/**
 	 * 获取文件信息

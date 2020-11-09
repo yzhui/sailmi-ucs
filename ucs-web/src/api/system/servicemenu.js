@@ -1,8 +1,8 @@
 import request from '@/router/axios';
-
+import {apiUrl} from '@/config/env';
 export const getList = (current, size, params) => {
   return request({
-    url: '/api/sailmi-system/servicemenu/list',
+    url: apiUrl+'/sailmi-system/servicemenu/list',
     method: 'get',
     params: {
       ...params,
@@ -14,7 +14,7 @@ export const getList = (current, size, params) => {
 
 export const getDetail = (id) => {
   return request({
-    url: '/api/sailmi-system/servicemenu/detail',
+    url: apiUrl+'/sailmi-system/servicemenu/detail',
     method: 'get',
     params: {
       id
@@ -24,7 +24,7 @@ export const getDetail = (id) => {
 
 export const remove = (ids) => {
   return request({
-    url: '/api/sailmi-system/servicemenu/remove',
+    url: apiUrl+'/sailmi-system/servicemenu/remove',
     method: 'post',
     params: {
       ids,
@@ -34,7 +34,7 @@ export const remove = (ids) => {
 
 export const add = (row) => {
   return request({
-    url: '/api/sailmi-system/servicemenu/submit',
+    url: apiUrl+'/sailmi-system/servicemenu/submit',
     method: 'post',
     data: row
   })
@@ -42,7 +42,7 @@ export const add = (row) => {
 
 export const update = (row) => {
   return request({
-    url: '/api/sailmi-system/servicemenu/submit',
+    url: apiUrl+'/sailmi-system/servicemenu/submit',
     method: 'post',
     data: row
   })

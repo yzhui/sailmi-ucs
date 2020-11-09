@@ -1,8 +1,9 @@
 import request from '@/router/axios';
+import {apiUrl} from '@/config/env';
 
 export const getList = (current, size, params) => {
   return request({
-    url: '/api/sailmi-user/list',
+    url: apiUrl+'/sailmi-user/list',
     method: 'get',
     params: {
       ...params,
@@ -13,7 +14,7 @@ export const getList = (current, size, params) => {
 }
 export const remove = (ids) => {
   return request({
-    url: '/api/sailmi-user/remove',
+    url: apiUrl+'/sailmi-user/remove',
     method: 'post',
     params: {
       ids,
@@ -23,7 +24,7 @@ export const remove = (ids) => {
 
 export const add = (row) => {
   return request({
-    url: '/api/sailmi-user/submit',
+    url: apiUrl+'/sailmi-user/submit',
     method: 'post',
     data: row
   })
@@ -31,7 +32,7 @@ export const add = (row) => {
 
 export const update = (row) => {
   return request({
-    url: '/api/sailmi-user/update',
+    url: apiUrl+'/sailmi-user/update',
     method: 'post',
     data: row
   })
@@ -39,7 +40,7 @@ export const update = (row) => {
 
 export const grant = (userIds, roleIds) => {
   return request({
-    url: '/api/sailmi-user/grant',
+    url: apiUrl+'/sailmi-user/grant',
     method: 'post',
     params: {
       userIds,
@@ -50,7 +51,7 @@ export const grant = (userIds, roleIds) => {
 
 export const getUser = (id) => {
   return request({
-    url: '/api/sailmi-user/detail',
+    url: apiUrl+'/sailmi-user/detail',
     method: 'get',
     params: {
       id,
@@ -60,14 +61,14 @@ export const getUser = (id) => {
 
 export const getUserInfo = () => {
   return request({
-    url: '/api/sailmi-user/info',
+    url: apiUrl+'/sailmi-user/info',
     method: 'get',
   })
 }
 
 export const resetPassword = (userIds) => {
   return request({
-    url: '/api/sailmi-user/reset-password',
+    url: apiUrl+'/sailmi-user/reset-password',
     method: 'post',
     params: {
       userIds,
@@ -77,7 +78,7 @@ export const resetPassword = (userIds) => {
 
 export const updatePassword = (oldPassword, newPassword, newPassword1) => {
   return request({
-    url: '/api/sailmi-user/update-password',
+    url: apiUrl+'/sailmi-user/update-password',
     method: 'post',
     params: {
       oldPassword,
