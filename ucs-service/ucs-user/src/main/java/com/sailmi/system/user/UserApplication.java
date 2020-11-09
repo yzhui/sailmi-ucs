@@ -29,7 +29,7 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringCloudApplication
 @EnableFeignClients(LaunchConstant.BASE_PACKAGES)
-@ComponentScan(basePackages = {"com.sailmi.system.user.feign"})
+@ComponentScan(basePackages = {"com.sailmi.**"})
 @MapperScan({"com.sailmi.**.mapper.**", "com.sailmi.**.mapper.**"})
 public class UserApplication {
 

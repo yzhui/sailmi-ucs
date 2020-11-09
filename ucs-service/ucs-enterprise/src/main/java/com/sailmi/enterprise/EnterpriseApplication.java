@@ -21,6 +21,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * 系统模块启动器
@@ -28,6 +29,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  */
 @SpringCloudApplication
 @EnableFeignClients(LaunchConstant.BASE_PACKAGES)
+@ComponentScan(basePackages = {"com.sailmi.**"})
 @MapperScan({"com.sailmi.**.mapper.**", "com.sailmi.**.mapper.**"})
 public class EnterpriseApplication {
 
