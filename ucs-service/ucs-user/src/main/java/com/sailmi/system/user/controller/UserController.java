@@ -21,6 +21,7 @@ import com.alibaba.excel.read.builder.ExcelReaderBuilder;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
+import com.sailmi.system.entity.Result;
 import com.sailmi.system.entity.UserEnterprise;
 import com.sailmi.system.feign.IuserEnterRelationFeign;
 import com.sailmi.system.user.entity.UcsAccountuser;
@@ -162,26 +163,29 @@ public class UserController {
 	@ApiOperation(value = "列表", notes = "传入account和realName")
 	public R<IPage<UserVO>> list(@ApiIgnore @RequestParam Map<String, Object> user, Query query, AuthUser authUser) {
 		QueryWrapper<User> queryWrapper = Condition.getQueryWrapper(user, User.class);
-		ArrayList<Long> userIds = new ArrayList<>();
+		IPage<User>	pages=null;
 		if(authUser!=null) {
-			//逻辑有问题，这里，不需要判断用户是否是平台管理员，只需要按此用户的实际企业获取用户列表
+			ArrayList<Long> userIds = new ArrayList<>();
 			//ucs_enterprise_user表要用起来  yzh
 				if (authUser.getEnterpriseId() != null) {
-					R<List<UserEnterprise>> listR = iuserEnterRelationFeign.detailInfo(authUser.getEnterpriseId(),false);
+					String enterpriseId = authUser.getEnterpriseId();
+					R<List<UserEnterprise>> listR = iuserEnterRelationFeign.detailInfo(enterpriseId);
 					if(listR!=null && listR.getData()!=null && listR.getData().size()>0){
-						listR.getData().stream().forEach(userEnter->{
-							userIds.add(userEnter.getUserId());
+						listR.getData().stream().forEach(UserEnterprise->{
+							userIds.add(UserEnterprise.getUserId());
 						});
 					}
 				}
+			if(userIds.size()>0){
+				queryWrapper.in("id",userIds);
+				pages = userService.page(Condition.getPage(query),  queryWrapper);
+			}
 		}
-		if(userIds.size()>0){
-			queryWrapper.in("id",userIds);
-		}else{
-			queryWrapper.in("id",0);
-		}
-			IPage<User>	pages = userService.page(Condition.getPage(query),  queryWrapper);
+		if(pages!=null && pages.getTotal()>0) {
 			return R.data(UserWrapper.build().pageVO(pages));
+		}else{
+			return R.data(null);
+		}
 	}
 
 	/**
@@ -335,5 +339,13 @@ public class UserController {
 		EasyExcel.write(response.getOutputStream(), UserExcel.class).sheet("用户数据表").doWrite(list);
 	}
 
+
+	@RequestMapping(value="updatePass",method=RequestMethod.POST)
+	@ResponseBody
+	public Result updatePassword(String userPhone, String userEmail, String password) {
+
+		return userService.updatePassword1(userPhone,userEmail,password);
+
+	}
 
 }

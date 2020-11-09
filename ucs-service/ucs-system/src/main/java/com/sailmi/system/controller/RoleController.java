@@ -74,10 +74,18 @@ public class RoleController extends AppController {
 	@ApiOperation(value = "列表", notes = "传入role")
 	public R<List<INode>> list(AuthUser authUser,@ApiIgnore @RequestParam Map<String, Object> role) {
 		QueryWrapper<Role> queryWrapper = Condition.getQueryWrapper(role, Role.class);
+		queryWrapper.eq("is_sys",0);
 		if(authUser!=null && authUser.getEnterpriseId()!=null) {
 			queryWrapper.eq("enterprise_id", authUser.getEnterpriseId());
 		}
-		List<Role> list = roleService.list(queryWrapper);
+		List<Role> list = roleService.list(queryWrapper);//查询该公司的角色列表
+
+		QueryWrapper<Role> roleQueryWrapper = new QueryWrapper<>();
+		roleQueryWrapper.eq("is_sys",1);
+		List<Role> commonList = roleService.list(roleQueryWrapper);//查询该公司的角色列表
+		if(commonList!=null && commonList.size()>0){
+			list.addAll(commonList);
+		}
 		return R.data(RoleWrapper.build().listNodeVO(list));
 	}
 
@@ -103,6 +111,9 @@ public class RoleController extends AppController {
 			String enterpriseId= "000000";
 			role.setEnterpriseId(Long.valueOf(enterpriseId));
 		}
+		if(Func.isEmpty(role.getIsSys())){// 1 是默认的系统角色，企业都可见，但是不能删除与修改
+			role.setIsSys("0");
+		}
 		return R.status(roleService.saveOrUpdate(role));
 	}
 
@@ -116,7 +127,7 @@ public class RoleController extends AppController {
 	public R remove(AuthUser authUser,@ApiParam(value = "主键集合", required = true) @RequestParam String ids) {
 		R<String> status=null;
 			if(ids.contains("-2") || ids.contains("-3")){//包含这两个角色，则不能删除
-				status = R.data(400, "", "是系统角色，没有删除权限");
+				status = R.data(400, "", "是系统公共角色，没有删除权限");
 			}else{
 				boolean flag= roleService.removeByIds(Func.toLongList(ids));
 				status = R.data(200, "", "删除成功");
@@ -137,9 +148,8 @@ public class RoleController extends AppController {
 	public R grant(AuthUser authUser,@ApiParam(value = "roleId集合", required = true) @RequestParam String roleIds,
 				   @ApiParam(value = "menuId集合", required = true) @RequestParam String menuIds) {
 		R<String> status=null;
-
 		if(roleIds.contains("-2") || roleIds.contains("-3")){
-			status = R.data(400, "", "该角色菜单是固定的，没有修改权限");
+			status = R.data(400, "", "该角色菜单是系统公共的，没有修改权限");
 		}else{
 			boolean temp = roleService.grant(Func.toLongList(roleIds), Func.toLongList(menuIds));
 			status = R.data(200, "", "修改成功");

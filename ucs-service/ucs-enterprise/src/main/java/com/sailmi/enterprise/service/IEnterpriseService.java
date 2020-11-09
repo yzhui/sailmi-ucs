@@ -17,6 +17,7 @@ package com.sailmi.enterprise.service;
 
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.system.entity.Enterprise;
+import com.sailmi.system.entity.UserEnterpriseDepartment;
 import com.sailmi.system.vo.EnterpriseVO;
 import com.sailmi.core.mp.base.BaseService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -91,4 +92,11 @@ public interface IEnterpriseService extends BaseService<Enterprise> {
 	Enterprise selectEnterprise(BigInteger userId, BigInteger enterpriseId);
 
 	void saveUserEnterprise(Long id, Long userId);
+
+	/**
+	 * 查询用户下的企业信息
+	 *
+	 * @return
+	 */
+	List<UserEnterpriseDepartment> getUserEnterpriseByUserId(BigInteger userId);
 }

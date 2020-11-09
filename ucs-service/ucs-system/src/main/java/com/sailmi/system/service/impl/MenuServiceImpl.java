@@ -19,6 +19,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sailmi.system.entity.MenuTreeResultEntity;
 import com.sailmi.system.entity.SystemEntity;
 import com.sailmi.system.service.ISystemService;
 import com.sailmi.system.service.ITenantService;
@@ -53,6 +54,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
 	IRoleMenuService roleMenuService;
 	ISystemService iSystemService;
+
 
 	@Override
 	public IPage<MenuVO> selectMenuPage(IPage<MenuVO> page, MenuVO menu) {
@@ -134,6 +136,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 		MenuWrapper menuWrapper = new MenuWrapper();
 		return ForestNodeMerger.merge(menuWrapper.listNodeVO(menus));
 	}
+
+
 
 	private List<Long> tenantMenuIds(String tenantId,List<Long> longs) {
 		QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();

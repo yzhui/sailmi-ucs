@@ -80,39 +80,46 @@ public class AuthClientController extends AppController {
 	@ApiOperationSupport(order = 2)
 	@ApiOperation(value = "分页", notes = "传入client")
 	public R<IPage<AuthClientVo>> list(AuthUser user, AuthClient authClient, Query query) {
-		ArrayList<Long> systemIds = new ArrayList<>();
+		IPage<AuthClient> pages=null;
+		IPage<AuthClientVo> serviceVOIPage =null;
 		if(user!=null && user.getEnterpriseId()!=null) {
-			QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
 			//需要查询租户表，获取此用户企业所管理的租户，然后查询此租户下所有的系统与client
 			QueryWrapper<Tenant> tenantQueryWrapper = new QueryWrapper<>();
 			tenantQueryWrapper.eq("enterprise_id",user.getEnterpriseId());
 			List<Tenant> tenalist = tenantService.list(tenantQueryWrapper);
-			ArrayList<String> strings = new ArrayList<>();
 			if(tenalist!=null && tenalist.size()>0){
+				ArrayList<String> strings = new ArrayList<>();
 				tenalist.stream().forEach(tenant -> {
 					strings.add(tenant.getTenantId());
 				});
+				if(strings.size()>0) {
+					QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
+					systemEntityQueryWrapper.in("tenant_id", strings);
+
+					List<SystemEntity> list = systemService.list(systemEntityQueryWrapper);
+					if(list!=null && list.size()>0){
+						ArrayList<Long> systemIds = new ArrayList<>();
+						list.stream().forEach(sysEntity->{
+							systemIds.add(sysEntity.getId());
+						});
+						QueryWrapper<AuthClient> queryWrapper = Condition.getQueryWrapper(authClient);
+						if(systemIds!=null && systemIds.size()>0){
+							queryWrapper.in("system_id",systemIds);
+							 pages = clientService.page(Condition.getPage(query), queryWrapper);
+						}
+
+					}
+				}
 			}
-			if(strings.size()>0) {
-				systemEntityQueryWrapper.in("tenant_id", strings);
-			}
-			List<SystemEntity> list = systemService.list(systemEntityQueryWrapper);
-			if(list!=null && list.size()>0){
-				list.stream().forEach(sysEntity->{
-					systemIds.add(sysEntity.getId());
+
+		}
+		if(pages!=null && pages.getTotal()>0) {
+			 serviceVOIPage = AuthClientWrapper.build().pageVO(pages);
+			if (serviceVOIPage != null && serviceVOIPage.getTotal() > 0) {
+				serviceVOIPage.getRecords().stream().forEach(clientVo -> {
+					clientVo.setSystemName(systemService.getById(clientVo.getSystemId()).getSystemName());
 				});
 			}
-		}
-		QueryWrapper<AuthClient> queryWrapper = Condition.getQueryWrapper(authClient);
-		if(systemIds!=null && systemIds.size()>0){
-			queryWrapper.in("system_id",systemIds);
-		}
-		IPage<AuthClient> pages = clientService.page(Condition.getPage(query), queryWrapper);
-		IPage<AuthClientVo> serviceVOIPage = AuthClientWrapper.build().pageVO(pages);
-		if(serviceVOIPage!=null && serviceVOIPage.getTotal()>0){
-			serviceVOIPage.getRecords().stream().forEach(clientVo->{
-				clientVo.setSystemName(systemService.getById(clientVo.getSystemId()).getSystemName());
-			});
 		}
 		return R.data(serviceVOIPage);
 	}

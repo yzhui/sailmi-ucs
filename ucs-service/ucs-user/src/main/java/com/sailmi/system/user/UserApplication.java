@@ -20,6 +20,7 @@ import com.sailmi.core.launch.constant.LaunchConstant;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * 用户启动器
@@ -28,6 +29,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  */
 @SpringCloudApplication
 @EnableFeignClients(LaunchConstant.BASE_PACKAGES)
+@ComponentScan(basePackages = {"com.sailmi.system.user.feign"})
 @MapperScan({"com.sailmi.**.mapper.**", "com.sailmi.**.mapper.**"})
 public class UserApplication {
 

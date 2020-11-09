@@ -18,10 +18,7 @@ package com.sailmi.enterprise.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.core.tool.utils.Func;
-import com.sailmi.system.entity.Enterprise;
-import com.sailmi.system.entity.ResponseMessage;
-import com.sailmi.system.entity.Result;
-import com.sailmi.system.entity.ServiceEnterprise;
+import com.sailmi.system.entity.*;
 import com.sailmi.system.vo.EnterpriseVO;
 import com.sailmi.enterprise.mapper.EnterpriseMapper;
 import com.sailmi.enterprise.service.IEnterpriseService;
@@ -173,5 +170,13 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 	@Override
 	public void saveUserEnterprise(Long id, Long userId) {
 		baseMapper.insertUserEnterprise(id, userId);
+	}
+
+	@Override
+	public List<UserEnterpriseDepartment> getUserEnterpriseByUserId(BigInteger userId) {
+		// 根据用户ID查询用户下的企业信息
+		List<UserEnterpriseDepartment> userEnterpriseDepartmentList = baseMapper
+			.getUserEnterpriseByUserId(userId);
+		return userEnterpriseDepartmentList;
 	}
 }

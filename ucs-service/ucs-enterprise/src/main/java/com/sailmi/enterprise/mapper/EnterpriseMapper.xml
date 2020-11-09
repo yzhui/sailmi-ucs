@@ -107,8 +107,8 @@
             SELECT enterprise_id
             FROM ucs_user_enterprise
             WHERE user_id = #{userId}
-            AND is_deleted = 0
-        ) AND is_deleted = 0
+
+        )
     </select>
 
     <!--是否存在企业中-->
@@ -139,4 +139,29 @@
     <insert id="insertUserEnterprise" >
         INSERT INTO ucs_user_enterprise(user_id, enterprise_id) VALUES (#{userId}, #{id})
     </insert>
+
+    <!-- 根据用户ID查询企业信息 -->
+    <select id="getUserEnterpriseByUserId" parameterType="BigInteger" resultType="com.sailmi.system.entity.UserEnterpriseDepartment">
+		SELECT
+			sue.enterprise_id AS enterpriseId,
+			se.enterprise_name AS enterpriseName,
+			sue.create_times AS createTime,
+			sue.department_id AS departmentId,
+			sd.dept_name AS departmentName,
+			sue.status AS status
+		FROM
+			ucs_user_enterprise sue
+		LEFT JOIN
+			ucs_dept sd
+		ON
+			sd.id = sue.department_id
+		LEFT JOIN
+			ucs_enterprise se
+		ON
+			se.id = sue.enterprise_id
+		WHERE
+			sue.user_id = #{userId}
+		/*AND
+			sue.isOpen = "1"*/
+	</select>
 </mapper>

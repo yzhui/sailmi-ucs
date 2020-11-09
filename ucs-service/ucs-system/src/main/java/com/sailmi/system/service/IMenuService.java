@@ -15,11 +15,13 @@
  */
 package com.sailmi.system.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.core.tool.support.Kv;
 import com.sailmi.system.entity.Menu;
+import com.sailmi.system.entity.MenuTreeResultEntity;
 import com.sailmi.system.vo.MenuVO;
 
 import java.util.List;
@@ -88,4 +90,6 @@ public interface IMenuService extends IService<Menu> {
 	List<Kv> authRoutes(AuthUser user);
 
 	List<MenuVO> grantServiceMenuTree(AuthUser user);
+
+
 }

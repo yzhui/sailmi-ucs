@@ -15,10 +15,16 @@
  */
 package com.sailmi.system.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.sailmi.core.secure.AuthUser;
+import com.sailmi.system.entity.Menu;
+import com.sailmi.system.entity.MenuTreeResultEntity;
 import com.sailmi.system.entity.ServiceMenu;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sailmi.system.vo.ServiceMenuVO;
+
+import java.util.List;
 
 /**
  * 服务功能包设定，表明此功能属于哪个服务包，只有享受此服务包的用户才能访问这个功能 服务类
@@ -37,4 +43,5 @@ public interface IServiceMenuService extends IService<ServiceMenu> {
 	 */
 	IPage<ServiceMenuVO> selectServiceMenuPage(IPage<ServiceMenuVO> page, ServiceMenuVO serviceMenu);
 
+	List<MenuTreeResultEntity> queryUserMenus(QueryWrapper<Menu> menuQueryWrapper);
 }
