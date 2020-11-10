@@ -18,10 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 统一用户Controller
@@ -242,7 +239,10 @@ public class AccountUserController {
 	 * @Date: 2020/11/9/0009 17:35
 	 */
 	@RequestMapping(value = "userUpdate", method = RequestMethod.POST)
-	public String userUpdate(AuthUser authUser, AccountUserEntity accountUser){
+	public String userUpdate(AuthUser authUser, AccountUserEntity accountUser, String date){
+		Long longTime= Long.valueOf(date);
+		Date d = new Date(longTime);
+		accountUser.setUserBrithday(d);
 		String res = accountUserService.userUpdate(authUser, accountUser);
 		return res;
 	}
