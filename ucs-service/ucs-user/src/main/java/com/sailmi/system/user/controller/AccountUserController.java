@@ -213,25 +213,39 @@ public class AccountUserController {
 //	 * @param accountUser
 //	 * @return
 //	 */
-//	@RequestMapping(value = "upsert", method = RequestMethod.POST)
-//	public String upsert(AccountUserEntity accountUser) {
-//		HashMap<String, Object> hashMap = new HashMap<String, Object>();
-//		int status = accountUserService.upsert(accountUser);
-//		if (status == 1) {
-//			hashMap.put("status", 1);
-//			hashMap.put("msg", "增加、保存用户信息列表成功！");
-//			return JSON.toJSONString(hashMap);
-//		} else if (status == 2) {
-//			hashMap.put("status", 2);
-//			hashMap.put("msg", "账号已存在不可重复添加!");
-//			return JSON.toJSONString(hashMap);
-//		} else {
-//			hashMap.put("status", 0);
-//			hashMap.put("msg", "增加、保存用户信息列表失败！");
-//		}
-//		return JSON.toJSONString(hashMap);
-//	}
-//
+	@RequestMapping(value = "upsert", method = RequestMethod.POST)
+	public String upsert(AccountUserEntity accountUser) {
+		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+		int status = accountUserService.upsert(accountUser);
+		if (status == 1) {
+			hashMap.put("status", 1);
+			hashMap.put("msg", "增加、保存用户信息列表成功！");
+			return JSON.toJSONString(hashMap);
+		} else if (status == 2) {
+			hashMap.put("status", 2);
+			hashMap.put("msg", "账号已存在不可重复添加!");
+			return JSON.toJSONString(hashMap);
+		} else {
+			hashMap.put("status", 0);
+			hashMap.put("msg", "增加、保存用户信息列表失败！");
+		}
+		return JSON.toJSONString(hashMap);
+	}
+
+	/**
+	 * <p>Description: 用户编辑</p>
+	 *
+	 * @param authUser:
+	 * @param accountUser:
+	 * @return: java.lang.String
+	 * @Author: syt
+	 * @Date: 2020/11/9/0009 17:35
+	 */
+	@RequestMapping(value = "userUpdate", method = RequestMethod.POST)
+	public String userUpdate(AuthUser authUser, AccountUserEntity accountUser){
+		String res = accountUserService.userUpdate(authUser, accountUser);
+		return res;
+	}
 //	/**
 //	 * 删除用户信息
 //	 *
@@ -712,5 +726,6 @@ public class AccountUserController {
 //		}
 //		return result;
 //	}
+
 
 }

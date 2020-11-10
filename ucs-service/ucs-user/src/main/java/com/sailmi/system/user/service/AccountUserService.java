@@ -1,5 +1,6 @@
 package com.sailmi.system.user.service;
 
+import com.sailmi.core.secure.AuthUser;
 import com.sailmi.system.entity.Enterprise;
 import com.sailmi.system.user.entity.AccountUserEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,7 +34,7 @@ public interface AccountUserService {
      * @param accountUser
      * @return status
      */
-//    public int upsert(AccountUserEntity accountUser);
+    public int upsert(AccountUserEntity accountUser) ;
 
     /**
      * 删除用户信息
@@ -49,9 +50,15 @@ public interface AccountUserService {
      * @param phoneNum
      * @return status
      */
-//    public int phone(String phoneNum);
+    public int phone(String phoneNum);
 
-    /**
+	/**
+	 * 用户编辑
+	 *
+	 */
+	String userUpdate(AuthUser authUser, AccountUserEntity accountUser);
+
+	/**
      * 企业
      *
      * @return

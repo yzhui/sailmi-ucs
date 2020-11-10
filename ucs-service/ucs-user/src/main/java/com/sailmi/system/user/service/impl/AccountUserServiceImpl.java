@@ -12,10 +12,13 @@ import com.alibaba.fastjson.JSON;
 //import com.linose.common.util.Page;
 //import com.linose.common.util.ResponseMessage;
 //import com.linose.common.util.Result;
+import com.sailmi.core.secure.AuthUser;
 import com.sailmi.system.entity.Enterprise;
 import com.sailmi.system.user.entity.AccountUserEntity;
+import com.sailmi.system.user.excel.PhoneCodeUtil;
 import com.sailmi.system.user.mapper.AccountUserMapper;
 import com.sailmi.system.user.service.AccountUserService;
+import com.sailmi.system.user.service.MailService;
 import io.netty.util.internal.StringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,7 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
-//import java.math.BigInteger;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,15 +61,14 @@ public class AccountUserServiceImpl implements AccountUserService {
     /**
      * 注入MAPPER
      */
-//    @Autowired(required = false)
-//	@Resource
-//    private AccountUserMapper accountUserMapper;
+    @Autowired(required = false)
+    private AccountUserMapper accountUserMapper;
 
     /**
      * 邮件发送
      */
-//    @Autowired
-//    private MailService mailService;
+    @Autowired(required = false)
+    private MailService mailService;
 
     /**
      * 短信通知
@@ -99,7 +101,7 @@ public class AccountUserServiceImpl implements AccountUserService {
     /**
      * 查询用户信息列表
      *
-     * @param userEntity 输入参数：用户实体类
+     * @param //userEntity 输入参数：用户实体类
      * @return
      */
 //    @Override
@@ -117,87 +119,110 @@ public class AccountUserServiceImpl implements AccountUserService {
 //        }
 //        return query;
 //    }
-//
-//    /**
-//     * 修改、增加用户信息
-//     *
-//     * @param acUser 输入参数：用户信息实体类
-//     * @return 返回值：1成功，0失败
-//     */
-//    @Override
-//    public int upsert(AccountUserEntity acUser) {
-//        int status = 0, insertRelation = 0, depTotalMemberNum = 0, phoneExis = -1,emailExis = -1, iExit = 0;
-//        //当前时间
-//        String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date().getTime());
-//        //企业名称
-//        String enterName = accountUserMapper.getEnterpriseNameById(acUser.getEnterpriseId());
-//        //密码
-//        String password = acUser.getPassword();
-//        // 修改用户信息或部门
-//        if (acUser.getId() != null) {
-//            status = accountUserMapper.update(acUser);
-//            if (status == 1) {
-//                boolean info = (acUser.getLoginName()) != null;
-//                if (info) {
-//                    // 将用户信息状态修改为已完善
-//                    accountUserMapper.updateSta(acUser.getId());
-//                }
-//                if (acUser.getEnterpriseId() != null & acUser.getDepartmentId() != null) {
-//                    // 修改用户部门
-//                    accountUserMapper.updateRealtion(acUser.getId(), acUser.getEnterpriseId(),
-//                            acUser.getDepartmentId());
-//                    // 更新部门人数
-//                    depTotalMemberNum = accountUserMapper.countDepMemberNum(acUser.getEnterpriseId(),
-//                            acUser.getDepartmentId());
-//                    accountUserMapper.updateDepMemberNum(depTotalMemberNum, acUser.getDepartmentId());
-//
-//                }
-//                return 1;
-//            }
-//            // 修改失败
-//            return 0;
-//        }
-//        // 新加入用户
-//        try {
-//        	BigInteger userId = null;
-//        	//判断账号是否存在:验证手机号和邮箱,账号存在直接加入企业
-//        	if(acUser.getUserPhone() != null) {
-//        		phoneExis = this.phone(acUser.getUserPhone());
-//        		//获取用户ID
-//        		userId = accountUserMapper.getIdByUserPhoneOrEmail(acUser.getUserPhone());
-//        	}else if(acUser.getUserEmail() != null) {
-//        		emailExis = this.emailOnlyOne(acUser.getUserEmail());
-//        		//获取用户ID
-//        		userId = accountUserMapper.getIdByUserPhoneOrEmail(acUser.getUserEmail());
-//        	}
-//        	//账号存在:直接将用户加入企业,0存在
-//        	if(phoneExis == 0 || emailExis == 0) {
-//        		//判断该用户是否已经存在该企业中
-//        		HashMap<Object, Object> hashMap = new HashMap<Object, Object>();
-//                hashMap.put("userId", userId);
-//                hashMap.put("enterpriseId", acUser.getEnterpriseId());
-//                iExit = accountUserMapper.userExitsEnterprise(hashMap);
-//        		if(iExit > 0) {
-//        			//用户已经加入过该企业
-//        			return 2;
-//        		}
-//        		// 插入用户企业关系表
-//                insertRelation = accountUserMapper.insertRelation(acUser.getEnterpriseId(), userId, createTime,
-//                        (acUser.getDepartmentId() == null) ? null : acUser.getDepartmentId());
-//                // 更新部门人数
-//                depTotalMemberNum = accountUserMapper.countDepMemberNum(acUser.getEnterpriseId(), acUser.getDepartmentId());
-//                accountUserMapper.updateDepMemberNum(depTotalMemberNum, acUser.getDepartmentId());
-//        		//写入用户角色
+
+	/**
+	 * 用户编辑
+	 *
+	 * @param authUser
+	 * @param accountUser
+	 */
+	@Override
+	public String userUpdate(AuthUser authUser, AccountUserEntity accountUser) {
+		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+		BigInteger id = BigInteger.valueOf(authUser.getUserId());
+		accountUser.setId(id);
+		int r = accountUserMapper.userUpdate(accountUser);
+		if (r > 0) {
+			hashMap.put("status", 1);
+			hashMap.put("msg", "编辑用户信息成功！");
+			return JSON.toJSONString(hashMap);
+		}
+		hashMap.put("status", 0);
+		hashMap.put("msg", "编辑用户信息失败！");
+		return JSON.toJSONString(hashMap);
+	}
+
+    /**
+     * 修改、增加用户信息
+     *
+     * @param acUser 输入参数：用户信息实体类
+     * @return 返回值：1成功，0失败
+     */
+    @Override
+    public int upsert(AccountUserEntity acUser) {
+        int status = 0, insertRelation = 0, depTotalMemberNum = 0, phoneExis = -1,emailExis = -1, iExit = 0;
+        //当前时间
+        String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date().getTime());
+        //企业名称
+        String enterName = accountUserMapper.getEnterpriseNameById(acUser.getEnterpriseId());
+        //密码
+        String password = acUser.getPassword();
+        // 修改用户信息或部门
+        if (acUser.getId() != null) {
+            status = accountUserMapper.update(acUser);
+            if (status == 1) {
+                boolean info = (acUser.getLoginName()) != null;
+                if (info) {
+                    // 将用户信息状态修改为已完善
+                    accountUserMapper.updateSta(acUser.getId());
+                }
+                if (acUser.getEnterpriseId() != null & acUser.getDepartmentId() != null) {
+                    // 修改用户部门
+                    accountUserMapper.updateRealtion(acUser.getId(), acUser.getEnterpriseId(),
+                            acUser.getDepartmentId());
+                    // 更新部门人数
+                    depTotalMemberNum = accountUserMapper.countDepMemberNum(acUser.getEnterpriseId(),
+                            acUser.getDepartmentId());
+                    accountUserMapper.updateDepMemberNum(depTotalMemberNum, acUser.getDepartmentId());
+
+                }
+                return 1;
+            }
+            // 修改失败
+            return 0;
+        }
+        // 新加入用户
+        try {
+        	BigInteger userId = null;
+        	//判断账号是否存在:验证手机号和邮箱,账号存在直接加入企业
+        	if(acUser.getUserPhone() != null) {
+        		phoneExis = this.phone(acUser.getUserPhone());
+        		//获取用户ID
+        		userId = accountUserMapper.getIdByUserPhoneOrEmail(acUser.getUserPhone());
+        	}else if(acUser.getUserEmail() != null) {
+        		emailExis = this.emailOnlyOne(acUser.getUserEmail());
+        		//获取用户ID
+        		userId = accountUserMapper.getIdByUserPhoneOrEmail(acUser.getUserEmail());
+        	}
+        	//账号存在:直接将用户加入企业,0存在
+        	if(phoneExis == 0 || emailExis == 0) {
+        		//判断该用户是否已经存在该企业中
+        		HashMap<Object, Object> hashMap = new HashMap<Object, Object>();
+                hashMap.put("userId", userId);
+                hashMap.put("enterpriseId", acUser.getEnterpriseId());
+                iExit = accountUserMapper.userExitsEnterprise(hashMap);
+        		if(iExit > 0) {
+        			//用户已经加入过该企业
+        			return 2;
+        		}
+        		// 插入用户企业关系表
+                insertRelation = accountUserMapper.insertRelation(acUser.getEnterpriseId(), userId, createTime,
+                        (acUser.getDepartmentId() == null) ? null : acUser.getDepartmentId());
+                // 更新部门人数
+                depTotalMemberNum = accountUserMapper.countDepMemberNum(acUser.getEnterpriseId(), acUser.getDepartmentId());
+                accountUserMapper.updateDepMemberNum(depTotalMemberNum, acUser.getDepartmentId());
+        		//写入用户角色
 //        		accountUserMapper.insertUserRole(acUser.getEnterpriseId(), userId);
-//        		//给用户发短信通知
-//        		 try {
-//                     if (acUser.getUserPhone() != null || acUser.getUserPhone() != "") {
-//                         PhoneCodeUtil.sendCodeMsg(acUser.getUserPhone(), enterName, acUser.getLoginName(), password);
-//                     }
-//                 } catch (Exception e) {
-//                     LOG.error("发送短信通知异常:" + e, e);
-//                 }
-//        		//给用户发送邮件通知
+        		//给用户发短信通知
+        		 try {
+                     if (acUser.getUserPhone() != null || acUser.getUserPhone() != "") {
+//                         PhoneCodeUtil.sendCodeMsg(acUser.getUserPhone()/*, enterName, acUser.getLoginName(), password*/);
+						 new PhoneCodeUtil().sendCodeMsg(acUser.getUserPhone());
+					 }
+                 } catch (Exception e) {
+                     LOG.error("发送短信通知异常:" + e, e);
+                 }
+        		//给用户发送邮件通知
 //        		 try {
 //        			 if (acUser.getUserEmail() != null || acUser.getUserEmail() != "") {
 //        				 this.sendEmail(acUser.getUserEmail(), enterName, acUser.getLoginName(), password);
@@ -205,85 +230,86 @@ public class AccountUserServiceImpl implements AccountUserService {
 //        		 }catch(Exception e) {
 //        			 LOG.error("发送邮件异常:" + e, e);
 //        		 }
-//        		 if (insertRelation == 1) {
-//                     return 1;
-//                 }
-//        		 return 0;
-//        	}
-//
-//
-//
-//            // 注册时间
-//            acUser.setRegisterDate(String.valueOf(new Date().getTime()));
-//            // 安全凭证
-//            acUser.setSafeCode(MD5Util.MD5Code(acUser.getPassword() + acUser.getLoginName()));
-//            // 密码加密
-//            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//            String hashPass = passwordEncoder.encode(acUser.getPassword());
-//            // 加密后存入
-//            acUser.setPassword(hashPass);
-//            // 管理员添加成员后更改该成员的最后操作企业ID记录
-//            BigInteger lastEnterpriseId = acUser.getEnterpriseId();
-//            acUser.setLastEnterpriseId(lastEnterpriseId);
-//            // 管理员添加成员后更改该成员的企业认证状态
-//            String enterSta = null;
-//            if (acUser.getEnterpriseId() != null) {
-//            	enterSta = "1";
-//                acUser.setEnterpriseStatus(enterSta);
-//            } else {
-//                enterSta = "0";
-//                acUser.setEnterpriseStatus(enterSta);
-//            }
-//
-//            //企业名称
-//            if (acUser.getInform() == 1 || acUser.getInform() == 3) {
-//                //判断loginName是否为空,为空则用手机号作为longinName
-//                if (acUser.getLoginName() == null || acUser.getLoginName() == "") {
-//                    acUser.setLoginName(acUser.getUserPhone());
-//                }
-//                try {
-//                    //给用户发短信通知
-//                    if (acUser.getUserPhone() != null || acUser.getUserPhone() != "") {
+        		 if (insertRelation == 1) {
+                     return 1;
+                 }
+        		 return 0;
+        	}
+
+
+
+            // 注册时间
+            acUser.setRegisterDate(String.valueOf(new Date().getTime()));
+            // 安全凭证
+			// acUser.setSafeCode(MD5Util.MD5Code(acUser.getPassword() + acUser.getLoginName()));
+			// 密码加密
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String hashPass = passwordEncoder.encode(acUser.getPassword());
+            // 加密后存入
+            acUser.setPassword(hashPass);
+            // 管理员添加成员后更改该成员的最后操作企业ID记录
+            BigInteger lastEnterpriseId = acUser.getEnterpriseId();
+            acUser.setLastEnterpriseId(lastEnterpriseId);
+            // 管理员添加成员后更改该成员的企业认证状态
+            String enterSta = null;
+            if (acUser.getEnterpriseId() != null) {
+            	enterSta = "1";
+                acUser.setEnterpriseStatus(enterSta);
+            } else {
+                enterSta = "0";
+                acUser.setEnterpriseStatus(enterSta);
+            }
+
+            //企业名称
+            if (acUser.getInform() == 1 || acUser.getInform() == 3) {
+                //判断loginName是否为空,为空则用手机号作为longinName
+                if (acUser.getLoginName() == null || acUser.getLoginName() == "") {
+                    acUser.setLoginName(acUser.getUserPhone());
+                }
+                try {
+                    //给用户发短信通知
+                    if (acUser.getUserPhone() != null || acUser.getUserPhone() != "") {
 //                        PhoneCodeUtil.sendCodeMsg(acUser.getUserPhone(), enterName, acUser.getLoginName(), password);
-//                    }
-//                } catch (Exception e) {
-//                    LOG.error("发送短信通知异常,e", e);
-//                }
-//            }
-//            if (acUser.getInform() == 2 || acUser.getInform() == 3) {
-//                //判断loginName是否为空,为空则用邮箱作为longinName
-//                if (acUser.getLoginName() == null || acUser.getLoginName() == "") {
-//                    acUser.setLoginName(acUser.getUserEmail());
-//                }
-//                //给用户发送邮件通知
-//                if (acUser.getUserEmail() != null || acUser.getUserEmail() != "") {
-//                    this.sendEmail(acUser.getUserEmail(), enterName, acUser.getLoginName(), password);
-//                }
-//            }
-//            if (acUser.getRealName() == null || acUser.getRealName().trim() == "") {
-//                acUser.setRealName("未填写真实姓名");
-//            }
-//            // 信息入库
-//            status = accountUserMapper.insert(acUser);
-//            //用户角色
+                        new PhoneCodeUtil().sendCodeMsg(acUser.getUserPhone());
+                    }
+                } catch (Exception e) {
+                    LOG.error("发送短信通知异常,e", e);
+                }
+            }
+            if (acUser.getInform() == 2 || acUser.getInform() == 3) {
+                //判断loginName是否为空,为空则用邮箱作为longinName
+                if (acUser.getLoginName() == null || acUser.getLoginName() == "") {
+                    acUser.setLoginName(acUser.getUserEmail());
+                }
+                //给用户发送邮件通知
+                if (acUser.getUserEmail() != null || acUser.getUserEmail() != "") {
+                    this.sendEmail(acUser.getUserEmail(), enterName, acUser.getLoginName(), password);
+                }
+            }
+            if (acUser.getRealName() == null || acUser.getRealName().trim() == "") {
+                acUser.setRealName("未填写真实姓名");
+            }
+            // 信息入库
+            status = accountUserMapper.insert(acUser);
+            //用户角色
 //            accountUserMapper.insertUserRole(acUser.getEnterpriseId(), acUser.getId());
-//
-//            // 插入用户企业关系表
-//            insertRelation = accountUserMapper.insertRelation(acUser.getEnterpriseId(), acUser.getId(), createTime,
-//                    (acUser.getDepartmentId() == null) ? null : acUser.getDepartmentId());
-//            // 更新部门人数
-//            depTotalMemberNum = accountUserMapper.countDepMemberNum(acUser.getEnterpriseId(), acUser.getDepartmentId());
-//            accountUserMapper.updateDepMemberNum(depTotalMemberNum, acUser.getDepartmentId());
-//
-//            if (status == 1 & insertRelation == 1) {
-//                return 1;
-//            }
-//            return 0;
-//        } catch (Exception e) {
-//            LOG.error("用户插入失败", e);
-//            return 0;
-//        }
-//    }
+
+            // 插入用户企业关系表
+            insertRelation = accountUserMapper.insertRelation(acUser.getEnterpriseId(), acUser.getId(), createTime,
+                    (acUser.getDepartmentId() == null) ? null : acUser.getDepartmentId());
+            // 更新部门人数
+            depTotalMemberNum = accountUserMapper.countDepMemberNum(acUser.getEnterpriseId(), acUser.getDepartmentId());
+            accountUserMapper.updateDepMemberNum(depTotalMemberNum, acUser.getDepartmentId());
+
+            if (status == 1 & insertRelation == 1) {
+                return 1;
+            }
+            return 0;
+        } catch (Exception e) {
+            LOG.error("用户插入失败", e);
+            return 0;
+        }
+    }
 //
 //    /**
 //     * 删除用户信息
@@ -317,38 +343,40 @@ public class AccountUserServiceImpl implements AccountUserService {
 //        return 0;
 //    }
 //
-//    /**
-//     * 验证手机是否唯一
-//     * @param phoneNum 手机号
-//     * @return 1不存在,0存在
-//     */
-//    @Override
-//    public int phone(String phoneNum) {
-//        List<String> allPhone = accountUserMapper.selectAllPhone();
-//        if (allPhone.size() > 0) {
-//            boolean contains = allPhone.contains(phoneNum);
-//            if (contains) {
-//                return 0;
-//            }
-//            return 1;
-//        }
-//        return 1;
-//    }
-//
-//    /**
-//     * 验证邮箱是否唯一
-//     * @param Email 邮箱
-//     * @return 1不存在,0存在
-//     */
-//    public int emailOnlyOne(String Email) {
-//    	int onlyOne = accountUserMapper.selectAllEmail(Email);
-//    	if(onlyOne == 1) {
-//    		//不存在
-//    		return 1;
-//    	}
-//    	//存在
-//		return 0;
-//    }
+    /**
+     * 验证手机是否唯一
+     * @param phoneNum 手机号
+     * @return 1不存在,0存在
+     */
+    @Override
+    public int phone(String phoneNum) {
+        List<String> allPhone = accountUserMapper.selectAllPhone();
+        if (allPhone.size() > 0) {
+            boolean contains = allPhone.contains(phoneNum);
+            if (contains) {
+                return 0;
+            }
+            return 1;
+        }
+        return 1;
+    }
+
+
+
+	/**
+     * 验证邮箱是否唯一
+     * @param // Email 邮箱
+     * @return 1不存在,0存在
+     */
+    private int emailOnlyOne(String email) {
+    	int onlyOne = accountUserMapper.selectAllEmail(email);
+    	if(onlyOne == 1) {
+    		//不存在
+    		return 1;
+    	}
+    	//存在
+		return 0;
+    }
     /**
      * 返回企业
      */
@@ -993,18 +1021,18 @@ public class AccountUserServiceImpl implements AccountUserService {
 //    /**
 //     * 发送邮件
 //     */
-//    private void sendEmail(String mailAddr, String enterName, String loginName, String password) {
-//        try {
-//            mailService.sendSimpleMail(mailAddr, "工业测试服务云", "尊敬的用户您好: \r\n" +
-//                    enterName + "管理员邀请加入并成为该公司成员用户，共享该企业相关的平台使用权限。\r\n" +
-//                    "登录账号为" + loginName + "完成登录" + "\r\n" +
-//                    "初始登录密码为" + password + "\r\n" +
-//                    "请尽快完成登录并重新设置密码。\r\n" +
-//                    "如有打扰请见谅。\r\n");
-//        } catch (Exception e) {
-//            LOG.error("系统错误::邮件发送异常" + mailAddr, e);
-//        }
-//    }
+    private void sendEmail(String mailAddr, String enterName, String loginName, String password) {
+        try {
+            mailService.sendSimpleMail(mailAddr, "工业测试服务云", "尊敬的用户您好: \r\n" +
+                    enterName + "管理员邀请加入并成为该公司成员用户，共享该企业相关的平台使用权限。\r\n" +
+                    "登录账号为" + loginName + "完成登录" + "\r\n" +
+                    "初始登录密码为" + password + "\r\n" +
+                    "请尽快完成登录并重新设置密码。\r\n" +
+                    "如有打扰请见谅。\r\n");
+        } catch (Exception e) {
+            LOG.error("系统错误::邮件发送异常" + mailAddr, e);
+        }
+    }
 //
 //    /**
 //     * 企业名称模糊查找

@@ -117,6 +117,7 @@
 		)
 	</insert>
 
+
     <update id="update">
         UPDATE service_accountuser
         <set>
@@ -145,16 +146,27 @@
         WHERE id = #{id}
     </update> -->
 
+    <!--用户编辑-->
+    <update id="userUpdate" >
+        UPDATE ucs_user
+        SET nick_name = #{username},
+         user_phone = #{userPhone},
+         user_email = #{userEmail},
+         user_sex = #{userSex},
+         user_birthday = #{userBrithday}
+        WHERE
+            id = #{id}
+    </update>
 	<!-- 根据手机或邮箱查ID -->
-	<!--<select id="getIdByUserPhoneOrEmail" resultType="java.math.BigInteger">
+	<select id="getIdByUserPhoneOrEmail" resultType="java.math.BigInteger">
 		SELECT
 			id
 		FROM
-			service_accountuser
+			ucs_user
 		WHERE
-			userPhone = #{userPhoneOrEmail}
-		OR userEmail = #{userPhoneOrEmail}
-	</select>-->
+			user_phone = #{userPhoneOrEmail}
+		OR user_email = #{userPhoneOrEmail}
+	</select>
 
     <!-- 用户在对应企业中的启用状态 -->
    <!-- <update id="updateIsOpen" parameterType="map">
@@ -174,10 +186,10 @@
 	</delete>-->
 
     <!-- checkPhoneOnlyOne -->
-<!--    <select id="selectAllPhone" resultType="java.lang.String">-->
-<!--		select userPhone from-->
-<!--		service_accountuser;-->
-<!--	</select>-->
+   <select id="selectAllPhone" resultType="java.lang.String">
+		select user_phone from
+		ucs_user;
+	</select>
 
     <!-- checkLoginName -->
 <!--    <select id="selectAllLoginName" resultType="java.lang.String">-->
@@ -186,20 +198,20 @@
 <!--	</select>-->
 
 	<!-- 验证邮箱是否存在 是则返回1，否则返回0-->
-	<!--<select id="selectAllEmail" resultType="int">
+	<select id="selectAllEmail" resultType="int">
 		SELECT
 		isnull(
 			(
 				SELECT
-					a.userPhone
+					a.user_phone
 				FROM
-					service_accountuser a
+					ucs_user a
 				WHERE
-					a.userPhone = #{email}
+					a.user_phone = #{email}
 				LIMIT 1
 			)
 		)
-	</select> -->
+	</select>
 
     <!-- 显示企业 -->
     <select id="getEnterpriseName"
@@ -222,10 +234,10 @@
 	</select>
 
     <!-- 用户添加(企业部门中间表) -->
-  <!--  <insert id="insertRelation" parameterType="map" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    <insert id="insertRelation" parameterType="map" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
 		insert into
-		service_user_enterprise
-		(userId,enterpriseId,departmentId,status,createTime,isOpen)
+		ucs_user_enterprise
+		(user_id,enterprise_id,department_id,status,create_times,is_open)
 		VALUES
 		(
 		#{userId},
@@ -235,17 +247,17 @@
 		#{createTime},
 		1
 		)
-	</insert>-->
+	</insert>
 
     <!-- 用户修改(企业部门中间表) -->
-  <!--  <update id="updateRealtion">
-		UPDATE service_user_enterprise
-		SET departmentId =
+    <update id="updateRealtion">
+		UPDATE ucs_user_enterprise
+		SET department_id =
 		#{departmentId}
 		WHERE
-		userId =#{id}
-		AND enterpriseId =#{enterpriseId}
-	</update>-->
+		user_id =#{id}
+		AND enterprise_id =#{enterpriseId}
+	</update>
 
     <!-- 部门名称 -->
    <!-- <select id="selDepName" resultType="java.lang.String">
@@ -282,12 +294,12 @@
 	</delete>-->
 
     <!-- 更改资料完善状态 -->
-   <!-- <update id="updateSta">
-		UPDATE service_accountuser
-		SET infoSta = '1'
+    <update id="updateSta">
+		UPDATE ucs_user
+		SET info_status = '1'
 		WHERE id =
 		#{id}
-	</update>-->
+	</update>
 
     <!-- 企业的信息 -->
 <!--    <select id="getEnterInfo"-->
@@ -393,25 +405,25 @@
     </update>-->
 
     <!-- 统计部门人数 -->
-   <!-- <select id="countDepMemberNum" resultType="int">
+    <select id="countDepMemberNum" resultType="int">
 		SELECT
 		COUNT(userId)
 		FROM
-		service_user_enterprise
+		ucs_user_enterprise
 		WHERE
-		enterpriseId = #{enterpriseId}
+		enterprise_id = #{enterpriseId}
 		AND
-		departmentId = #{departmentId}
-	</select>-->
+		department_id = #{departmentId}
+	</select>
 
     <!-- 修改部门人数 -->
-    <!--<update id="updateDepMemberNum">
-		UPDATE service_department
-		SET memberNumber =
+    <update id="updateDepMemberNum">
+		UPDATE ucs_dept
+		SET member_number =
 		#{memberNumber}
 		WHERE
 		id = #{id}
-	</update>-->
+	</update>
 
     <!-- 获取部门ID -->
    <!-- <select id="getDepId" parameterType="map"
@@ -487,15 +499,15 @@
 	</select>-->
 
     <!-- 用户加入企业,默认状态未审核 -->
-   <!-- <insert id="personJoinEnterprise" parameterType="map">
+    <insert id="personJoinEnterprise" parameterType="map">
 		INSERT INTO
-		service_user_enterprise (
-		userId,
-		enterpriseId,
-		departmentId,
+		ucs_user_enterprise (
+		user_id,
+		enterprise_id,
+		department_id,
 		status,
-		createTime,
-		isOpen
+		create_times,
+		is_open
 		)VALUES(
 		#{userId},
 		#{enterpriseId},
@@ -504,7 +516,7 @@
 		#{createTime},
 		'1'
 		)
-	</insert>-->
+	</insert>
 
    <!-- <update id="updateUserRole" parameterType="map">
         UPDATE
@@ -531,8 +543,8 @@
 		userId = #{userId}
 		AND b.roleType
 		= 2
-	</select>
-    <insert id="insertUserRole" parameterType="map">
+	</select> -->
+    <!--<insert id="insertUserRole" parameterType="map">
 		INSERT INTO
 		access_role_userrelation (
 		userId,
@@ -543,8 +555,8 @@
 		#{enterpriseId},
 		3
 		)
-	</insert>
-    <select id="queryUserRoleList" parameterType="map" resultType="String">
+	</insert>-->
+   <!-- <select id="queryUserRoleList" parameterType="map" resultType="String">
 	SELECT
 		b.roleType
 	FROM
@@ -574,16 +586,16 @@
 	</select>-->
 
     <!-- 用户是否存在某个企业内 -->
-   <!-- <select id="userExitsEnterprise" parameterType="Map" resultType="int">
+    <select id="userExitsEnterprise" parameterType="Map" resultType="int">
 	SELECT
-		count(userId)
+		count(user_id)
 	FROM
-		service_user_enterprise
+		ucs_user_enterprise
 	WHERE
-		userId = #{userId}
-	AND enterpriseId = #{enterpriseId}
-	AND isOpen = '1'
-	</select>-->
+		user_id = #{userId}
+	AND enterprise_id = #{enterpriseId}
+	AND is_open = '1'
+	</select>
 
     <!-- 用户在该企业状态是否冻结 -->
     <!--<select id="freeze" parameterType="Map" resultType="String">
@@ -626,14 +638,14 @@
 	</insert>-->
 
     <!-- 企业名称 -->
-    <!--<select id="getEnterpriseNameById" resultType="String">
+    <select id="getEnterpriseNameById" resultType="String">
 		SELECT
-			enterpriseName
+			enterprise_name
 		FROM
-			service_enterprise
+			ucs_enterprise
 		WHERE
 			id = #{enterpriseId}
-	</select>-->
+	</select>
 
     <!-- 管理员删除用户 -->
     <!--<update id="adminDelUser">

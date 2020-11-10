@@ -7,6 +7,7 @@ import com.sailmi.system.user.entity.AccountUserEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +32,7 @@ public interface AccountUserMapper {
      * @param acUser
      * @return
      */
-//    int update(AccountUserEntity acUser);
+    int update(AccountUserEntity acUser);
 
     /**
      * 插入用户信息
@@ -39,7 +40,7 @@ public interface AccountUserMapper {
      * @param acUser
      * @return
      */
-//    int insert(AccountUserEntity acUser);
+    int insert(AccountUserEntity acUser);
 
     /**
      * 删除用户信息
@@ -54,7 +55,7 @@ public interface AccountUserMapper {
      *
      * @return
      */
-//    List<String> selectAllPhone();
+    List<String> selectAllPhone();
 
     /**
      * 返回企业
@@ -74,7 +75,7 @@ public interface AccountUserMapper {
      * @param enterpriseId
      * @param userId
      */
-//    int insertRelation(@Param("enterpriseId") BigInteger enterpriseId, @Param("userId") BigInteger userId, @Param("createTime") String createTime, @Param("departmentId") BigInteger departmentId);
+    int insertRelation(@Param("enterpriseId") BigInteger enterpriseId, @Param("userId") BigInteger userId, @Param("createTime") String createTime, @Param("departmentId") BigInteger departmentId);
 
     /**
      * 验证手机唯一
@@ -109,7 +110,7 @@ public interface AccountUserMapper {
      *
      * @param id 用户ID
      */
-//    int updateSta(BigInteger id);
+    int updateSta(BigInteger id);
 
     /**
      * 企业部门人员树
@@ -154,7 +155,7 @@ public interface AccountUserMapper {
      * @param enterpriseId 企业ID
      * @param departmentId 部门ID
      */
-//    int updateRealtion(@Param("id") BigInteger id, @Param("enterpriseId") BigInteger enterpriseId, @Param("departmentId") BigInteger departmentId);
+    int updateRealtion(@Param("id") BigInteger id, @Param("enterpriseId") BigInteger enterpriseId, @Param("departmentId") BigInteger departmentId);
 
     /**
      * 统计部门人数
@@ -163,7 +164,7 @@ public interface AccountUserMapper {
      * @param departmentId 部门ID
      * @return 部门下总人数
      */
-//    int countDepMemberNum(@Param("enterpriseId") BigInteger enterpriseId, @Param("departmentId") BigInteger departmentId);
+    int countDepMemberNum(@Param("enterpriseId") BigInteger enterpriseId, @Param("departmentId") BigInteger departmentId);
 
     /**
      * 修改部门人数
@@ -171,7 +172,7 @@ public interface AccountUserMapper {
      * @param memberNumber 部门总人数
      * @param id           部门ID
      */
-//    int updateDepMemberNum(@Param("memberNumber") int memberNumber, @Param("id") BigInteger id);
+    int updateDepMemberNum(@Param("memberNumber") int memberNumber, @Param("id") BigInteger id);
 
     /**
      * 部门ID
@@ -273,7 +274,7 @@ public interface AccountUserMapper {
      * @param hashMap
      * @return
      */
-//    int userExitsEnterprise(HashMap<Object, Object> hashMap);
+    int userExitsEnterprise(HashMap<Object, Object> hashMap);
 
     /**
      * 查看用户在该企业状态是否冻结
@@ -303,7 +304,7 @@ public interface AccountUserMapper {
      * @param enterpriseId
      * @return
      */
-//    String getEnterpriseNameById(BigInteger enterpriseId);
+    String getEnterpriseNameById(BigInteger enterpriseId);
 
     /**
      * 管理员批量删除用户
@@ -357,14 +358,24 @@ public interface AccountUserMapper {
 	 * @param email
 	 * @return
 	 */
-//	int selectAllEmail(@Param("email") String email);
+	int selectAllEmail(@Param("email") String email);
 
 	/**
 	 * 通过手机或者邮箱查找用户ID
 	 * @param userPhoneOrEmail
 	 * @return id 用户ID
 	 */
-//	BigInteger getIdByUserPhoneOrEmail(@Param("userPhoneOrEmail") String userPhoneOrEmail);
+	BigInteger getIdByUserPhoneOrEmail(@Param("userPhoneOrEmail") String userPhoneOrEmail);
+
+	/**
+	 * <p>Description: 用户编辑</p>
+	 *
+	 * @param accountUser:
+	 * @return: int
+	 * @Author: syt
+	 * @Date: 2020/11/9/0009 17:42
+	 */
+	int userUpdate(AccountUserEntity accountUser);
 
 	/**
 	 * 管理员同意用户加入企业时防止重复添加
@@ -374,7 +385,7 @@ public interface AccountUserMapper {
 	 */
 //	int userIsExitEnterpriseByUserIdAndEnterpriseId(@Param("userId") BigInteger userId, @Param("enterpriseId") BigInteger enterpriseId);
 
-	String queryEnterByUserId(String userId);
+//	String queryEnterByUserId(String userId);
 
 //	List<AccountUserEntity> queryApprovedList(String enterpriseId);
 

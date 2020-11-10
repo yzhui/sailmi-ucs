@@ -2,6 +2,7 @@ package com.sailmi.system.user.entity;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * 统一账户管理用户实体类
@@ -49,7 +50,7 @@ public class AccountUserEntity {
 	/**
 	 * 用户生日
 	 */
-	private String userBrithday="";
+	private Date userBrithday;
 
 	/**
 	 * 实名认证状态:1已认证，0未认证
@@ -226,11 +227,11 @@ public class AccountUserEntity {
 		this.userSex = userSex;
 	}
 
-	public String getUserBrithday() {
+	public Date getUserBrithday() {
 		return userBrithday;
 	}
 
-	public void setUserBrithday(String userBrithday) {
+	public void setUserBrithday(Date userBrithday) {
 		this.userBrithday = userBrithday;
 	}
 
