@@ -129,7 +129,7 @@ public class AccountUserServiceImpl implements AccountUserService {
 	@Override
 	public String userUpdate(AuthUser authUser, AccountUserEntity accountUser) {
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
-		BigInteger id = BigInteger.valueOf(authUser.getUserId());
+		BigInteger id = BigInteger.valueOf(1301788793255452689L);
 		accountUser.setId(id);
 		int r = accountUserMapper.userUpdate(accountUser);
 		if (r > 0) {
