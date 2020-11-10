@@ -179,4 +179,21 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 			.getUserEnterpriseByUserId(userId);
 		return userEnterpriseDepartmentList;
 	}
+
+	/**
+	 * <p>Description: 审核</p>
+	 *
+	 * @param id:
+	 * @return: boolean
+	 * @Author: syt
+	 * @Date: 2020/11/10/0010 14:46
+	 */
+	@Override
+	public boolean check(String id) {
+		int c = baseMapper.check(id);
+		if (c > 0) {
+			return true;
+		}
+		return false;
+	}
 }

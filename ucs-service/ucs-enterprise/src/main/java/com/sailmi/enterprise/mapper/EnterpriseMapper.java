@@ -131,4 +131,8 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 */
 	List<UserEnterpriseDepartment> getUserEnterpriseByUserId(BigInteger userId);
 
+	/**
+	 *审核
+	 */
+	int check(String id);
 }

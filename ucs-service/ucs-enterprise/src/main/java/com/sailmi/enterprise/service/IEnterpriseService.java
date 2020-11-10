@@ -99,4 +99,7 @@ public interface IEnterpriseService extends BaseService<Enterprise> {
 	 * @return
 	 */
 	List<UserEnterpriseDepartment> getUserEnterpriseByUserId(BigInteger userId);
+
+
+	boolean check(String id);
 }

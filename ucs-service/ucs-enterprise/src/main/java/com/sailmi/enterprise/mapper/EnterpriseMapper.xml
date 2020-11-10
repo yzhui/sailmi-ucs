@@ -164,4 +164,9 @@
 		/*AND
 			sue.isOpen = "1"*/
 	</select>
+    <update id="check" parameterType="string">
+        UPDATE ucs_enterprise
+        SET status = 0
+        WHERE id = #{id}
+    </update>
 </mapper>

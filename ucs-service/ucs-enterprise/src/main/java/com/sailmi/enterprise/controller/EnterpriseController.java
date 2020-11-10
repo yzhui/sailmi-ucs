@@ -304,6 +304,16 @@ public class EnterpriseController extends AppController {
 	}
 
 	/**
+	 * 审核
+	 */
+	@PostMapping("/check")
+	@ApiOperationSupport(order = 13)
+	@ApiOperation(value = "审核", notes = "传入ids")
+	public R check(@ApiParam(value = "主键", required = true) @RequestParam String id) {
+		return R.status(enterpriseService.check(id));
+	}
+
+	/**
 	 * <p>Description: 云测用户创建企业</p>
 	 *
 	 * @return: com.sailmi.core.tool.api.R
@@ -447,7 +457,7 @@ public class EnterpriseController extends AppController {
 	 * @Date: 2020/11/1/0002 15:30
 	 */
 	@GetMapping("enterList")
-	@ApiOperationSupport(order = 9)
+	@ApiOperationSupport(order = 12)
 	@ApiOperation(value = "用户已有的企业列表", notes = "无")
 	public R enterpriseList(AuthUser authUser){
 		List<Enterprise> enlist = enterpriseService.enterpriseList(authUser.getUserId());
