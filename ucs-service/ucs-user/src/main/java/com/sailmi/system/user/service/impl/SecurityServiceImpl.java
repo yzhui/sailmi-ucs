@@ -63,7 +63,7 @@ public class SecurityServiceImpl implements SecurityService {
 	    	if(type.equals("jpg") || type.equals("png")) {
 	    		HashMap<String, Object> saveMap = new HashMap<String, Object>();
 	    		saveMap.put("id", id);
-	    		saveMap.put("headImg", readPath + "/png/" + fileName);
+	    		saveMap.put("headImg", readPath + fileName);
 	    		//图片信息存到数据库
 	    		int saveHead = securityMapper.saveHeadImg(saveMap);
 	    		if(saveHead == 1) {
