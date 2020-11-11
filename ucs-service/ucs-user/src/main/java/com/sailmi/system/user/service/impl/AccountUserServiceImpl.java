@@ -82,21 +82,21 @@ public class AccountUserServiceImpl implements AccountUserService {
      * @param id 用户ID
      * @return 根据ID获取用户信息
      */
-//    @Override
-//    public AccountUserEntity get(BigInteger id) {
-//    	AccountUserEntity aue = accountUserMapper.get(id);
-//    	//判断手机与邮箱的认证状态:0未认证,1已认证
-//    	if(!StringUtil.isNullOrEmpty(aue.getUserPhone())) {
-//    		aue.setPhoneSta("1");
-//    	}
-//    	if(!StringUtil.isNullOrEmpty(aue.getUserEmail())) {
-//    		aue.setEmailSta("1");
-//    	}
-//    	//注册时间
-//    	String regDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(Long.parseLong(aue.getRegisterDate())));
-//    	aue.setRegisterDate(regDate);
-//        return aue;
-//    }
+    @Override
+    public AccountUserEntity get(BigInteger id) {
+    	AccountUserEntity aue = accountUserMapper.get(id);
+    	//判断手机与邮箱的认证状态:0未认证,1已认证
+    	if(!StringUtil.isNullOrEmpty(aue.getUserPhone())) {
+    		aue.setPhoneSta("1");
+    	}
+    	if(!StringUtil.isNullOrEmpty(aue.getUserEmail())) {
+    		aue.setEmailSta("1");
+    	}
+    	//注册时间
+    	String regDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(aue.getCreateTime());
+    	aue.setRegisterDate(regDate);
+        return aue;
+    }
 
     /**
      * 查询用户信息列表

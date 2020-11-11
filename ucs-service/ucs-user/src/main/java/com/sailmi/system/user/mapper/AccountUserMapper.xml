@@ -16,21 +16,22 @@
 		a.user_phone AS "userPhone",
 		a.user_email AS "userEmail",
 		a.user_sex AS "userSex",
-		a.user_brithday AS "userBrithday",
+		a.user_birthday AS "userBrithday",
 		a.real_status AS "realStatus",
-		a.register_date AS "registerDate",
+		/*a.register_date AS "registerDate",*/
 		a.enterprise_status AS "enterpriseStatus",
-		a.phone_sta AS "phoneSta",
-		a.email_sta AS "emailSta",
-		a.info_sta AS "infoSta",
+		a.phone_status AS "phoneSta",
+		a.email_status AS "emailSta",
+		a.info_status AS "infoSta",
 		a.real_name AS "realName",
 		a.last_login AS "lastLogin",
-		a.head_img AS "headImgUrl"
-		FROM service_accountuser a
+		a.head_img AS "headImgUrl",
+		a.create_time AS "createTime"
+		FROM ucs_user a
 		where
 		a.id =#{id}
-		AND
-		a.is_deleted = 0
+		/*AND
+		a.is_deleted = 0*/
 
 	</select>
 

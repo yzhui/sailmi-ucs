@@ -5,6 +5,7 @@ import com.sailmi.system.entity.Enterprise;
 import com.sailmi.system.user.entity.AccountUserEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public interface AccountUserService {
      * @param id
      * @return
      */
-//    public AccountUserEntity get(BigInteger id);
+    public AccountUserEntity get(BigInteger id);
 
     /**
      * 获取用户信息列表

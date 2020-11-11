@@ -13,6 +13,7 @@ import com.sailmi.core.secure.AuthUser;
 import com.sailmi.system.entity.ResponseMessage;
 import com.sailmi.system.entity.Result;
 import com.sailmi.system.user.entity.AccountUserEntity;
+import com.sailmi.system.user.service.AccountUserService;
 import com.sailmi.system.user.service.MailService;
 import com.sailmi.system.user.service.SecurityService;
 import lombok.extern.slf4j.Slf4j;
@@ -45,8 +46,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class SecurityController {
 
-//    @Autowired
-//    private AccountUserService accountUserService;
+    @Autowired(required = false)
+    private AccountUserService accountUserService;
 
     @Autowired(required = false)
     private SecurityService securityService;
@@ -70,44 +71,45 @@ public class SecurityController {
      * @author suyt
      * @return
      */
-//    @RequestMapping("getLevel")
-//	public Result getLevel(BigInteger id) {
-//		int level = 1;//初始值为1
-//		Result result = new Result();
-//		HashMap<String, Integer> hashMap = new HashMap<String,Integer>();
-//		AccountUserEntity acQuery = accountUserService.get(id);
-//		if(acQuery.getPhoneSta().equals("1")) {
-//			level += 1;
-//		}
-//		if(acQuery.getEmailSta().equals("1")) {
-//			level += 1;
-//		}
-//		if(level == 2) {
-//			result.setCode(ResponseMessage.SUCCESS);
-//			result.setMsg("账号风险评估成功");
-//			hashMap.put("level",level);
-//			result.setData(hashMap);
-//			return result;
-//		}
-//		if(level == 3) {
-//			result.setCode(ResponseMessage.SUCCESS);
-//			result.setMsg("账号风险评估成功");
-//			hashMap.put("level",level);
-//			result.setData(hashMap);
-//			return result;
-//		}
-//		if(level == 1) {
-//			result.setCode(ResponseMessage.SUCCESS);
-//			result.setMsg("账号风险评估成功");
-//			hashMap.put("level",level);
-//			result.setData(hashMap);
-//			return result;
-//		}
-//		result.setCode(ResponseMessage.FAILE);
-//		result.setMsg("账号风险评估失败");
-//		result.setData(new HashMap<String,Integer>().put("level",level));
-//		return result;
-//	}
+    @RequestMapping("getLevel")
+	public Result getLevel(AuthUser authUser, BigInteger id) {
+		int level = 1;//初始值为1
+		Result result = new Result();
+		HashMap<String, Integer> hashMap = new HashMap<String,Integer>();
+		id = BigInteger.valueOf(authUser.getUserId());
+		AccountUserEntity acQuery = accountUserService.get(id);
+		if(acQuery.getPhoneSta().equals("1")) {
+			level += 1;
+		}
+		if(acQuery.getEmailSta().equals("1")) {
+			level += 1;
+		}
+		if(level == 2) {
+			result.setCode(ResponseMessage.SUCCESS);
+			result.setMsg("账号风险评估成功");
+			hashMap.put("level",level);
+			result.setData(hashMap);
+			return result;
+		}
+		if(level == 3) {
+			result.setCode(ResponseMessage.SUCCESS);
+			result.setMsg("账号风险评估成功");
+			hashMap.put("level",level);
+			result.setData(hashMap);
+			return result;
+		}
+		if(level == 1) {
+			result.setCode(ResponseMessage.SUCCESS);
+			result.setMsg("账号风险评估成功");
+			hashMap.put("level",level);
+			result.setData(hashMap);
+			return result;
+		}
+		result.setCode(ResponseMessage.FAILE);
+		result.setMsg("账号风险评估失败");
+		result.setData(new HashMap<String,Integer>().put("level",level));
+		return result;
+	}
 
     /**
      * 上传头像(限定jpg和png格式,大小不得超过500K)

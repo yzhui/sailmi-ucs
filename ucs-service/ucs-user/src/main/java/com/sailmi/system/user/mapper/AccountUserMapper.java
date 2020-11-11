@@ -19,7 +19,7 @@ public interface AccountUserMapper {
     /**
      * 查询用户信息列表
      */
-//    AccountUserEntity get(BigInteger id);
+    AccountUserEntity get(BigInteger id);
 
     /**
      * 查询用户信息列表
