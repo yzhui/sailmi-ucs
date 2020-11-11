@@ -217,20 +217,20 @@
     <!-- 显示企业 -->
     <select id="getEnterpriseName"
             resultType="com.sailmi.system.entity.Enterprise">
-		SELECT
+			SELECT
 		ucs_enterprise.id,
-		ucs_enterprise.enterpriseName
+		ucs_enterprise.enterprise_name
 		FROM
 		ucs_enterprise
 		WHERE
 		ucs_enterprise.id IN(
-		SELECT
-		ucs_user_enterprise.enterpriseId
-		FROM
-		ucs_user_enterprise
-		WHERE
-		ucs_user_enterprise.userId = #{id}
-		AND isOpen = 1
+			SELECT
+			ucs_user_enterprise.enterprise_id
+			FROM
+			ucs_user_enterprise
+			WHERE
+			ucs_user_enterprise.user_id = #{id}
+            AND is_open = 1
 		)
 	</select>
 
@@ -451,20 +451,17 @@
     </update>-->
 
     <!-- 查询上次操作的企业的信息 -->
-   <!-- <select id="getLastEnter"
-            resultType="com.linose.common.entity.LastEnterpriseEntity">
+   <select id="getLastEnter"
+            resultType="com.sailmi.system.user.entity.LastEnterpriseEntity">
 		SELECT
-		enterpriseName AS "lastEnterpriseName",
-		id AS
-		"lastEnterpriseId"
-		FROM
-		service_enterprise
+		enterprise_name AS "lastEnterpriseName",
+		id AS "lastEnterpriseId"
+		FROM ucs_enterprise
 		WHERE id = (
-		SELECT
-		lastEnterpriseId FROM service_accountuser WHERE id
-		= #{id}
+			SELECT default_enterprise FROM ucs_user
+			WHERE id = 1301788793255452689
 		)
-	</select>-->
+	</select>
 
     <!-- 验证企业是否存在 -->
    <!-- <select id="checkEnterExist" resultType="string">

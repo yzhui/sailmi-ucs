@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.*;
@@ -38,17 +39,17 @@ public class AccountUserController {
 	/**
 	 * 获取用户信息
 	 */
-//	@RequestMapping(value = "/get", method = RequestMethod.POST)
-//	public String get(AuthUser authUser , BigInteger id) {
-//		HashMap<String, Object> hashMap = new HashMap<String, Object>();
-//		id = BigInteger.valueOf(authUser.getUserId());
-//		id = BigInteger.valueOf(0);
-//		AccountUserEntity acQuery = accountUserService.get(id);
-//		List<Enterprise> entName = null;
-//		List<LastEnterpriseEntity> lastEnter = null;
-//		if (acQuery != null) {
-			// 查询该用户下的所有企业
-//			entName = accountUserService.getEnterpriseName(id);
+	@RequestMapping(value = "/get", method = RequestMethod.POST)
+	public String get(AuthUser authUser , BigInteger id) {
+		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+		id = BigInteger.valueOf(authUser.getUserId());
+//		id = BigInteger.valueOf(1301788793255452689L);
+		AccountUserEntity acQuery = accountUserService.get(id);
+		List<Enterprise> entName = null;
+		List<LastEnterpriseEntity> lastEnter = null;
+		if (acQuery != null) {
+			 //查询该用户下的所有企业
+			entName = accountUserService.getEnterpriseName(id);
 //			if (entName != null && entName.size() > 0) {
 //				for (Enterprise enter : entName) {
 //					List<String> list = accountUserService.queryUserRoleType(id, enter.getId());
@@ -61,23 +62,23 @@ public class AccountUserController {
 //					}
 //				}
 //			}
-			// 上次操作企业信息(前端需要此格式)
-//			lastEnter = accountUserService.getLastEnterprise(id);
-//			hashMap.put("status", 1);
-//			hashMap.put("msg", "查询用户信息成功！");
-//			hashMap.put("result", acQuery);
-//			hashMap.put("resultent", entName);
-//			hashMap.put("LastInfo", lastEnter);
-//			return JSON.toJSONString(hashMap);
-//		}else {
-//			hashMap.put("status", 0);
-//			hashMap.put("msg", "");
-//			hashMap.put("result", "");
-//			hashMap.put("resultent", "");
-//			hashMap.put("LastInfo", "");
-//		}
-//		return JSON.toJSONString(hashMap);
-//	}
+			//上次操作企业信息(前端需要此格式)
+			lastEnter = accountUserService.getLastEnterprise(id);
+			hashMap.put("status", 1);
+			hashMap.put("msg", "查询用户信息成功！");
+			hashMap.put("result", acQuery);
+			hashMap.put("resultent", entName);
+			hashMap.put("LastInfo", lastEnter);
+			return JSON.toJSONString(hashMap);
+		}else {
+			hashMap.put("status", 0);
+			hashMap.put("msg", "");
+			hashMap.put("result", "");
+			hashMap.put("resultent", "");
+			hashMap.put("LastInfo", "");
+		}
+		return JSON.toJSONString(hashMap);
+	}
 //
 //	/**
 //	 * 获取用户信息

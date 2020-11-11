@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSON;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.system.entity.Enterprise;
 import com.sailmi.system.user.entity.AccountUserEntity;
+import com.sailmi.system.user.entity.LastEnterpriseEntity;
 import com.sailmi.system.user.excel.PhoneCodeUtil;
 import com.sailmi.system.user.mapper.AccountUserMapper;
 import com.sailmi.system.user.service.AccountUserService;
@@ -380,10 +381,10 @@ public class AccountUserServiceImpl implements AccountUserService {
     /**
      * 返回企业
      */
-//    @Override
-//    public List<Enterprise> getEnterpriseName(BigInteger id) {
-//        return accountUserMapper.getEnterpriseName(id);
-//    }
+    @Override
+    public List<Enterprise> getEnterpriseName(BigInteger id) {
+        return accountUserMapper.getEnterpriseName(id);
+    }
 
     /**
      * 用户在对应企业中的启用状态
@@ -519,11 +520,11 @@ public class AccountUserServiceImpl implements AccountUserService {
 //     * @param id 用户ID
 //     * @return List<LastEnterpriseEntity> 上次操作企业信息
 //     */
-//    @Override
-//    public List<LastEnterpriseEntity> getLastEnterprise(BigInteger id) {
-//        return accountUserMapper.getLastEnter(id);
-//    }
-//
+    @Override
+    public List<LastEnterpriseEntity> getLastEnterprise(BigInteger id) {
+        return accountUserMapper.getLastEnter(id);
+    }
+
 //    /**
 //     * 验证企业是否存在
 //     *

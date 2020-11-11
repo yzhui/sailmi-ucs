@@ -3,6 +3,7 @@ package com.sailmi.system.user.service;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.system.entity.Enterprise;
 import com.sailmi.system.user.entity.AccountUserEntity;
+import com.sailmi.system.user.entity.LastEnterpriseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
@@ -64,7 +65,7 @@ public interface AccountUserService {
      *
      * @return
      */
-//    public List<Enterprise> getEnterpriseName(BigInteger accountUser);
+    public List<Enterprise> getEnterpriseName(BigInteger accountUser);
 
 //    /**
 //     * 用户在对应企业中的启用状态
@@ -122,7 +123,7 @@ public interface AccountUserService {
 //     * @param id 用户ID
 //     * @return List<LastEnterpriseEntity> 上次操作企业信息
 //     */
-//    public List<LastEnterpriseEntity> getLastEnterprise(BigInteger id);
+    public List<LastEnterpriseEntity> getLastEnterprise(BigInteger id);
 //
 //    /**
 //     * 判断企业是否存在
