@@ -45,6 +45,6 @@ sendEmail:
 
 #自定义头像上传路径
 headimg:
-  uploadPath: /var/www/html/png/
+  uploadPath: /usr/share/nginx/html/ucs/ftpuser
   #头像访问地址
-  readPath: test.iitplat.com
+  readPath: http://dev_ucs.iitplat.com/ftpuser/

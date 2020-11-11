@@ -122,17 +122,16 @@ public class SecurityController {
     @Value("${headimg.uploadPath}")
     private String headUrl ;
     @RequestMapping("uploadHeadImg")
-	public Result uploadHeadImg(/* @RequestParam("headImg") */MultipartFile headImg,
-			/* @RequestParam("id") */BigInteger id,HttpServletRequest request) {
-    	log.info("用户ID是否接收到{}",id);
+	public Result uploadHeadImg(AuthUser authUser, MultipartFile headImg,
+			BigInteger id, HttpServletRequest request) {
     	log.info("headImg是否接收到{}",headImg);
     	String path = headUrl;
     	Result result = new Result();
     	// token
+
     	//Map<String, String> parseToken = JWTDecodeUtil.parseToken(request);
     	// token中解析userId
     	//id = BigInteger.valueOf(Long.parseLong(parseToken.get("userId")));
-    	log.info("判断token是否解析到{}",id);
     	try {
 			if(headImg == null || headImg.getSize() <= 0 || headImg.getBytes().length <= 0) {
 				result.setCode(ResponseMessage.PARAMETER);
@@ -146,7 +145,7 @@ public class SecurityController {
 			result.setData(e);
 			return result;
 		}
-    	int sta = securityService.uploadHeadImg(headImg,id,path);
+    	int sta = securityService.uploadHeadImg(headImg, id, path);
     	if(sta == 1) {
     		result.setCode(ResponseMessage.SUCCESS);
     		result.setMsg("头像上传成功");
