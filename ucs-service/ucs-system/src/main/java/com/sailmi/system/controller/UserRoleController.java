@@ -35,6 +35,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.sailmi.core.boot.ctrl.AppController;
 
+import java.util.List;
+
 
 /**
  *  控制器
@@ -72,6 +74,13 @@ public class UserRoleController extends AppController {
 		return R.data(UserRoleWrapper.build().pageVO(pages));
 	}
 
+	@GetMapping("/urlist")
+	@ApiOperationSupport(order = 2)
+	@ApiOperation(value = "分页", notes = "传入userRole")
+	public R<List<UserRole>> querylist(UserRole userRole, Query query) {
+		List<UserRole> ulist = userRoleService.list(Condition.getQueryWrapper(userRole));
+		return R.data(ulist);
+	}
 	/**
 	* 自定义分页
 	*/
