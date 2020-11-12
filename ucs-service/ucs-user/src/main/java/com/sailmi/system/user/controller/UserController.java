@@ -142,6 +142,18 @@ public class UserController {
 	/**
 	 * 查询单条
 	 */
+	@ApiOperationSupport(order = 1)
+	@ApiOperation(value = "查看用户基础信息详情", notes = "传入id")
+	@GetMapping("/detail")
+	public R<UserVO> detail( String id) {
+		QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+		userQueryWrapper.eq("id",id);
+		User detail = userService.getOne(userQueryWrapper);
+		return R.data(UserWrapper.build().entityVO(detail));
+	}
+	/**
+	 * 查询单条
+	 */
 	@ApiOperationSupport(order =2)
 	@ApiOperation(value = "查看用户综合信息详情", notes = "传入id")
 	@GetMapping("/info")
