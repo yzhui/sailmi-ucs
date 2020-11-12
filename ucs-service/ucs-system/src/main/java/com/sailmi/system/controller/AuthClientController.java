@@ -61,6 +61,7 @@ public class AuthClientController extends AppController {
 	private IAuthClientService clientService;
 	private ISystemService systemService;
 	private ITenantService tenantService;
+
 	/**
 	* 详情
 	*/

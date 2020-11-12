@@ -58,6 +58,9 @@ public class AuthProvider {
 		 * alice
 		 */
 		defaultSkipUrl.add("/alice/**");
+		defaultSkipUrl.add("/security/uploadHeadImg");
+		defaultSkipUrl.add("/checkCode");
+		defaultSkipUrl.add("/file/**");
 	}
 
 	/**

@@ -10,9 +10,11 @@ import com.alibaba.fastjson.JSON;
 //import com.linose.common.util.ResponseMessage;
 //import com.linose.common.util.Result;
 import com.sailmi.core.secure.AuthUser;
+import com.sailmi.core.tool.utils.DigestUtil;
 import com.sailmi.system.entity.ResponseMessage;
 import com.sailmi.system.entity.Result;
 import com.sailmi.system.user.entity.AccountUserEntity;
+import com.sailmi.system.user.service.AccountUserService;
 import com.sailmi.system.user.service.MailService;
 import com.sailmi.system.user.service.SecurityService;
 import lombok.extern.slf4j.Slf4j;
@@ -45,8 +47,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class SecurityController {
 
-//    @Autowired
-//    private AccountUserService accountUserService;
+    @Autowired(required = false)
+    private AccountUserService accountUserService;
 
     @Autowired(required = false)
     private SecurityService securityService;
@@ -70,44 +72,45 @@ public class SecurityController {
      * @author suyt
      * @return
      */
-//    @RequestMapping("getLevel")
-//	public Result getLevel(BigInteger id) {
-//		int level = 1;//初始值为1
-//		Result result = new Result();
-//		HashMap<String, Integer> hashMap = new HashMap<String,Integer>();
-//		AccountUserEntity acQuery = accountUserService.get(id);
-//		if(acQuery.getPhoneSta().equals("1")) {
-//			level += 1;
-//		}
-//		if(acQuery.getEmailSta().equals("1")) {
-//			level += 1;
-//		}
-//		if(level == 2) {
-//			result.setCode(ResponseMessage.SUCCESS);
-//			result.setMsg("账号风险评估成功");
-//			hashMap.put("level",level);
-//			result.setData(hashMap);
-//			return result;
-//		}
-//		if(level == 3) {
-//			result.setCode(ResponseMessage.SUCCESS);
-//			result.setMsg("账号风险评估成功");
-//			hashMap.put("level",level);
-//			result.setData(hashMap);
-//			return result;
-//		}
-//		if(level == 1) {
-//			result.setCode(ResponseMessage.SUCCESS);
-//			result.setMsg("账号风险评估成功");
-//			hashMap.put("level",level);
-//			result.setData(hashMap);
-//			return result;
-//		}
-//		result.setCode(ResponseMessage.FAILE);
-//		result.setMsg("账号风险评估失败");
-//		result.setData(new HashMap<String,Integer>().put("level",level));
-//		return result;
-//	}
+    @RequestMapping("getLevel")
+	public Result getLevel(AuthUser authUser, BigInteger id) {
+		int level = 1;//初始值为1
+		Result result = new Result();
+		HashMap<String, Integer> hashMap = new HashMap<String,Integer>();
+		id = BigInteger.valueOf(authUser.getUserId());
+		AccountUserEntity acQuery = accountUserService.get(id);
+		if(acQuery.getPhoneSta().equals("1")) {
+			level += 1;
+		}
+		if(acQuery.getEmailSta().equals("1")) {
+			level += 1;
+		}
+		if(level == 2) {
+			result.setCode(ResponseMessage.SUCCESS);
+			result.setMsg("账号风险评估成功");
+			hashMap.put("level",level);
+			result.setData(hashMap);
+			return result;
+		}
+		if(level == 3) {
+			result.setCode(ResponseMessage.SUCCESS);
+			result.setMsg("账号风险评估成功");
+			hashMap.put("level",level);
+			result.setData(hashMap);
+			return result;
+		}
+		if(level == 1) {
+			result.setCode(ResponseMessage.SUCCESS);
+			result.setMsg("账号风险评估成功");
+			hashMap.put("level",level);
+			result.setData(hashMap);
+			return result;
+		}
+		result.setCode(ResponseMessage.FAILE);
+		result.setMsg("账号风险评估失败");
+		result.setData(new HashMap<String,Integer>().put("level",level));
+		return result;
+	}
 
     /**
      * 上传头像(限定jpg和png格式,大小不得超过500K)
@@ -120,17 +123,16 @@ public class SecurityController {
     @Value("${headimg.uploadPath}")
     private String headUrl ;
     @RequestMapping("uploadHeadImg")
-	public Result uploadHeadImg(/* @RequestParam("headImg") */MultipartFile headImg,
-			/* @RequestParam("id") */BigInteger id,HttpServletRequest request) {
-    	log.info("用户ID是否接收到{}",id);
+	public Result uploadHeadImg(AuthUser authUser, MultipartFile headImg,
+			BigInteger id, HttpServletRequest request) {
     	log.info("headImg是否接收到{}",headImg);
     	String path = headUrl;
     	Result result = new Result();
     	// token
+
     	//Map<String, String> parseToken = JWTDecodeUtil.parseToken(request);
     	// token中解析userId
     	//id = BigInteger.valueOf(Long.parseLong(parseToken.get("userId")));
-    	log.info("判断token是否解析到{}",id);
     	try {
 			if(headImg == null || headImg.getSize() <= 0 || headImg.getBytes().length <= 0) {
 				result.setCode(ResponseMessage.PARAMETER);
@@ -144,7 +146,7 @@ public class SecurityController {
 			result.setData(e);
 			return result;
 		}
-    	int sta = securityService.uploadHeadImg(headImg,id,path);
+    	int sta = securityService.uploadHeadImg(headImg, id, path);
     	if(sta == 1) {
     		result.setCode(ResponseMessage.SUCCESS);
     		result.setMsg("头像上传成功");
@@ -225,7 +227,7 @@ public class SecurityController {
      * @author suyt
      */
     @RequestMapping("codeVerify")
-    public Result codeVerify(String eMailAddr, String code,BigInteger id) {
+    public Result codeVerify(AuthUser authUser, String eMailAddr, String code,BigInteger id) {
     	Result result = new Result();
     	String key = "EmailCode:"+eMailAddr;
 		Long expire = stringRedisTemplate.getExpire(key, TimeUnit.MINUTES);
@@ -237,6 +239,7 @@ public class SecurityController {
 			if(redisCode!=null) {
 				if(redisCode.equals(code)) {//验证码验证成功
 					//修改邮箱
+					id = BigInteger.valueOf(authUser.getUserId());
 					securityService.updateUserEmail(eMailAddr,id);
 					result.setCode(ResponseMessage.SUCCESS);
 					result.setMsg("验证成功");
@@ -333,10 +336,11 @@ public class SecurityController {
 //    				result.setCode(ResponseMessage.INVALID_TOKEN);
 //    				result.setMsg("缺少正确参数token");
 //    			}else {
-    				 BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    				  String hashPass = passwordEncoder.encode(newpassword);
+//    				 BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//    				  String hashPass = passwordEncoder.encode(newpassword);
+					String encrypt = DigestUtil.encrypt(newpassword);
 					String userId = authUser.getUserId().toString();
-    				int status=securityService.updateUserPass(userId,hashPass);
+    				int status=securityService.updateUserPass(userId,encrypt);
 
     				if(status>0) {
     					result.setCode(ResponseMessage.SUCCESS);

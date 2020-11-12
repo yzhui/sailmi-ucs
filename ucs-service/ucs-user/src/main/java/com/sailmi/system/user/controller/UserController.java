@@ -53,6 +53,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.BufferedInputStream;
@@ -133,6 +134,23 @@ public class UserController {
 	}
 
 	/**
+	 * <p>Description: 忘记密码中的验证码</p>
+	 *
+	 * @param userPhone:
+	 * @param code:
+	 * @return: com.sailmi.system.entity.Result
+	 * @Author: syt
+	 * @Date: 2020/11/12/0012 14:59
+	 */
+	@RequestMapping(value="checkCode",method=RequestMethod.POST)
+	@ResponseBody
+	public Result checkPhoneCode(String userPhone,String code) {
+
+		return userService.checkPhoneCode(userPhone,code);
+
+	}
+
+	/**
 	 * 验证手机号唯一
 	 * @param userPhone
 	 * @return
@@ -153,6 +171,21 @@ public class UserController {
 
 	}
 
+	/****
+	 * @author GisonWin
+	 * @Date 2019-12-24
+	 * 验证手机号是否存在于系统中.  由于有台接口更改,该接口仅用于忘记密码内的校验
+	 * @param userPhone
+	 * @return
+	 */
+	@RequestMapping(value="uniquePhone1",method=RequestMethod.POST)
+	@ResponseBody
+	public Result queryUniquePhone(String userPhone) {
+
+		return userService.queyrUniquePhone(userPhone);
+
+	}
+
 	/**
 	 * 查询单条
 	 */
@@ -164,6 +197,26 @@ public class UserController {
 		return R.data(UserWrapper.build().entityVO(detail));
 	}
 
+	/**
+	 * 查询单条
+	 */
+	@ApiOperationSupport(order = 1)
+	@ApiOperation(value = "查看用户基础信息详情", notes = "传入id")
+	@GetMapping("/userdetail")
+	public R<User> detail(HttpServletRequest request) {
+		String id = request.getParameter("id");
+		User detail=null;
+		if(id!=null) {
+			QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+			userQueryWrapper.eq("id", id);
+			 detail = userService.getOne(userQueryWrapper);
+		}
+		if(detail!=null) {
+			return R.data(detail);
+		}else{
+			return R.data(null);
+		}
+	}
 	/**
 	 * 查询单条
 	 */

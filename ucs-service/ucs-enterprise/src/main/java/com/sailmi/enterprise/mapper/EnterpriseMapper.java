@@ -83,7 +83,7 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 * @Author: syt
 	 * @Date: 2020/10/30/0030 17:41
 	 */
-	int joinEnterprise(@Param("id") Long id, @Param("userId") Long userId);
+	int joinEnterprise(@Param("id") Long id, @Param("userId") Long userId,@Param("time") String time);
 
 	/**
 	 * <p>Description: 用户的企业列表</p>
@@ -121,7 +121,7 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 * @Author: syt
 	 * @Date: 2020/11/4/0004 14:39
 	 */
-	int insertUserEnterprise(@Param("id") Long id, @Param("userId") Long userId);
+	int insertUserEnterprise(@Param("id") Long id, @Param("userId") Long userId,@Param("time") String time);
 
 	/**
 	 * 根据用户ID查询用户下的企业信息

@@ -96,7 +96,7 @@
 
     <!--加入企业-->
     <insert id="joinEnterprise" >
-        INSERT INTO ucs_user_enterprise(user_id,enterprise_id) VALUES(#{userId}, #{id})
+        INSERT INTO ucs_user_enterprise(user_id,enterprise_id,create_times) VALUES(#{userId}, #{id},#{time})
     </insert>
 
     <!--用户的企业列表-->
@@ -137,7 +137,7 @@
 
     <!--企业用户关系-->
     <insert id="insertUserEnterprise" >
-        INSERT INTO ucs_user_enterprise(user_id, enterprise_id) VALUES (#{userId}, #{id})
+        INSERT INTO ucs_user_enterprise(user_id, enterprise_id, create_times) VALUES (#{userId}, #{id},#{time})
     </insert>
 
     <!-- 根据用户ID查询企业信息 -->

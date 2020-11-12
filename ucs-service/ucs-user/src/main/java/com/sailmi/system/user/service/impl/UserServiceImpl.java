@@ -91,6 +91,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 					user.setDefaultEnterpriseId(Long.valueOf(0));//默认公司是0
 					user.setLastLogin(String.valueOf(new Date().getTime()));//登陆时间
 					user.setCreateTime(new Date());//创建时间
+					user.setPhoneStatus("1");//用户手机号注册状态是1   syt
 					int insert = baseMapper.insert(user);
 					status = "success";
 				} else {//验证码验证失败
@@ -321,7 +322,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 		if(userEmail!=null && userEmail.length()>0){
 			userId=baseMapper.queryUserIdByEmail(userEmail);
 		}
-
+		System.out.println(DigestUtil.encrypt(password));
 		int status=baseMapper.updateUserPass(userId,DigestUtil.encrypt(password));
 		if(status>0) {
 			result.setCode(ResponseMessage.SUCCESS);
@@ -333,4 +334,60 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 		return result;
 	}
 
+	@Override
+	public Result checkPhoneCode(String userPhone, String code) {
+		Result result = new Result();
+		String key = "phoneCode:check"+userPhone;
+//		Long expire = stringRedisTemplate.getExpire(key, TimeUnit.SECONDS);
+		String redisCode = stringRedisTemplate.opsForValue().get(key);
+		if (redisCode != null) {
+			if (redisCode.equals(code)) {//验证码验证成功
+				result.setCode(ResponseMessage.SUCCESS);
+				result.setMsg("验证成功");
+			}else {
+				result.setCode(ResponseMessage.PARAERROE);
+				result.setMsg("验证码失败");
+			}
+			return result;
+		}
+		result.setCode(ResponseMessage.PARAERROE);
+		result.setMsg("验证码失败");
+		return result;
+//		if(expire<0) {
+//			result.setCode(ResponseMessage.TIMEOUT);
+//			result.setMsg("验证码超时");
+//		}else {
+//			String redisCode = stringRedisTemplate.opsForValue().get(key);
+//			if(redisCode!=null) {
+//				if(redisCode.equals(code)) {//验证码验证成功
+//					result.setCode(ResponseMessage.SUCCESS);
+//					result.setMsg("验证成功");
+//				}else {
+//					result.setCode(ResponseMessage.PARAERROE);
+//					result.setMsg("验证码错误");
+//				}
+//			}
+//		}
+
+	}
+	/***
+	 * <p>Description: </p>
+	 * 验证手机号是否存在于系统中.  由于有台接口更改,该接口仅用于忘记密码内的校验
+	 * @return: com.sailmi.system.entity.Result
+	 * @Author: syt
+	 * @Date: 2020/11/12/0012 16:20
+	 */
+	@Override
+	public Result queyrUniquePhone(String userPhone) {
+		Result response = new Result();
+		int queryPhoneNum = userMapper.queryPhoneNum(userPhone);
+		if(queryPhoneNum>0) {
+			response.setCode("1");
+			response.setMsg("该手机号已经存在");
+		}else {
+			response.setCode("0");
+			response.setMsg("该手机号不存存在");
+		}
+		return response;
+	}
 }

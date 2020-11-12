@@ -180,4 +180,9 @@
     <select id="queryUserIdByEmail" parameterType="String" resultType="String">
 		SELECT id FROM ucs_user WHERE user_email=#{userEmail}
 	</select>
+
+    <select id="queryPhoneNum" parameterType="String" resultType="Integer">
+		SELECT count(*) FROM ucs_user WHERE user_phone=#{userPhone}
+
+	</select>
 </mapper>

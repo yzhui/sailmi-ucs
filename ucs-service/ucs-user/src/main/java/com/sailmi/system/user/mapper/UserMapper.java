@@ -104,4 +104,6 @@ public interface UserMapper extends BaseMapper<User> {
 	String queryUserIdByEmail(String userEmail);
 
 	int updateUserPass(@Param("userId")String userId,@Param("password") String password);
+
+	int queryPhoneNum(String userPhone);
 }

@@ -1,5 +1,7 @@
 package com.sailmi.system.user.entity;
 
+import com.sailmi.core.mp.base.BaseEntity;
+
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 import java.util.Date;
@@ -9,7 +11,7 @@ import java.util.Date;
  *
  * @author syt
  */
-public class AccountUserEntity {
+public class AccountUserEntity extends BaseEntity {
 
 	/**
 	 * 用户ID

@@ -9,9 +9,9 @@ spring:
     username: ${ucs.datasource.dev.username}
     password: ${ucs.datasource.dev.password}
   mail:
-    host: smtp.qq.com
-    username: 331975548@qq.com
-    password: jvucugdupskfbghc
+    host: smtp.exmail.qq.com #smtp.qq.com
+    username: dev@linose.com
+    password: Lns12345
     default-encoding: UTF-8
     port: 465
     properties:
@@ -45,6 +45,6 @@ sendEmail:
 
 #自定义头像上传路径
 headimg:
-  uploadPath: /var/www/html/png/
+  uploadPath: /usr/share/nginx/html/ucs/ftpuser
   #头像访问地址
-  readPath: test.iitplat.com
+  readPath: http://dev_ucs.iitplat.com/ftpuser/
