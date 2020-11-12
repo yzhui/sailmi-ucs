@@ -15,6 +15,7 @@
  */
 package com.sailmi.system.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sailmi.system.entity.UserRole;
 import com.sailmi.system.service.IUserRoleService;
@@ -63,6 +64,15 @@ public class UserRoleController extends AppController {
 		return R.data(UserRoleWrapper.build().entityVO(detail));
 	}
 
+	@GetMapping("/userdetail")
+	@ApiOperationSupport(order = 1)
+	@ApiOperation(value = "详情", notes = "传入userRole")
+	public R<UserRoleVO> userdetail(String id) {
+		QueryWrapper<UserRole> userRoleQueryWrapper = new QueryWrapper<>();
+		userRoleQueryWrapper.eq("id",id);
+		UserRole detail = userRoleService.getOne(userRoleQueryWrapper);
+		return R.data(UserRoleWrapper.build().entityVO(detail));
+	}
 	/**
 	* 分页
 	*/
