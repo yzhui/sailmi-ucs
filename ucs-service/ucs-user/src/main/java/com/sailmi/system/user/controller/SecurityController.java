@@ -227,7 +227,7 @@ public class SecurityController {
      * @author suyt
      */
     @RequestMapping("codeVerify")
-    public Result codeVerify(String eMailAddr, String code,BigInteger id) {
+    public Result codeVerify(AuthUser authUser, String eMailAddr, String code,BigInteger id) {
     	Result result = new Result();
     	String key = "EmailCode:"+eMailAddr;
 		Long expire = stringRedisTemplate.getExpire(key, TimeUnit.MINUTES);
@@ -239,6 +239,7 @@ public class SecurityController {
 			if(redisCode!=null) {
 				if(redisCode.equals(code)) {//验证码验证成功
 					//修改邮箱
+					id = BigInteger.valueOf(authUser.getUserId());
 					securityService.updateUserEmail(eMailAddr,id);
 					result.setCode(ResponseMessage.SUCCESS);
 					result.setMsg("验证成功");
