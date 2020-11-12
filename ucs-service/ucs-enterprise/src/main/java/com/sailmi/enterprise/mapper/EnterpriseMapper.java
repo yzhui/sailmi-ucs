@@ -83,7 +83,7 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 * @Author: syt
 	 * @Date: 2020/10/30/0030 17:41
 	 */
-	int joinEnterprise(@Param("id") Long id, @Param("userId") Long userId);
+	int joinEnterprise(@Param("id") Long id, @Param("userId") Long userId,@Param("time") String time);
 
 	/**
 	 * <p>Description: 用户的企业列表</p>
