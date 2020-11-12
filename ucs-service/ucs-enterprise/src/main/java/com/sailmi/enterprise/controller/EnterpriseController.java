@@ -474,6 +474,7 @@ public class EnterpriseController extends AppController {
 	public String selectEnterprise(AuthUser authUser, BigInteger userId, BigInteger enterpriseId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		userId = BigInteger.valueOf(authUser.getUserId());
+//		userId = BigInteger.valueOf(1301788793255452689L);
 		try {
 			Enterprise enterprise = enterpriseService.selectEnterprise(userId, enterpriseId);
 			map.put("status", 1);
