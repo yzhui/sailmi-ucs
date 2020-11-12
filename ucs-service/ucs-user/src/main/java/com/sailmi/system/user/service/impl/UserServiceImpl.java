@@ -335,5 +335,24 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 //		}
 
 	}
-
+	/***
+	 * <p>Description: </p>
+	 * 验证手机号是否存在于系统中.  由于有台接口更改,该接口仅用于忘记密码内的校验
+	 * @return: com.sailmi.system.entity.Result
+	 * @Author: syt
+	 * @Date: 2020/11/12/0012 16:20
+	 */
+	@Override
+	public Result queyrUniquePhone(String userPhone) {
+		Result response = new Result();
+		int queryPhoneNum = userMapper.queryPhoneNum(userPhone);
+		if(queryPhoneNum>0) {
+			response.setCode("1");
+			response.setMsg("该手机号已经存在");
+		}else {
+			response.setCode("0");
+			response.setMsg("该手机号不存存在");
+		}
+		return response;
+	}
 }

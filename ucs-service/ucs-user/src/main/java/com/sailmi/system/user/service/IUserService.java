@@ -163,4 +163,14 @@ public interface IUserService extends BaseService<User> {
 	Result updatePassword1(String userPhone, String userEmail, String password);
 
 	Result checkPhoneCode(String userPhone, String code);
+
+	/**
+	 * <p>Description: </p>
+	 *
+	 * 验证手机号是否存在于系统中.  由于有台接口更改,该接口仅用于忘记密码内的校验
+	 * @return: com.sailmi.system.entity.Result
+	 * @Author: syt
+	 * @Date: 2020/11/12/0012 16:20
+	 */
+	Result queyrUniquePhone(String userPhone);
 }

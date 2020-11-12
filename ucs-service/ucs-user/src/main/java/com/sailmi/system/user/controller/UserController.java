@@ -146,6 +146,21 @@ public class UserController {
 
 	}
 
+	/****
+	 * @author GisonWin
+	 * @Date 2019-12-24
+	 * 验证手机号是否存在于系统中.  由于有台接口更改,该接口仅用于忘记密码内的校验
+	 * @param userPhone
+	 * @return
+	 */
+	@RequestMapping(value="uniquePhone1",method=RequestMethod.POST)
+	@ResponseBody
+	public Result queryUniquePhone(String userPhone) {
+
+		return userService.queyrUniquePhone(userPhone);
+
+	}
+
 	/**
 	 * 查询单条
 	 */
