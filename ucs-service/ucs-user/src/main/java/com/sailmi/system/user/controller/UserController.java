@@ -50,6 +50,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.BufferedInputStream;
@@ -144,12 +145,20 @@ public class UserController {
 	 */
 	@ApiOperationSupport(order = 1)
 	@ApiOperation(value = "查看用户基础信息详情", notes = "传入id")
-	@GetMapping("/detail")
-	public R<UserVO> detail( String id) {
-		QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-		userQueryWrapper.eq("id",id);
-		User detail = userService.getOne(userQueryWrapper);
-		return R.data(UserWrapper.build().entityVO(detail));
+	@GetMapping("/userdetail")
+	public R<UserVO> detail(HttpServletRequest request) {
+		String id = request.getParameter("id");
+		User detail=null;
+		if(id!=null) {
+			QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+			userQueryWrapper.eq("id", id);
+			 detail = userService.getOne(userQueryWrapper);
+		}
+		if(detail!=null) {
+			return R.data(UserWrapper.build().entityVO(detail));
+		}else{
+			return R.data(null);
+		}
 	}
 	/**
 	 * 查询单条
