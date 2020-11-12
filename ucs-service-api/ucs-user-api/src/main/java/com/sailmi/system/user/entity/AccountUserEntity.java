@@ -21,6 +21,8 @@ public class AccountUserEntity extends BaseEntity {
 	/**
 	 * 用户昵称
 	 */
+	private String nickName;
+
 	private String username="";
 
 	/**
@@ -374,4 +376,11 @@ public class AccountUserEntity extends BaseEntity {
 		this.headImgUrl = headImgUrl;
 	}
 
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
 }
