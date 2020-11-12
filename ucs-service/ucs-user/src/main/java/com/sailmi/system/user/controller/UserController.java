@@ -146,7 +146,7 @@ public class UserController {
 	@ApiOperationSupport(order = 1)
 	@ApiOperation(value = "查看用户基础信息详情", notes = "传入id")
 	@GetMapping("/userdetail")
-	public R<UserVO> detail(HttpServletRequest request) {
+	public R<User> detail(HttpServletRequest request) {
 		String id = request.getParameter("id");
 		User detail=null;
 		if(id!=null) {
@@ -155,7 +155,7 @@ public class UserController {
 			 detail = userService.getOne(userQueryWrapper);
 		}
 		if(detail!=null) {
-			return R.data(UserWrapper.build().entityVO(detail));
+			return R.data(detail);
 		}else{
 			return R.data(null);
 		}
