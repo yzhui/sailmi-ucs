@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSON;
 //import com.linose.common.util.ResponseMessage;
 //import com.linose.common.util.Result;
 import com.sailmi.core.secure.AuthUser;
+import com.sailmi.core.tool.utils.DigestUtil;
 import com.sailmi.system.entity.ResponseMessage;
 import com.sailmi.system.entity.Result;
 import com.sailmi.system.user.entity.AccountUserEntity;
@@ -334,10 +335,11 @@ public class SecurityController {
 //    				result.setCode(ResponseMessage.INVALID_TOKEN);
 //    				result.setMsg("缺少正确参数token");
 //    			}else {
-    				 BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    				  String hashPass = passwordEncoder.encode(newpassword);
+//    				 BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//    				  String hashPass = passwordEncoder.encode(newpassword);
+					String encrypt = DigestUtil.encrypt(newpassword);
 					String userId = authUser.getUserId().toString();
-    				int status=securityService.updateUserPass(userId,hashPass);
+    				int status=securityService.updateUserPass(userId,encrypt);
 
     				if(status>0) {
     					result.setCode(ResponseMessage.SUCCESS);
