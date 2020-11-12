@@ -129,11 +129,24 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 			return 2;
 		}
 		//用户加入企业
-		int r = baseMapper.joinEnterprise(Long.valueOf(id.toString()),userId);
+		int r = baseMapper.joinEnterprise(Long.valueOf(id.toString()),userId,this.timeStamp2Date());
 		if(r > 0){
 			return 1;
 		}
 		return 0;
+	}
+
+	private String timeStamp2Date() {
+		long time = System.currentTimeMillis();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//要转换的时间格式
+		Date date;
+		try {
+			date = sdf.parse(sdf.format(time));
+			return sdf.format(date);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
