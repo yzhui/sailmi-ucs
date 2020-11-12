@@ -161,4 +161,6 @@ public interface IUserService extends BaseService<User> {
 	int resetUserPassById(String id);
 
 	Result updatePassword1(String userPhone, String userEmail, String password);
+
+	Result checkPhoneCode(String userPhone, String code);
 }

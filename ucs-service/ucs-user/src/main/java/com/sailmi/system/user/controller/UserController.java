@@ -108,6 +108,14 @@ public class UserController {
 		return R.status(userService.sendPhoneCode(userPhone));
 	}
 
+	@RequestMapping(value="checkCode",method=RequestMethod.POST)
+	@ResponseBody
+	public Result checkPhoneCode(String userPhone,String code) {
+
+		return userService.checkPhoneCode(userPhone,code);
+
+	}
+
 	/**
 	 * 验证手机号唯一
 	 * @param userPhone

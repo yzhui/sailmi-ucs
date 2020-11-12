@@ -298,4 +298,41 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 		return result;
 	}
 
+	@Override
+	public Result checkPhoneCode(String userPhone, String code) {
+		Result result = new Result();
+		String key = "phoneCode:check"+userPhone;
+//		Long expire = stringRedisTemplate.getExpire(key, TimeUnit.SECONDS);
+		String redisCode = stringRedisTemplate.opsForValue().get(key);
+		if (redisCode != null) {
+			if (redisCode.equals(code)) {//验证码验证成功
+				result.setCode(ResponseMessage.SUCCESS);
+				result.setMsg("验证成功");
+			}else {
+				result.setCode(ResponseMessage.PARAERROE);
+				result.setMsg("验证码失败");
+			}
+			return result;
+		}
+		result.setCode(ResponseMessage.PARAERROE);
+		result.setMsg("验证码失败");
+		return result;
+//		if(expire<0) {
+//			result.setCode(ResponseMessage.TIMEOUT);
+//			result.setMsg("验证码超时");
+//		}else {
+//			String redisCode = stringRedisTemplate.opsForValue().get(key);
+//			if(redisCode!=null) {
+//				if(redisCode.equals(code)) {//验证码验证成功
+//					result.setCode(ResponseMessage.SUCCESS);
+//					result.setMsg("验证成功");
+//				}else {
+//					result.setCode(ResponseMessage.PARAERROE);
+//					result.setMsg("验证码错误");
+//				}
+//			}
+//		}
+
+	}
+
 }
