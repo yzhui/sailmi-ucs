@@ -55,6 +55,7 @@ public class AuthProvider {
 		defaultSkipUrl.add("/realuser/IDCard");
 		defaultSkipUrl.add("/security/uploadHeadImg");
 		defaultSkipUrl.add("/checkCode");
+		defaultSkipUrl.add("/file/**");
 	}
 
 	/**
