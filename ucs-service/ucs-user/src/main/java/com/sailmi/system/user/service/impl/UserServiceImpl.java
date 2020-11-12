@@ -88,9 +88,10 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 						user.setPassword(DigestUtil.encrypt(users.getPassword()));
 					}
 					user.setTenantId("000000");//这里hardcode了,应该获取当前系统的tenantid   yzh
-					user.setDefaultEnterpriseId(Long.valueOf(0));//默认公司是0
+//					user.setDefaultEnterpriseId(Long.valueOf(0));//默认公司是0
 					user.setLastLogin(String.valueOf(new Date().getTime()));//登陆时间
 					user.setCreateTime(new Date());//创建时间
+					user.setPhoneStatus("1");//用户手机号注册状态是1   syt
 					int insert = baseMapper.insert(user);
 					status = "success";
 				} else {//验证码验证失败
