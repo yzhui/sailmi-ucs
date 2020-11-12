@@ -108,6 +108,15 @@ public class UserController {
 		return R.status(userService.sendPhoneCode(userPhone));
 	}
 
+	/**
+	 * <p>Description: 忘记密码中的验证码</p>
+	 *
+	 * @param userPhone:
+	 * @param code:
+	 * @return: com.sailmi.system.entity.Result
+	 * @Author: syt
+	 * @Date: 2020/11/12/0012 14:59
+	 */
 	@RequestMapping(value="checkCode",method=RequestMethod.POST)
 	@ResponseBody
 	public Result checkPhoneCode(String userPhone,String code) {
