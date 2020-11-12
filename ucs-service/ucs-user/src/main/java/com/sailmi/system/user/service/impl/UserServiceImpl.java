@@ -101,6 +101,41 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 		}
 		return status;
 	}
+
+	/**
+	 * 注册用户 不用短信认证
+	 * @param user
+	 * @return
+	 */
+	@Override
+	public String registerUserV2(UcsAccountuser users) {
+		int count = queryUnikePhone(users.getUserPhone());
+		if (count>0) {
+			return "phone";
+		}
+		User user = new User();
+		if (users.getUserPhone() != null) {//手机号和账号
+			user.setPhone(users.getUserPhone());
+			user.setAccount(users.getUserPhone());
+			String md5 = MD5Tools.MD5(users.getUserPhone());//安全码
+			user.setCode(md5);
+			user.setRealName(users.getRealName());
+			user.setName(users.getUserPhone());
+		}
+		if (users.getPassword() != null) {
+			user.setPassword(DigestUtil.encrypt(users.getPassword()));
+		}
+		user.setTenantId(users.getTenantId());
+		user.setDefaultEnterpriseId(users.getLastEnterpriseId());//默认公司是0
+		user.setLastLogin(String.valueOf(new Date().getTime()));//登陆时间
+		user.setCreateTime(new Date());//创建时间
+		int insert = baseMapper.insert(user);
+		if (insert > 0) {
+			return "success";
+		}
+		return "fail";
+	}
+
 			@Override
 			public boolean submit(User user) {
 				if (Func.isNotEmpty(user.getPassword())) {

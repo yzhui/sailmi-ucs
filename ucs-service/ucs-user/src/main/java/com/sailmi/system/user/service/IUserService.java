@@ -43,6 +43,13 @@ public interface IUserService extends BaseService<User> {
 	String registerUser(UcsAccountuser user);
 
 	/**
+	 * 注册用户 不用短信认证
+	 * @param user
+	 * @return
+	 */
+	String registerUserV2(UcsAccountuser user);
+
+	/**
 	 * 新增或修改用户
 	 *
 	 * @param user

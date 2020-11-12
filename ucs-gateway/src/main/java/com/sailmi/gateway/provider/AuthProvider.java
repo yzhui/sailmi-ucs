@@ -53,6 +53,11 @@ public class AuthProvider {
 		defaultSkipUrl.add("/updatePass");
 		defaultSkipUrl.add("/upload/uploadPicture");
 		defaultSkipUrl.add("/realuser/IDCard");
+		/**
+		 * knowniot - public house
+		 * alice
+		 */
+		defaultSkipUrl.add("/alice/**");
 	}
 
 	/**

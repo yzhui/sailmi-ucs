@@ -150,5 +150,7 @@ public class UcsAccountuser  extends  BaseEntity{
 	@ApiModelProperty(value = "用户头像")
   private String headImgUrl;
 
-
+	@TableField("tenant_id")
+	@ApiModelProperty(value = "租客id")
+	private String tenantId; //租客id
 }

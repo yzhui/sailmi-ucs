@@ -25,6 +25,8 @@ import com.sailmi.system.entity.Result;
 import com.sailmi.system.entity.UserEnterprise;
 import com.sailmi.system.feign.IuserEnterRelationFeign;
 import com.sailmi.system.user.entity.UcsAccountuser;
+import com.sailmi.system.user.persist.AliceUserModel;
+import com.sailmi.system.user.service.knowniot.IAliceUserService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -45,6 +47,7 @@ import com.sailmi.system.user.excel.UserImportListener;
 import com.sailmi.system.user.service.IUserService;
 import com.sailmi.system.user.vo.UserVO;
 import com.sailmi.system.user.wrapper.UserWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -73,6 +76,28 @@ public class UserController {
 	private IUserService userService;
 	private IuserEnterRelationFeign iuserEnterRelationFeign;
 
+	/******************************************************
+	 *                  Public House 2nd
+	 ******************************************************/
+	@PostMapping("/alice/knowniot/createUser")
+	@ApiOperationSupport(order = 1)
+	@ApiOperation(value = "创建员工，关联企业、部门", notes = "传入")
+	public R createKnowniotUser(UcsAccountuser user) throws Exception {
+		String s = userService.registerUserV2(user);
+		if(s.equals("fail")){
+			return R.fail("注册失败");
+		} else if (s.equals("phone")) {
+			return R.fail("此手机号码已被注册: " + user.getUserPhone());
+		} else if(s.equals("success")){
+			return R.success("注册成功");
+		}else{
+			return R.fail("验证码超时");
+		}
+	}
+
+	/******************************************************
+	 *                  Ucs
+	 ******************************************************/
 	/**
 	 * 注册用户
 	 * @param user
