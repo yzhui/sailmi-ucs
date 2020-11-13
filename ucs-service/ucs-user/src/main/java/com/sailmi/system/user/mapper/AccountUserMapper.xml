@@ -11,6 +11,7 @@
     <select id="get"
             resultType="com.sailmi.system.user.entity.AccountUserEntity">
 		SELECT a.id AS "id",
+		a.nick_name AS "nickName",
 		a.login_name AS "loginName",
 		a.login_name AS "username",
 		a.user_phone AS "userPhone",
