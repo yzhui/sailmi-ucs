@@ -37,7 +37,7 @@ import javax.annotation.Resource;
 @EnableSwagger2
 @SpringCloudApplication
 @EnableFeignClients(LaunchConstant.BASE_PACKAGES)
-@ComponentScan({"com.sailmi.resource","com.sailmi.core.oss.provider.mongodb","com.sailmi.core.tool.context"})
+@ComponentScan({"com.sailmi.core.oss.**.*","com.sailmi.core.oss.provider.**.*","com.sailmi.resource.**.*","com.sailmi.core.oss.props"})
 @EnableMongoRepositories
 public class ResourceApplication {
 	//创建application context

@@ -44,6 +44,7 @@ import javax.annotation.Resource;
 @Api(value = "对象存储端点", tags = "对象存储端点")
 public class OssEndpoint {
 	//初始化OSSProperties
+	@Autowired
 	private OssProvider ossProvider;
 
 	/**
@@ -101,7 +102,7 @@ public class OssEndpoint {
 	})
 	public R<GeneralFile> putFile(@RequestParam MultipartFile file) {
 		GeneralFile generalFile = null;
-		generalFile = ossProvider.putFile(file.getOriginalFilename(), (MultipartFile) file.getInputStream());
+		generalFile = ossProvider.putFile(file.getOriginalFilename(), file);
 		return R.data(generalFile);
 	}
 

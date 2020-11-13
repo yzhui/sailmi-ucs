@@ -19,6 +19,10 @@
             <version>${sailmi.core.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
     </dependencies>
     <packaging>jar</packaging>
 
