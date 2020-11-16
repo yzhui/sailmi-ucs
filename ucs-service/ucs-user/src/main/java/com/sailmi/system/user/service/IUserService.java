@@ -53,6 +53,8 @@ public interface IUserService extends BaseService<User> {
 
 	UserInfo editKnowniotUser(UcsAccountuser user) throws Exception;
 
+	String delKnowniotUser(Long userId, boolean isSoft) throws Exception;
+
 	/**
 	 * 新增或修改用户
 	 *

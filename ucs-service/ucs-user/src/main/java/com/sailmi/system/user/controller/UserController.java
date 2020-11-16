@@ -110,6 +110,20 @@ public class UserController {
 		return R.data(userService.editKnowniotUser(user));
 	}
 
+	@PostMapping("/alice/knowniot/delUser")
+	@ApiOperationSupport(order = 1)
+	@ApiOperation(value = "删除用户", notes = "传入")
+	public R delKnowniotUser(Long userId, boolean isSoft) throws Exception {
+		String s = userService.delKnowniotUser(userId, isSoft);
+		if (s.equals("success")) {
+			return R.success("删除成功");
+		} else if (s.equals("notExists")) {
+			return R.fail("用户不存在");
+		} else {
+			return R.fail("删除失败");
+		}
+	}
+
 	/******************************************************
 	 *                  Ucs
 	 ******************************************************/

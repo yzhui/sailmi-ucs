@@ -175,6 +175,24 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 		return null;
 	}
 
+	@Override
+	public String delKnowniotUser(Long userId, boolean isSoft) throws Exception {
+		if (isSoft) {
+			return "success";
+		}
+
+		Integer cnt = baseMapper.selectCount(Wrappers.<User>query().lambda().eq(User::getId, userId));
+		if (cnt == 0) {
+			return "notExists";
+		}
+
+		if (baseMapper.deleteById(userId) > 0) {
+			return "success";
+		}
+
+		return "fail";
+	}
+
 			@Override
 			public boolean submit(User user) {
 				if (Func.isNotEmpty(user.getPassword())) {
