@@ -137,6 +137,44 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 		return "fail";
 	}
 
+	@Override
+	public UserInfo userInfoV2(String tenantId,String account, String password) {
+		UserInfo userInfo = new UserInfo();
+		UserVO userVO = new UserVO();
+		User user = baseMapper.getUser(tenantId, account, password);
+		userVO = BeanUtil.copy(user, UserVO.class);//用户信息封装
+		userInfo.setUser(userVO);
+		return userInfo;
+	}
+
+	@Override
+	public UserInfo editKnowniotUser(UcsAccountuser users) {
+		User user = baseMapper.selectById(users.getId());
+		if (!user.getPhone().equals(users.getUserPhone())) {
+			int count = queryUnikePhone(users.getUserPhone());
+			if (count > 0) {
+				throw new ApiException("当前手机号码已存在!");
+			}
+		}
+		user.setPhone(users.getUserPhone());
+		user.setAccount(users.getUserPhone());
+		String md5 = MD5Tools.MD5(users.getUserPhone());//安全码
+		user.setCode(md5);
+		user.setRealName(users.getRealName());
+		user.setName(users.getUserPhone());
+		if (users.getPassword() != null) {
+			user.setPassword(DigestUtil.encrypt(users.getPassword()));
+		}
+		user.setUpdateTime(new Date());//创建时间
+
+		int update = baseMapper.updateById(user);
+		if (update > 0) {
+			return userInfoV2(user.getTenantId(), user.getAccount(), user.getPassword());
+		}
+
+		return null;
+	}
+
 			@Override
 			public boolean submit(User user) {
 				if (Func.isNotEmpty(user.getPassword())) {

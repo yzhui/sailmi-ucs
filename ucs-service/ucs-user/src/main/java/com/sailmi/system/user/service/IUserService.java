@@ -49,6 +49,10 @@ public interface IUserService extends BaseService<User> {
 	 */
 	String registerUserV2(UcsAccountuser user);
 
+	UserInfo userInfoV2(String tenantId, String account, String password);
+
+	UserInfo editKnowniotUser(UcsAccountuser user) throws Exception;
+
 	/**
 	 * 新增或修改用户
 	 *

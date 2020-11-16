@@ -96,6 +96,20 @@ public class UserController {
 		}
 	}
 
+	@GetMapping("/alice/knowniot/getUser")
+	@ApiOperationSupport(order = 1)
+	@ApiOperation(value = "获取用户信息", notes = "传入")
+	public R getKnowniotUser(String tenantId, String account, String password) throws Exception {
+		return R.data(userService.userInfoV2(tenantId,account, password));
+	}
+
+	@PostMapping("/alice/knowniot/editUser")
+	@ApiOperationSupport(order = 1)
+	@ApiOperation(value = "修改用户信息", notes = "传入")
+	public R editKnowniotUser(UcsAccountuser user) throws Exception {
+		return R.data(userService.editKnowniotUser(user));
+	}
+
 	/******************************************************
 	 *                  Ucs
 	 ******************************************************/
