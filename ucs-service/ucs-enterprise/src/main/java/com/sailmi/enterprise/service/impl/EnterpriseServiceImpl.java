@@ -129,7 +129,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 			return 2;
 		}
 		//用户加入企业
-		int r = baseMapper.joinEnterprise(Long.valueOf(id.toString()),userId,this.timeStamp2Date());
+		int r = baseMapper.joinEnterprise(Long.valueOf(id.toString()),userId,this.timeStamp2Date(), 2);/*用户加入企业默认是普通用户2标识*/
 		if(r > 0){
 			return 1;
 		}
