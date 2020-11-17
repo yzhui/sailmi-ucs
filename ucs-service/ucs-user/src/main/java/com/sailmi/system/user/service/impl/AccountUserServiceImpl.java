@@ -502,17 +502,17 @@ public class AccountUserServiceImpl implements AccountUserService {
 //        return toCloud;
 //    }
 //
-//    /**
-//     * 记录上次操作企业ID
-//     */
-//    @Override
-//    public int lastEnterpriseId(BigInteger enterpriseId, BigInteger userId) {
-//        int lastSta = accountUserMapper.lastEnterpriseId(enterpriseId, userId);
-//        if (lastSta > 0) {
-//            return 1;
-//        }
-//        return 0;
-//    }
+    /**
+     * 记录上次操作企业ID
+     */
+    @Override
+    public int lastEnterpriseId(BigInteger enterpriseId, BigInteger userId) {
+        int lastSta = accountUserMapper.lastEnterpriseId(enterpriseId, userId);
+        if (lastSta > 0) {
+            return 1;
+        }
+        return 0;
+    }
 //
 //    /**
 //     * 查询上次操作企业信息

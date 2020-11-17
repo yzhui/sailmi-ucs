@@ -441,15 +441,13 @@
 	</select>-->
 
     <!-- 记录上次操作企业ID -->
-   <!-- <update id="lastEnterpriseId"> &lt;!&ndash; parameterType="map" &ndash;&gt;
+   <update id="lastEnterpriseId">
         UPDATE
-        service_accountuser
-        SET lastEnterpriseId =
-        #{enterpriseId}
+        ucs_user
+        SET default_enterprise = #{enterpriseId}
         WHERE
-        id =
-        #{userId}
-    </update>-->
+        id = #{userId}
+    </update>
 
     <!-- 查询上次操作的企业的信息 -->
    <select id="getLastEnter"

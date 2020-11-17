@@ -170,7 +170,7 @@
         WHERE id = #{id}
     </update>
     <!-- 修改用户认证企业状态 : -->
-    <update id="updateEnterpriseStatus" parameterType="BigInteger">
+    <update id="updateEnterpriseStatus" >
 		UPDATE
 			ucs_user
 		SET

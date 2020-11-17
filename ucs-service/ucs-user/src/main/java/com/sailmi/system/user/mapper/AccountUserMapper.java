@@ -189,7 +189,7 @@ public interface AccountUserMapper {
      *
      * @param enterpriseId 企业ID
      */
-//    int lastEnterpriseId(@Param("enterpriseId") BigInteger enterpriseId, @Param("userId") BigInteger userId);
+    int lastEnterpriseId(@Param("enterpriseId") BigInteger enterpriseId, @Param("userId") BigInteger userId);
 
     /**
      * 查询上次操作企业信息
