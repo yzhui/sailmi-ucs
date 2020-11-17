@@ -169,13 +169,18 @@
         SET status = 0
         WHERE id = #{id}
     </update>
-    <!-- 修改用户认证企业状态 : 2审核中-->
+    <!-- 修改用户认证企业状态 : -->
     <update id="updateEnterpriseStatus" parameterType="BigInteger">
 		UPDATE
 			ucs_user
 		SET
-			enterprise_status = 2
+			enterprise_status = #{entStatus}
 		WHERE
 			id = #{userId}
 	</update>
+    <!--获取企业管理员-->
+    <select id="getAdminUserIds" resultType="long">
+        select user_id from  ucs_user_enterprise
+        where enterprise_id = #{id} and status = 1
+    </select>
 </mapper>

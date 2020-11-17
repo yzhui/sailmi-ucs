@@ -142,5 +142,15 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 * @Author: syt
 	 * @Date: 2020/11/17/0017 10:25
 	 */
-	void updateEnterpriseStatus(Long userId);
+	void updateEnterpriseStatus(@Param("userId") Long userId,@Param("entStatus") int entStatus);
+
+	/**
+	 * <p>Description: 查找企业中的管理员</p>
+	 *
+	 * @param id:
+	 * @return: java.util.List<java.lang.Long>
+	 * @Author: syt
+	 * @Date: 2020/11/17/0017 17:12
+	 */
+	List<Long> getAdminUserIds(String id);
 }
