@@ -46,6 +46,7 @@ import com.sailmi.enterprise.wrapper.EnterpriseWrapper;
 import com.sailmi.core.boot.ctrl.AppController;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -477,6 +478,9 @@ public class EnterpriseController extends AppController {
 //		userId = BigInteger.valueOf(1301788793255452689L);
 		try {
 			Enterprise enterprise = enterpriseService.selectEnterprise(userId, enterpriseId);
+			Date createTime = enterprise.getCreateTime();
+			SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			enterprise.setCreateDate(sdf1.format(createTime));
 			map.put("status", 1);
 			map.put("msg", "SUCCESS");
 			map.put("result", enterprise);
