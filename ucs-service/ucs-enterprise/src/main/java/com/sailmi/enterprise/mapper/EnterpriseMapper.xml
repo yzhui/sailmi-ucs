@@ -169,12 +169,12 @@
         SET status = 0
         WHERE id = #{id}
     </update>
-    <!-- 修改用户认证企业状态 -->
+    <!-- 修改用户认证企业状态 : 2审核中-->
     <update id="updateEnterpriseStatus" parameterType="BigInteger">
 		UPDATE
 			ucs_user
 		SET
-			enterprise_status = 1
+			enterprise_status = 2
 		WHERE
 			id = #{userId}
 	</update>
