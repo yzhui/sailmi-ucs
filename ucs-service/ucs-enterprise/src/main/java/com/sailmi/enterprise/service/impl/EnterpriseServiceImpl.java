@@ -182,7 +182,10 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 	 */
 	@Override
 	public void saveUserEnterprise(Long id, Long userId) {
-		baseMapper.insertUserEnterprise(id, userId, timeStamp2Date());
+		int i = baseMapper.insertUserEnterprise(id, userId, timeStamp2Date());
+		if (i > 0) {
+			baseMapper.updateEnterpriseStatus(userId);
+		}
 	}
 
 	@Override

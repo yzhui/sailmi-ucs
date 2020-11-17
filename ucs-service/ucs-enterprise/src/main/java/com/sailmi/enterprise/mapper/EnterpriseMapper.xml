@@ -169,4 +169,13 @@
         SET status = 0
         WHERE id = #{id}
     </update>
+    <!-- 修改用户认证企业状态 -->
+    <update id="updateEnterpriseStatus" parameterType="BigInteger">
+		UPDATE
+			ucs_user
+		SET
+			enterprise_status = 1
+		WHERE
+			id = #{userId}
+	</update>
 </mapper>

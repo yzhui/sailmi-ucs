@@ -135,4 +135,12 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 *审核
 	 */
 	int check(String id);
+
+	/**
+	 * 用户创建企业后修改企业认证状态
+	 *
+	 * @Author: syt
+	 * @Date: 2020/11/17/0017 10:25
+	 */
+	void updateEnterpriseStatus(Long userId);
 }
