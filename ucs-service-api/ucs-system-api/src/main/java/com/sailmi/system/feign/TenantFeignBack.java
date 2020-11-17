@@ -12,6 +12,6 @@ public class TenantFeignBack implements  TenantFeign{
 
 	@Override
 	public R<List<Tenant>> queryLoginUserTeants(@RequestParam(value = "enterpriseId",required = true) String enterpriseId) {
-		return R.fail("查询失败");
+		return R.data(null);
 	}
 }
