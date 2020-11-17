@@ -137,7 +137,7 @@
 
     <!--企业用户关系-->
     <insert id="insertUserEnterprise" >
-        INSERT INTO ucs_user_enterprise(user_id, enterprise_id, create_times) VALUES (#{userId}, #{id},#{time})
+        INSERT INTO ucs_user_enterprise(user_id, enterprise_id, create_times, status) VALUES (#{userId}, #{id},#{time},#{status})
     </insert>
 
     <!-- 根据用户ID查询企业信息 -->

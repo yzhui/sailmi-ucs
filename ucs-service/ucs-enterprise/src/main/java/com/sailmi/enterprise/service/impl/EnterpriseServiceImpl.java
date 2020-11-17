@@ -182,7 +182,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 	 */
 	@Override
 	public void saveUserEnterprise(Long id, Long userId) {
-		int i = baseMapper.insertUserEnterprise(id, userId, timeStamp2Date());
+		int i = baseMapper.insertUserEnterprise(id, userId, timeStamp2Date(), 1);/*走创建企业接口的默认都是企业管理员用1标识*/
 		if (i > 0) {
 			baseMapper.updateEnterpriseStatus(userId);
 		}
