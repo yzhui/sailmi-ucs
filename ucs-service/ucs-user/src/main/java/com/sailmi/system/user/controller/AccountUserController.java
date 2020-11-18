@@ -407,22 +407,23 @@ public class AccountUserController {
 //		return JSON.toJSONString(hashMap);
 //	}
 //
-//	/**
-//	 * 记录上次操作企业ID
-//	 */
-//	@PostMapping(value = "lastEntId")
-//	public String lastEnterpriseId(BigInteger enterpriseId, BigInteger userId) {
-//		HashMap<String, Object> hashMap = new HashMap<>();
-//		int lastEnterSta = accountUserService.lastEnterpriseId(enterpriseId, userId);
-//		if (lastEnterSta == 1) {
-//			hashMap.put("status", 1);// 成功
-//			hashMap.put("msg", "切换企业成功");
-//			return JSON.toJSONString(hashMap);
-//		}
-//		hashMap.put("status", 0);// 失败
-//		hashMap.put("msg", "切换企业失败");
-//		return JSON.toJSONString(hashMap);
-//	}
+	/**
+	 * 记录上次操作企业ID
+	 */
+	@PostMapping(value = "lastEntId")
+	public String lastEnterpriseId(AuthUser authUser, BigInteger enterpriseId, BigInteger userId) {
+		HashMap<String, Object> hashMap = new HashMap<>();
+		userId = BigInteger.valueOf(authUser.getUserId());
+		int lastEnterSta = accountUserService.lastEnterpriseId(enterpriseId, userId);
+		if (lastEnterSta == 1) {
+			hashMap.put("status", 1);// 成功
+			hashMap.put("msg", "切换企业成功");
+			return JSON.toJSONString(hashMap);
+		}
+		hashMap.put("status", 0);// 失败
+		hashMap.put("msg", "切换企业失败");
+		return JSON.toJSONString(hashMap);
+	}
 //
 //	/**
 //	 * 测试平台用数据 树

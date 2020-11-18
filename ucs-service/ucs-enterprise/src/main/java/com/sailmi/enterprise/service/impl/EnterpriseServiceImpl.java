@@ -26,6 +26,7 @@ import com.sailmi.core.mp.base.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -129,7 +130,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 			return 2;
 		}
 		//用户加入企业
-		int r = baseMapper.joinEnterprise(Long.valueOf(id.toString()),userId,this.timeStamp2Date());
+		int r = baseMapper.joinEnterprise(Long.valueOf(id.toString()),userId,this.timeStamp2Date(), 2);/*用户加入企业默认是普通用户2标识*/
 		if(r > 0){
 			return 1;
 		}
@@ -182,7 +183,10 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 	 */
 	@Override
 	public void saveUserEnterprise(Long id, Long userId) {
-		baseMapper.insertUserEnterprise(id, userId, timeStamp2Date());
+		int i = baseMapper.insertUserEnterprise(id, userId, timeStamp2Date(), 1);/*走创建企业接口的默认都是企业管理员用1标识*/
+		if (i > 0) {
+			baseMapper.updateEnterpriseStatus(userId, 2);/*2审核中*/
+		}
 	}
 
 	@Override
@@ -196,14 +200,21 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 	/**
 	 * <p>Description: 审核</p>
 	 *
-	 * @param id:
+	 * @param id:企业id
 	 * @return: boolean
 	 * @Author: syt
 	 * @Date: 2020/11/10/0010 14:46
 	 */
 	@Override
+	@Transactional
 	public boolean check(String id) {
+		//审核后企业状态更改
 		int c = baseMapper.check(id);
+		//企业状态更改完同时更改该企业创建者的企业认证状态
+		List<Long> aui = baseMapper.getAdminUserIds(id);
+		for (int i = 0; i < aui.size(); i++) {
+			baseMapper.updateEnterpriseStatus(aui.get(i), 1);/*1已审核*/
+		}
 		if (c > 0) {
 			return true;
 		}

@@ -96,7 +96,7 @@
 
     <!--加入企业-->
     <insert id="joinEnterprise" >
-        INSERT INTO ucs_user_enterprise(user_id,enterprise_id,create_times) VALUES(#{userId}, #{id},#{time})
+        INSERT INTO ucs_user_enterprise(user_id,enterprise_id,create_times,status) VALUES(#{userId}, #{id},#{time},#{status})
     </insert>
 
     <!--用户的企业列表-->
@@ -137,7 +137,7 @@
 
     <!--企业用户关系-->
     <insert id="insertUserEnterprise" >
-        INSERT INTO ucs_user_enterprise(user_id, enterprise_id, create_times) VALUES (#{userId}, #{id},#{time})
+        INSERT INTO ucs_user_enterprise(user_id, enterprise_id, create_times, status) VALUES (#{userId}, #{id},#{time},#{status})
     </insert>
 
     <!-- 根据用户ID查询企业信息 -->
@@ -169,4 +169,18 @@
         SET status = 0
         WHERE id = #{id}
     </update>
+    <!-- 修改用户认证企业状态 : -->
+    <update id="updateEnterpriseStatus" >
+		UPDATE
+			ucs_user
+		SET
+			enterprise_status = #{entStatus}
+		WHERE
+			id = #{userId}
+	</update>
+    <!--获取企业管理员-->
+    <select id="getAdminUserIds" resultType="long">
+        select user_id from  ucs_user_enterprise
+        where enterprise_id = #{id} and status = 1
+    </select>
 </mapper>

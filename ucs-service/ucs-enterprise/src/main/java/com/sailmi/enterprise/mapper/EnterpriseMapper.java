@@ -83,7 +83,7 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 * @Author: syt
 	 * @Date: 2020/10/30/0030 17:41
 	 */
-	int joinEnterprise(@Param("id") Long id, @Param("userId") Long userId,@Param("time") String time);
+	int joinEnterprise(@Param("id") Long id, @Param("userId") Long userId,@Param("time") String time,@Param("status") int status);
 
 	/**
 	 * <p>Description: 用户的企业列表</p>
@@ -121,7 +121,7 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 * @Author: syt
 	 * @Date: 2020/11/4/0004 14:39
 	 */
-	int insertUserEnterprise(@Param("id") Long id, @Param("userId") Long userId,@Param("time") String time);
+	int insertUserEnterprise(@Param("id") Long id, @Param("userId") Long userId,@Param("time") String time,@Param("status") int status);
 
 	/**
 	 * 根据用户ID查询用户下的企业信息
@@ -135,4 +135,22 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 *审核
 	 */
 	int check(String id);
+
+	/**
+	 * 用户创建企业后修改企业认证状态
+	 *
+	 * @Author: syt
+	 * @Date: 2020/11/17/0017 10:25
+	 */
+	void updateEnterpriseStatus(@Param("userId") Long userId,@Param("entStatus") int entStatus);
+
+	/**
+	 * <p>Description: 查找企业中的管理员</p>
+	 *
+	 * @param id:
+	 * @return: java.util.List<java.lang.Long>
+	 * @Author: syt
+	 * @Date: 2020/11/17/0017 17:12
+	 */
+	List<Long> getAdminUserIds(String id);
 }
