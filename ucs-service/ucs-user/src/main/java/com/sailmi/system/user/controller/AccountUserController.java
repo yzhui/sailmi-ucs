@@ -411,8 +411,9 @@ public class AccountUserController {
 	 * 记录上次操作企业ID
 	 */
 	@PostMapping(value = "lastEntId")
-	public String lastEnterpriseId(BigInteger enterpriseId, BigInteger userId) {
+	public String lastEnterpriseId(AuthUser authUser, BigInteger enterpriseId, BigInteger userId) {
 		HashMap<String, Object> hashMap = new HashMap<>();
+		userId = BigInteger.valueOf(authUser.getUserId());
 		int lastEnterSta = accountUserService.lastEnterpriseId(enterpriseId, userId);
 		if (lastEnterSta == 1) {
 			hashMap.put("status", 1);// 成功
