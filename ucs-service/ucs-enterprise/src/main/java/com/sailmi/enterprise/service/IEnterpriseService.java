@@ -102,4 +102,14 @@ public interface IEnterpriseService extends BaseService<Enterprise> {
 
 
 	boolean check(String id);
+
+	/**
+	 * 用户退出企业
+	 *
+	 * @param enterpriseId
+	 * @param userId
+	 * @return
+	 */
+	int updateUserEnterpriseStatus(BigInteger userId, BigInteger enterpriseId);
+
 }

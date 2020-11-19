@@ -524,4 +524,35 @@ public class EnterpriseController extends AppController {
 		}
 		return JSON.toJSONString(map);
 	}
+
+	/**
+	 * 用户退出企业
+	 *
+	 * @param enterpriseId
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping(value = "updateUserEnterpriseStatus", method = RequestMethod.POST)
+	public String updateUserEnterpriseStatus(AuthUser authUser, BigInteger userId, BigInteger enterpriseId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+//		userId = BigInteger.valueOf(authUser.getUserId());
+		try {
+			int index = enterpriseService.updateUserEnterpriseStatus(userId, enterpriseId);
+			if (index > 0) {
+				map.put("status", 1);
+				map.put("msg", "SUCCESS");
+				map.put("result", "修改成功");
+			} else {
+				map.put("status", 2);
+				map.put("msg", "ERROR");
+				map.put("result", "修改失败 ");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", 0);
+			map.put("msg", "ERROR");
+			map.put("result", "系统内部出错");
+		}
+		return JSON.toJSONString(map);
+	}
 }

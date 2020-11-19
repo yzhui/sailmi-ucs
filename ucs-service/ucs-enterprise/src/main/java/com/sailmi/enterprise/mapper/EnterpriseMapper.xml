@@ -161,8 +161,8 @@
 			se.id = sue.enterprise_id
 		WHERE
 			sue.user_id = #{userId}
-		/*AND
-			sue.isOpen = "1"*/
+		AND
+			sue.is_open = "1"
 	</select>
     <update id="check" parameterType="string">
         UPDATE ucs_enterprise
@@ -183,4 +183,38 @@
         select user_id from  ucs_user_enterprise
         where enterprise_id = #{id} and status = 1
     </select>
+    <!-- 用户退出企业，修改用户状态 -->
+    <update id="updateUserEnterpriseStatus" parameterType="Map">
+		UPDATE
+			ucs_user_enterprise
+		SET
+			is_open = "0"
+		WHERE
+			user_id = #{userId}
+		AND
+			enterprise_id = #{enterpriseId}
+	</update>
+    <!-- 查询用户加入的所有企业 -->
+    <select id="queryAllEnterprise" resultType="BigInteger">
+		SELECT
+			enterprise_id
+		FROM
+			ucs_user_enterprise
+		WHERE
+			user_id = #{userId}
+	</select>
+    <!-- 只加入一个企业要退出时,则将上次操作企业ID更改为NULL -->
+    <update id="lastEnterpriseIsNull">
+		UPDATE ucs_user
+		SET default_enterprise = NULL
+		WHERE
+			id = #{userId}
+	</update>
+    <!-- 用户若退出当前企业后,更改上次操作企业ID为该用户的其他企业 -->
+    <update id="updatelastEnterprise">
+		UPDATE ucs_user
+		SET default_enterprise = #{lastEnterpriseId}
+		WHERE
+			id = #{userId}
+	</update>
 </mapper>

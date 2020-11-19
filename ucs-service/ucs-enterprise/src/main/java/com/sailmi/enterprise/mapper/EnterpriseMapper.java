@@ -23,6 +23,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -153,4 +154,32 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 * @Date: 2020/11/17/0017 17:12
 	 */
 	List<Long> getAdminUserIds(String id);
+
+	/**
+	 * 用户退出企业
+	 *
+	 * @param map
+	 * @return
+	 */
+	int updateUserEnterpriseStatus(Map<String, Object> map);
+
+	/**
+	 * 用户若退出当前企业后,更改上次操作企业ID为该用户的其他企业.若用户只加入一个企业,则将上次操作企业ID更改为NULL
+	 * 查询用户的企业
+	 * @param userId 用户ID
+	 * @return
+	 */
+	List<BigInteger> queryAllEnterprise(BigInteger userId);
+
+	/**
+	 * 只加入一个企业要退出时,则将上次操作企业ID更改为NULL
+	 * @param userId
+	 */
+	void lastEnterpriseIsNull(BigInteger userId);
+
+	/**
+	 * 用户若退出当前企业后,更改上次操作企业ID为该用户的其他企业
+	 * @param hashMap
+	 */
+	void updatelastEnterprise(HashMap<Object, Object> hashMap);
 }
