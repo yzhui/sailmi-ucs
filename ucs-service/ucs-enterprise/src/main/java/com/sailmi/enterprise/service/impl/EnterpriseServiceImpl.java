@@ -87,7 +87,8 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 
 	@Override
 	public int saveEnterpriseInfo(Enterprise enterprise) {
-
+		enterprise.setCreateTime(new Date());//创建时间
+		enterprise.setIsDeleted(0);//删除状态
 		return baseMapper.insertEnterpriseInfo(enterprise);
 	}
 

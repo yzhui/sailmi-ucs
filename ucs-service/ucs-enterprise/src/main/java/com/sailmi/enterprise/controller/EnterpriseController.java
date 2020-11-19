@@ -341,6 +341,13 @@ public class EnterpriseController extends AppController {
 				if (finace > 0) {
 					//企业用户关系
 					enterpriseService.saveUserEnterprise(id, authUser.getUserId());
+					//绑定企业创建者在后台的角色（-3）
+					UserRole userRole1 = new UserRole();
+					userRole1.setUserId(authUser.getUserId());
+					userRole1.setRoleId(-3l);
+					userRole1.setStatus(0);
+					userRole1.setIsDeleted(0);
+					iUserRoleFeign.insertRoleUserRealtion(userRole1);
 					return R.data(enterprise);
 				} else {
 					return R.fail("失败:企业财务信息保存失败");
@@ -474,8 +481,8 @@ public class EnterpriseController extends AppController {
 	@RequestMapping(value = "getEnterprise", method = RequestMethod.POST)
 	public String selectEnterprise(AuthUser authUser, BigInteger userId, BigInteger enterpriseId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		userId = BigInteger.valueOf(authUser.getUserId());
-//		userId = BigInteger.valueOf(1301788793255452689L);
+//		userId = BigInteger.valueOf(authUser.getUserId());
+		userId = BigInteger.valueOf(1301788793255452694L);
 		try {
 			Enterprise enterprise = enterpriseService.selectEnterprise(userId, enterpriseId);
 			Date createTime = enterprise.getCreateTime();
