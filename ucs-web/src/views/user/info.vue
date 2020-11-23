@@ -61,6 +61,7 @@
         if (this.type === "info") {
           getUserInfo().then(res => {
             const user = res.data.data;
+            alert("hamdle witch!");
             this.form = {
               id: user.id,
               avatar: user.avatar,

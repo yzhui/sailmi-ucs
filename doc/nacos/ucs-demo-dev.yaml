@@ -1,19 +1,121 @@
-#自定义配置
-demo:
-  name: demo-name
+erver:
+    undertow:
+        io-threads: 4
+        worker-threads: 20
+        buffer-size: 1024
+        direct-buffers: true
+spring:
+    devtools:
+        restart:
+            log-condition-evaluation-delta: false
+        livereload:
+            port: 23333
+    cloud:
+        sentinel:
+            eager: true
+        gateway:
+            globalcors:
+                cors-configurations:
+                    '[/**]':
+                        allow-credentials: true
+                        allowed-origins: "*"
+                        allowed-headers: "*"
+                        allowed-methods:
+                            - OPTIONS
+                            - GET
+                            - POST
+                        max-age: 3600
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://49.4.28.140:14397/sailplat_ucs?characterEncoding=utf-8
+        username: microuser
+        password: RtaQbTrwaZC
+    data:
+        mongodb:
+            uri: mongodb://localhost:27017/sailmi-fss
+            database: sailmi-oss
+feign:
+    hystrix:
+        enabled: true
+    okhttp:
+        enabled: true
+    httpclient:
+        enabled: false
+hystrix:
+    threadpool:
+        default:
+            coreSize: 300
+            maxQueueSize: 1000
+            queueSizeRejectionThreshold: 800
+    command:
+        default:
+            execution:
+                isolation:
+                    thread:
+                        timeoutInMilliseconds: 5000
+ribbon:
+    MaxAutoRetries: 1
+    MaxAutoRetriesNextServer: 2
+    ReadTimeout: 60000
+    ConnectTimeout: 60000
+    OkToRetryOnAllOperations: true
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"
+    endpoint:
+        health:
+            show-details: always
 
-#放行配置
 ucs:
-  secure:
-    skip-url:
-      - /demo/**
-  datasource:
-    demo:
-      master:
-        url: jdbc:mysql://localhost:3306/sailmi-ucs?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
-        username: root
-        password: password
-      slave:
-        url: jdbc:mysql://localhost:3306/sailmi-ucs?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
-        username: root
-        password: password
+    xss:
+        enabled: true
+        skip-url:
+            - /weixin
+    secure:
+        skip-url:
+            - /test/**
+        client:
+            - client-id: sword
+              path-patterns:
+                  - /sword/**
+            - client-id: saber
+              path-patterns:
+                  - /saber/**
+    tenant:
+        column: enterprise_id
+        tables:
+            - sailplat_notice
+    oss:
+        provider: localfileoss
+        enabled: true
+        tenantMode: true
+        alioss:
+            keyId:
+            keySecret:
+            endpoint:
+            defaultBucket:
+            proxyHost:
+            proxyPort:
+            clientConfiguration:
+                socketTimeout: 5000
+                connectionTimeout: 5000
+        mongooss:
+            enable: true
+            name: mongo
+        localfileoss:
+            storePath: f:/uploadfiles
+            fileUrl: http://localhost:1888/ucs/api/sailmi-resource/oss/endpoint/file
+        qiniuoss:
+            accessKey: <your qiniu access key>
+            secretKey: <your qiniu secret ky>
+            host: <your qiniu subdomain>.bkt.clouddn.com
+            defaultBucket: testfss
+        webdavoss:
+            username: alice
+            password: secret1234
+            endpoint: http://127.0.0.1
+logging:
+    level:
+        com.alibaba.nacos.client.config.impl: ERROR

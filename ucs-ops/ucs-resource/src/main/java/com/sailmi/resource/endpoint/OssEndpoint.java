@@ -28,10 +28,20 @@ import com.sailmi.core.oss.model.OssFile;
 import com.sailmi.core.tool.api.R;
 import com.sailmi.core.tool.utils.Func;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.Collection;
+import java.util.Locale;
 
 /**
  * 对象存储端点
@@ -47,10 +57,40 @@ public class OssEndpoint {
 	@Autowired
 	private OssProvider ossProvider;
 
+
 	/**
 	 * 获取文件信息
 	 *
-	 * @param fileName 存储桶对象名称
+	 * @param fileName 对象名称
+	 * @return InputStream
+	 */
+	@SneakyThrows
+	@GetMapping("/file/{fileName}")
+	public HttpServletResponse File(@PathVariable("fileName") String fileName) {
+		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = attributes.getRequest();
+		HttpServletResponse response = attributes.getResponse();
+		System.out.println("request file name is:"+fileName);
+		InputStream fis= ossProvider.getFile(fileName);
+		response.setContentType("application/octet-stream");
+		OutputStream outputStream = response.getOutputStream();
+		int bufferLen= 1024;
+		byte[] buffer = new byte[bufferLen];
+		int readLen = fis.read(buffer);
+		while(readLen>0){
+			outputStream.write(buffer,0,readLen);
+			readLen = fis.read(buffer);
+		}
+		outputStream.close();
+		fis.close();
+		return response;
+	}
+
+
+	/**
+	 * 获取文件信息
+	 *
+	 * @param fileName 对象名称
 	 * @return InputStream
 	 */
 	@SneakyThrows
@@ -103,6 +143,9 @@ public class OssEndpoint {
 	public R<GeneralFile> putFile(@RequestParam MultipartFile file) {
 		GeneralFile generalFile = null;
 		generalFile = ossProvider.putFile(file.getOriginalFilename(), file);
+		System.out.println("dataFile file link is:"+generalFile.getLink());
+		System.out.println("dataFile file name is:"+generalFile.getName());
+		System.out.println("dataFile file original name is:"+generalFile.getOriginalName());
 		return R.data(generalFile);
 	}
 

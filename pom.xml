@@ -23,6 +23,7 @@
         <captcha.version>1.6.2</captcha.version>
         <easyexcel.version>2.1.6</easyexcel.version>
         <mica.auto.version>1.1.0</mica.auto.version>
+        <nacos.client.version>1.4.0</nacos.client.version>
         <spring.boot.version>2.2.7.RELEASE</spring.boot.version>
         <spring.boot.admin.version>2.2.3</spring.boot.admin.version>
         <spring.cloud.dependencies.version>Hoxton.SR5</spring.cloud.dependencies.version>
@@ -74,6 +75,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -94,6 +96,11 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
+            <version>${nacos.client.version}</version>
         </dependency>
     </dependencies>
 

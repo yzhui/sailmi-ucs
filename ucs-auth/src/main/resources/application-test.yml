@@ -2,10 +2,3 @@
 server:
   port: 8100
 
-#数据源配置
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${ucs.datasource.test.url}
-    username: ${ucs.datasource.test.username}
-    password: ${ucs.datasource.test.password}
