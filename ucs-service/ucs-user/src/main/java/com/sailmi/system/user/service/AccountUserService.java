@@ -115,7 +115,7 @@ public interface AccountUserService {
 //     *
 //     * @param enterpriseId
 //     */
-//    public int lastEnterpriseId(BigInteger enterpriseId, BigInteger userId);
+    public int lastEnterpriseId(BigInteger enterpriseId, BigInteger userId);
 //
 //    /**
 //     * 查询上次操作企业信息

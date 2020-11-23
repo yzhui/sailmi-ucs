@@ -99,7 +99,7 @@ public class ServiceMenuController extends AppController {
 						serviceList.stream().forEach(ServiceEntity->{
 							serviceIds.add(ServiceEntity.getId());
 						});
-							//查询该包下的菜单集合
+						//查询该包下的菜单集合
 						if(serviceIds.size()>0) {
 							QueryWrapper<ServiceMenu> serviceMenuQueryWrapper = new QueryWrapper<>();
 							serviceMenuQueryWrapper.in("service_id",serviceIds);
@@ -115,6 +115,8 @@ public class ServiceMenuController extends AppController {
 									menuQueryWrapper.in("id", menuIds);
 									menuList = serviceMenuService.queryUserMenus(menuQueryWrapper);
 								}
+								//添加公共企业管理菜单
+								menuList=addCommonEnterMenus(menuList);
 							}
 						}
 					}
@@ -124,8 +126,57 @@ public class ServiceMenuController extends AppController {
 		return R.data(menuList);
 	}
 
+	private List<MenuTreeResultEntity> addCommonEnterMenus(List<MenuTreeResultEntity> menuList) {
+		//添加公共企业管理包
+			QueryWrapper<ServiceEntity> serviceQueryWrapper = new QueryWrapper<>();
+			serviceQueryWrapper.eq("service_type",0);
+			List<ServiceEntity> commonEnterServices = serviceService.list(serviceQueryWrapper);
+			if(commonEnterServices!=null && commonEnterServices.size()>0){
+				ArrayList<String> serviceIds = new ArrayList<>();
+				commonEnterServices.stream().forEach(ServiceEntity->{
+					serviceIds.add(ServiceEntity.getId().toString());
+				});
+				QueryWrapper<ServiceMenu> serviceMenuQueryWrapper = new QueryWrapper<>();
+				serviceMenuQueryWrapper.in("service_id",serviceIds);
+				List<ServiceMenu> list = serviceMenuService.list(serviceMenuQueryWrapper);
+				if(list!=null && list.size()>0){
+					ArrayList<String> menuIds = new ArrayList<>();
+					list.stream().forEach(ServiceMenu->{
+						menuIds.add(ServiceMenu.getMenuId().toString());
+					});
+
+					if(menuIds.size()>0){
+						QueryWrapper<Menu> menuQueryWrapper = new QueryWrapper<>();
+						menuQueryWrapper.in("id", menuIds);
+						List<Menu> commonlist = menuService.list(menuQueryWrapper);
 
 
+						MenuTreeResultEntity menuparent= new MenuTreeResultEntity();
+						menuparent.setId("-1");
+						menuparent.setPid("0");
+						menuparent.setMenuName("企业管理");
+						menuparent.setIconUrl("iconweb-icon-1");
+
+						if(commonlist!=null && commonlist.size()>0){
+							ArrayList<MenuTreeResultEntity> menuTreeResultEntities = new ArrayList<>();
+							commonlist.stream().forEach(Menu->{
+								MenuTreeResultEntity menuTreeResultEntity = new MenuTreeResultEntity();
+								menuTreeResultEntity.setId(Menu.getId().toString());//id
+								menuTreeResultEntity.setPid("-1");
+								menuTreeResultEntity.setIconUrl(Menu.getSource());//icon
+								menuTreeResultEntity.setMenuName(Menu.getName());//name
+								menuTreeResultEntity.setMenuUrl("http://dev_ucs.iitplat.com/#"+Menu.getPath());//url
+								menuTreeResultEntity.setMenuSort(Menu.getSort().toString());//sort
+								menuTreeResultEntities.add(menuTreeResultEntity);
+							});
+							menuparent.setMenuChild(menuTreeResultEntities);
+						}
+						menuList.add(menuparent);
+					}
+				}
+			}
+		return menuList;
+	}
 
 
 	/**

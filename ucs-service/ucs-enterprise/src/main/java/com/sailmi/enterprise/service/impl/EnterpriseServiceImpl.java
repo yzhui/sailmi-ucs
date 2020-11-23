@@ -19,6 +19,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.core.tool.utils.Func;
 import com.sailmi.system.entity.*;
+import com.sailmi.system.user.entity.AccountUserEntity;
 import com.sailmi.system.vo.EnterpriseVO;
 import com.sailmi.enterprise.mapper.EnterpriseMapper;
 import com.sailmi.enterprise.service.IEnterpriseService;
@@ -26,6 +27,7 @@ import com.sailmi.core.mp.base.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -86,7 +88,8 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 
 	@Override
 	public int saveEnterpriseInfo(Enterprise enterprise) {
-
+		enterprise.setCreateTime(new Date());//创建时间
+		enterprise.setIsDeleted(0);//删除状态
 		return baseMapper.insertEnterpriseInfo(enterprise);
 	}
 
@@ -129,7 +132,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 			return 2;
 		}
 		//用户加入企业
-		int r = baseMapper.joinEnterprise(Long.valueOf(id.toString()),userId,this.timeStamp2Date());
+		int r = baseMapper.joinEnterprise(Long.valueOf(id.toString()),userId,this.timeStamp2Date(), 2);/*用户加入企业默认是普通用户2标识*/
 		if(r > 0){
 			return 1;
 		}
@@ -182,7 +185,10 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 	 */
 	@Override
 	public void saveUserEnterprise(Long id, Long userId) {
-		baseMapper.insertUserEnterprise(id, userId, timeStamp2Date());
+		int i = baseMapper.insertUserEnterprise(id, userId, timeStamp2Date(), 1);/*走创建企业接口的默认都是企业管理员用1标识*/
+		if (i > 0) {
+			baseMapper.updateEnterpriseStatus(userId, 2);/*2审核中*/
+		}
 	}
 
 	@Override
@@ -196,17 +202,72 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 	/**
 	 * <p>Description: 审核</p>
 	 *
-	 * @param id:
+	 * @param id:企业id
 	 * @return: boolean
 	 * @Author: syt
 	 * @Date: 2020/11/10/0010 14:46
 	 */
 	@Override
+	@Transactional
 	public boolean check(String id) {
+		//审核后企业状态更改
 		int c = baseMapper.check(id);
+		//企业状态更改完同时更改该企业创建者的企业认证状态
+		List<Long> aui = baseMapper.getAdminUserIds(id);
+		for (int i = 0; i < aui.size(); i++) {
+			baseMapper.updateEnterpriseStatus(aui.get(i), 1);/*1已审核*/
+		}
 		if (c > 0) {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public int updateUserEnterpriseStatus(BigInteger userId, BigInteger enterpriseId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("enterpriseId", enterpriseId);
+		// 用户退出企业
+		int count = baseMapper.updateUserEnterpriseStatus(map);
+		//用户若退出当前企业后,更改上次操作企业ID为该用户的其他企业.若用户只加入一个企业要退出时,则将上次操作企业ID更改为NULL
+		List<BigInteger> allEnterprise = baseMapper.queryAllEnterprise(userId);
+		if(allEnterprise.size() < 1) {
+			//只加入一个企业要退出时,则将上次操作企业ID更改为NULL
+			baseMapper.lastEnterpriseIsNull(userId);
+		}else {
+			//用户若退出当前企业后,更改上次操作企业ID为该用户的其他企业
+			HashMap<Object, Object> hashMap = new HashMap<Object,Object>();
+			hashMap.put("userId", userId);
+			hashMap.put("lastEnterpriseId", allEnterprise.get(0));
+			baseMapper.updatelastEnterprise(hashMap);
+		}
+		//企业名称
+//		String enterpriseName = enterpriseMapper.getEnterpriseNameById(enterpriseId);
+		//查询该企业的管理员
+//		BigInteger adminId = enterpriseMapper.getAdminIdByEnterpriseId(enterpriseId);
+		//用户信息
+//		AccountUserEntity accUser = enterpriseMapper.getUserInfo(userId);
+//		//定义发送消息的数据集
+//		HashMap<Object,Object> message = new HashMap<Object,Object>();
+//		//用户ID
+//		message.put("userId", userId);
+//		//登录名称
+//		message.put("userName", accUser.getLoginName());
+//		//用户手机
+//		message.put("userPhone", accUser.getUserPhone());
+//		//用户邮箱
+//		message.put("userEmaile", accUser.getUserEmail());
+//		//加入时间
+//		message.put("registerDate", accUser.getRegisterDate());
+//		//企业ID
+//		message.put("enterpriseId", enterpriseId);
+//		//管理员ID
+//		message.put("adminId", adminId);
+//		//企业名称
+//		message.put("enterpriseName", enterpriseName);
+//		createEnterpriseServiceFeign.userQuitEnterprise(JSON.toJSONString(message));
+//		createEnterpriseServiceFeign.userQuitEnterprise("{\"userId\":\"" +userId+ "\",\"enterpriseId\":\"" +enterpriseId+ "\",\"enterpriseName\":\"" +enterprise.getEnterpriseName()+ "\"}");
+		return count;
 	}
 }

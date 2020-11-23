@@ -114,5 +114,9 @@ public class Enterprise extends BaseEntity {
     @ApiModelProperty(value = "备注信息")
     private String remarks;
 
-
+	/**
+	 * 生效时间
+	 */
+    @TableField(exist = false)
+	private String createDate;
 }
