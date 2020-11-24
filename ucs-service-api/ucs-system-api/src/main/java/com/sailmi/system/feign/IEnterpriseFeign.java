@@ -33,7 +33,7 @@ public interface IEnterpriseFeign {
 	@PostMapping(API_PREFIX+"/userenter-detail")
 	public R<UserEnterprise> queryUserEnterpriseInfo(String enterpriseId);
 
-	@PostMapping(API_UEPREFIX+"/serviceenterlist")
+	@GetMapping(API_UEPREFIX+"/serviceenterlist")
 	public R<List<ServiceEnterprise>> servicelist(ServiceEnterprise serviceEnterprise);
 
 }
