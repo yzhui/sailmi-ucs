@@ -72,6 +72,8 @@ public class ServiceEnterpriseController extends AppController {
 		return R.data(ServiceEnterpriseWrapper.build().pageVO(pages));
 	}
 
+
+
 	/**
 	* 自定义分页 服务企业授权表，表示哪个企业具有此服务的权限，此版本暂不考虑个人用户的服务授权
 	*/
