@@ -18,10 +18,12 @@ package com.sailmi.system.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.system.entity.*;
+import com.sailmi.system.feign.IEnterpriseFeign;
 import com.sailmi.system.service.IMenuService;
 import com.sailmi.system.service.IServiceMenuService;
 import com.sailmi.system.service.IServiceService;
 import com.sailmi.system.service.ISystemService;
+import com.sailmi.system.vo.EnterpriseVO;
 import com.sailmi.system.vo.ServiceMenuVO;
 import com.sailmi.system.wrapper.ServiceMenuWrapper;
 import io.swagger.annotations.Api;
@@ -35,6 +37,7 @@ import com.sailmi.core.mp.support.Condition;
 import com.sailmi.core.mp.support.Query;
 import com.sailmi.core.tool.api.R;
 import com.sailmi.core.tool.utils.Func;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.querydsl.QuerydslUtils;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -60,6 +63,7 @@ public class ServiceMenuController extends AppController {
 	private ISystemService systemService;
 	private IServiceService serviceService;
 	private IMenuService menuService;
+	private IEnterpriseFeign  iEnterpriseFeign;
 
 
 	/**
@@ -80,9 +84,14 @@ public class ServiceMenuController extends AppController {
 		List<MenuTreeResultEntity> menuList =new ArrayList<>();
 		if(authUser!=null && authUser.getTenantId()!=null){
 			//获取该用户登陆的企业的tenantId
+			Enterprise enterprise = new Enterprise();
+			enterprise.setId(Long.valueOf(authUser.getEnterpriseId()));
+			R<EnterpriseVO> enterpriseVOR = iEnterpriseFeign.detailInfo(enterprise);
 			//查询该tenan下的授权的system
 			QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
-			systemEntityQueryWrapper.eq("tenant_id",authUser.getTenantId());
+			if(enterpriseVOR!=null && enterpriseVOR.getData()!=null && enterpriseVOR.getData().getTenantId()!=null ) {
+				systemEntityQueryWrapper.eq("tenant_id", enterpriseVOR.getData().getTenantId());
+			}
 			List<SystemEntity> sysList = systemService.list(systemEntityQueryWrapper);
 			//查询system下的service包
 			if(sysList!=null && sysList.size()>0){
