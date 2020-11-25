@@ -110,9 +110,11 @@ public class TenantController extends AppController {
 	@ApiOperation(value = "租户下拉数据源", notes = "传入tenant")
 	@GetMapping("/select")
 	public R<List<Tenant>> select(Tenant tenant, AuthUser authUser) {
-		System.out.println("............Now Select Tenant!"+tenant);
-		QueryWrapper<Tenant> queryWrapper = Condition.getQueryWrapper(tenant);
-		List<Tenant> list = tenantService.list((!authUser.getTenantId().equals(AppConstant.ADMIN_TENANT_ID)) ? queryWrapper.lambda().eq(Tenant::getTenantId, authUser.getTenantId()) : queryWrapper);
+		QueryWrapper<Tenant> queryWrapper =new QueryWrapper<>();
+		if(authUser!=null && authUser.getEnterpriseId()!=null){
+			queryWrapper.eq("enterprise_id",authUser.getEnterpriseId());
+		}
+		List<Tenant> list = tenantService.list(queryWrapper);
 		return R.data(list);
 	}
 
