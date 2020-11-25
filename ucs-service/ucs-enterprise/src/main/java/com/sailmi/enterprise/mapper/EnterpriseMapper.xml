@@ -206,7 +206,7 @@
     <!-- 只加入一个企业要退出时,则将上次操作企业ID更改为NULL -->
     <update id="lastEnterpriseIsNull">
 		UPDATE ucs_user
-		SET default_enterprise = NULL
+		SET default_enterprise = 0
 		WHERE
 			id = #{userId}
 	</update>

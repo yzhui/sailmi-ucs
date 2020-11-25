@@ -133,6 +133,8 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 		}
 		//用户加入企业
 		int r = baseMapper.joinEnterprise(Long.valueOf(id.toString()),userId,this.timeStamp2Date(), 2);/*用户加入企业默认是普通用户2标识*/
+		//更改用户的企业认证状态:暂时为用户加入之后默认已通过
+		baseMapper.updateEnterpriseStatus(userId, 1);
 		if(r > 0){
 			return 1;
 		}
@@ -186,6 +188,11 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 	@Override
 	public void saveUserEnterprise(Long id, Long userId) {
 		int i = baseMapper.insertUserEnterprise(id, userId, timeStamp2Date(), 1);/*走创建企业接口的默认都是企业管理员用1标识*/
+		//更改默认的企业id
+		HashMap<Object, Object> hashMap = new HashMap<Object,Object>();
+		hashMap.put("userId", userId);
+		hashMap.put("lastEnterpriseId", id);
+		baseMapper.updatelastEnterprise(hashMap);
 		if (i > 0) {
 			baseMapper.updateEnterpriseStatus(userId, 2);/*2审核中*/
 		}
@@ -233,8 +240,10 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 		//用户若退出当前企业后,更改上次操作企业ID为该用户的其他企业.若用户只加入一个企业要退出时,则将上次操作企业ID更改为NULL
 		List<BigInteger> allEnterprise = baseMapper.queryAllEnterprise(userId);
 		if(allEnterprise.size() < 1) {
-			//只加入一个企业要退出时,则将上次操作企业ID更改为NULL
+			//只加入一个企业要退出时,则将上次操作企业ID更改为0,因为涉及到ucs查询角色使用所以要改为0
 			baseMapper.lastEnterpriseIsNull(userId);
+			//只加入一个企业要退出时将用户的企业认证状态同时改为0未认证
+			baseMapper.updateEnterpriseStatus(Long.parseLong(userId.toString()), 0);
 		}else {
 			//用户若退出当前企业后,更改上次操作企业ID为该用户的其他企业
 			HashMap<Object, Object> hashMap = new HashMap<Object,Object>();
