@@ -85,7 +85,7 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, Tenant> imp
 			enterprise.setId(Long.valueOf(tenant.getEnterpriseId()));
 			enterpriseFeign.update(enterprise);
 		}else{
-			tenant.setEnterpriseId("-1");
+			tenant.setEnterpriseId("0");
 		}
 		return super.saveOrUpdate(tenant);
 	}

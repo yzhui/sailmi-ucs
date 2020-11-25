@@ -329,7 +329,7 @@ public class EnterpriseController extends AppController {
 		enterprise.setTenantId(authUser.getTenantId());//设置租户ID
 //		enterprise.setTenantId("123321");//设置租户ID
 		enterpriseService.saveEnterpriseInfo(enterprise);//首先插入企业基本信息
-		Long id = enterprise.getId();
+		Long id = enterprise.getId();//新增的企业ID
 		//企业基本信息插入后插入企业详细信息
 		if (id != 0 && id != null) {//企业基本信息插入成功后插入企业详细信息
 			enterpriseDetails.setEnterpriseId(id);//企业详细信息关联企业ID
@@ -341,6 +341,13 @@ public class EnterpriseController extends AppController {
 				if (finace > 0) {
 					//企业用户关系
 					enterpriseService.saveUserEnterprise(id, authUser.getUserId());
+					//绑定企业创建者在后台的角色（-3）
+					UserRole userRole1 = new UserRole();
+					userRole1.setUserId(authUser.getUserId());
+					userRole1.setRoleId(-3l);
+					userRole1.setStatus(0);
+					userRole1.setIsDeleted(0);
+					iUserRoleFeign.insertRoleUserRealtion(userRole1);
 					return R.data(enterprise);
 				} else {
 					return R.fail("失败:企业财务信息保存失败");
@@ -475,7 +482,7 @@ public class EnterpriseController extends AppController {
 	public String selectEnterprise(AuthUser authUser, BigInteger userId, BigInteger enterpriseId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		userId = BigInteger.valueOf(authUser.getUserId());
-//		userId = BigInteger.valueOf(1301788793255452689L);
+//		userId = BigInteger.valueOf(1301788793255452694L);
 		try {
 			Enterprise enterprise = enterpriseService.selectEnterprise(userId, enterpriseId);
 			Date createTime = enterprise.getCreateTime();
@@ -514,6 +521,37 @@ public class EnterpriseController extends AppController {
 			map.put("status", 0);
 			map.put("msg", "ERROR");
 			map.put("result", "查询失败");
+		}
+		return JSON.toJSONString(map);
+	}
+
+	/**
+	 * 用户退出企业
+	 *
+	 * @param enterpriseId
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping(value = "updateUserEnterpriseStatus", method = RequestMethod.POST)
+	public String updateUserEnterpriseStatus(AuthUser authUser, BigInteger userId, BigInteger enterpriseId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		userId = BigInteger.valueOf(authUser.getUserId());
+		try {
+			int index = enterpriseService.updateUserEnterpriseStatus(userId, enterpriseId);
+			if (index > 0) {
+				map.put("status", 1);
+				map.put("msg", "SUCCESS");
+				map.put("result", "修改成功");
+			} else {
+				map.put("status", 2);
+				map.put("msg", "ERROR");
+				map.put("result", "修改失败 ");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", 0);
+			map.put("msg", "ERROR");
+			map.put("result", "系统内部出错");
 		}
 		return JSON.toJSONString(map);
 	}

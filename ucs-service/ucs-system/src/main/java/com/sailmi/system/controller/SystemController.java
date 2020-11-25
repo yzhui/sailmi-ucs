@@ -119,9 +119,28 @@ public class SystemController extends AppController {
 	@GetMapping("/systemlist")
 	@ApiOperationSupport(order = 2)
 	@ApiOperation(value = "下拉列表", notes = "传入system")
-	public R<List<SystemEntity>> querylist(SystemEntity system) {
-		List<SystemEntity> list = systemService.list();
-		return R.data(list);
+	public R<List<SystemEntity>> querylist(AuthUser authUser,SystemEntity system) {
+		//查询该企业下面的系统
+		QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
+		List<SystemEntity> lists=null;
+		if(authUser!=null && authUser.getEnterpriseId()!=null){
+			//查询该企业下的所有租户
+			QueryWrapper<Tenant>  queryWrapper=new QueryWrapper<Tenant>();
+			queryWrapper.eq("enterprise_id",authUser.getEnterpriseId());
+			List<Tenant> list = tenantService.list(queryWrapper);
+			if(list!=null && list.size()>0){
+				ArrayList<String> tenantIds = new ArrayList<>();
+				list.stream().forEach(tenant -> {
+					tenantIds.add(tenant.getTenantId());
+				});
+
+				if(tenantIds.size()>0){
+					systemEntityQueryWrapper.in("tenant_id",tenantIds);
+					lists = systemService.list(systemEntityQueryWrapper);
+				}
+			}
+		}
+		return R.data(lists);
 	}
 
 	/**
@@ -141,7 +160,8 @@ public class SystemController extends AppController {
 	@PostMapping("/save")
     @ApiOperationSupport(order = 4)
 	@ApiOperation(value = "新增", notes = "传入system")
-	public R save(@Valid @RequestBody SystemEntity system) {
+	public R save(@Valid @RequestBody SystemEntity system,AuthUser user) {
+
 		return R.status(systemService.save(system));
 	}
 

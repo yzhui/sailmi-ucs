@@ -24,6 +24,7 @@ import com.sailmi.system.feign.IEnterpriseFeign;
 import com.sailmi.system.service.ITenantService;
 import com.sailmi.system.vo.DictVO;
 import com.sailmi.system.vo.EnterpriseVO;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import com.sailmi.core.boot.ctrl.AppController;
@@ -80,7 +81,8 @@ public class DictController extends AppController {
 	@ApiOperationSupport(order = 2)
 	@ApiOperation(value = "列表", notes = "传入dict")
 	public R<List<INode>> list(AuthUser authUser, @ApiIgnore @RequestParam Map<String, Object> dict) {
-		QueryWrapper<Dict> queryWrapper = Condition.getQueryWrapper(dict, Dict.class);
+		//QueryWrapper<Dict> queryWrapper = Condition.getQueryWrapper(dict, Dict.class);
+		QueryWrapper<Dict> queryWrapper =new QueryWrapper<>();
 		if(authUser!=null && authUser.getEnterpriseId()!=null){
 			Long aLong = Long.valueOf(authUser.getEnterpriseId());
 			Enterprise enterprise = new Enterprise();
