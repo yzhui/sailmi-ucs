@@ -119,8 +119,13 @@ public class SystemController extends AppController {
 	@GetMapping("/systemlist")
 	@ApiOperationSupport(order = 2)
 	@ApiOperation(value = "下拉列表", notes = "传入system")
-	public R<List<SystemEntity>> querylist(SystemEntity system) {
-		List<SystemEntity> list = systemService.list();
+	public R<List<SystemEntity>> querylist(AuthUser authUser,SystemEntity system) {
+		//查询该企业下面的系统
+		QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
+		if(authUser!=null && authUser.getTenantId()!=null){
+			systemEntityQueryWrapper.eq("tenant_id",authUser.getTenantId());
+		}
+		List<SystemEntity> list = systemService.list(systemEntityQueryWrapper);
 		return R.data(list);
 	}
 
