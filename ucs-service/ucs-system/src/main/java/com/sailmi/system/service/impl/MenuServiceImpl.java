@@ -126,25 +126,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 			menus = baseMapper.selectList(menuQueryWrapper);//该企业下的菜单
 		}
 		QueryWrapper<Menu> menuQueryWrappers = new QueryWrapper<>();
-		menuQueryWrappers.eq("enterprise_id",null);
+		menuQueryWrappers.isNull("enterprise_id");
 		List<Menu> menuslist = baseMapper.selectList(menuQueryWrappers);
 		if(menuslist!=null && menuslist.size()>0){
 			menus.addAll(menuslist);
 		}
-//		List<Long> longs = new ArrayList<>();
-//		if(user!=null && user.getTenantId()!=null) {
-//			String tenantIds="000000";
-//			longs=tenantMenuIds(tenantIds,longs);//公共菜单
-//			if(!user.getTenantId().equals("000000")) {
-//				tenantIds = user.getTenantId();//本租户菜单
-//				longs = tenantMenuIds(tenantIds, longs);//公共菜单
-//			}
-//		}
-//		if(longs!=null && longs.size()>0){
-//			QueryWrapper<Menu> menuQueryWrapper = new QueryWrapper<>();
-//			menuQueryWrapper.in("system_id",longs);
-//			 menus = baseMapper.selectList(menuQueryWrapper);
-//		}
+
 		MenuWrapper menuWrapper = new MenuWrapper();
 		return ForestNodeMerger.merge(menuWrapper.listNodeVO(menus));
 	}

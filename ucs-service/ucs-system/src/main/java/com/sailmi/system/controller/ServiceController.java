@@ -150,8 +150,8 @@ public class ServiceController extends AppController {
 	@GetMapping("/service-tree")
 	@ApiOperationSupport(order = 8)
 	@ApiOperation(value = "服务包树形结构", notes = "服务报树形结构")
-	public R<List<ServiceVO>> grantTree() {
-		return R.data(serviceService.grantTree());
+	public R<List<ServiceVO>> grantTree(AuthUser authUser) {
+		return R.data(serviceService.grantTree(authUser));
 	}
 
 

@@ -88,8 +88,11 @@ public class ServiceServiceImpl extends ServiceImpl<ServiceMapper, ServiceEntity
 	}
 
 	@Override
-	public List<ServiceVO> grantTree() {
+	public List<ServiceVO> grantTree(AuthUser authUser) {
 		QueryWrapper<ServiceEntity> serviceEntityQueryWrapper = new QueryWrapper<>();
+		if(authUser!=null && authUser.getEnterpriseId()!=null){
+			serviceEntityQueryWrapper.eq("enterprise_id",authUser.getEnterpriseId());
+		}
 		List<ServiceEntity> serviceEntities = baseMapper.selectList(serviceEntityQueryWrapper);
 		ArrayList<ServiceVO> serviceVOS = new ArrayList<>();
 		if(serviceEntities!=null && serviceEntities.size()>0){
