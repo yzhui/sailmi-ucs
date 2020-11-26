@@ -130,7 +130,10 @@ public class MenuController extends AppController {
 	@PreAuth(RoleConstant.HAS_ROLE_TENANT_ADMIN)
 	@ApiOperationSupport(order = 3)
 	@ApiOperation(value = "新增或修改", notes = "传入menu")
-	public R submit(@Valid @RequestBody Menu menu) {
+	public R submit(@Valid @RequestBody Menu menu,AuthUser authUser) {
+		if(authUser!=null && authUser.getEnterpriseId()!=null){
+			menu.setEnterpriseId(Long.valueOf(authUser.getEnterpriseId()));
+		}
 		return R.status(menuService.saveOrUpdate(menu));
 	}
 

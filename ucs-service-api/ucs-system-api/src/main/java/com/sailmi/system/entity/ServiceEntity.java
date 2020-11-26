@@ -40,11 +40,11 @@ public class ServiceEntity implements Serializable {
   @TableId("ID")
   private Long id;
   private String serviceName;
+
+  private  String enterpriseId;
     /**
      * 此服务由哪个系统提供
      */
-    @ApiModelProperty(value = "此服务由哪个系统提供")
-    private Long systemId;
     /**
      * 服务类型，所有人可访问，还是只是授权用户可以使用，授 权用户包括收费用户，只是收费是授 权的前提，是否收费由业务系统实现
      */

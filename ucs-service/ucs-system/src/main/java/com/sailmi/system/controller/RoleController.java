@@ -148,7 +148,7 @@ public class RoleController extends AppController {
 	public R grant(AuthUser authUser,@ApiParam(value = "roleId集合", required = true) @RequestParam String roleIds,
 				   @ApiParam(value = "menuId集合", required = true) @RequestParam String menuIds) {
 		R<String> status=null;
-		if(roleIds.contains("-2") || roleIds.contains("-3")){
+		if(roleIds.contains("-2") || roleIds.contains("-3") && !authUser.getUserId().equals("0")){
 			status = R.data(400, "", "该角色菜单是系统公共的，没有修改权限");
 		}else{
 			boolean temp = roleService.grant(Func.toLongList(roleIds), Func.toLongList(menuIds));
