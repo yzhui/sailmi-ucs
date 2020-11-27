@@ -107,9 +107,8 @@ public class RoleController extends AppController {
 	@ApiOperationSupport(order = 4)
 	@ApiOperation(value = "新增或修改", notes = "传入role")
 	public R submit(@Valid @RequestBody Role role, AuthUser user) {
-		if (Func.isEmpty(role.getId())) {
-			String enterpriseId= "000000";
-			role.setEnterpriseId(Long.valueOf(enterpriseId));
+		if(user!=null && user.getEnterpriseId()!=null){
+			role.setEnterpriseId(Long.valueOf(user.getEnterpriseId()));
 		}
 		if(Func.isEmpty(role.getIsSys())){// 1 是默认的系统角色，企业都可见，但是不能删除与修改
 			role.setIsSys("0");
