@@ -66,7 +66,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 
 	@Override
 	public List<DeptVO> queryEnterTree(String enterpriseId) {
-		ArrayList<DeptVO> deptVOS = new ArrayList<>();
+		List<DeptVO> deptVOS = new ArrayList<>();
 		QueryWrapper<Dept> deptQueryWrapper = new QueryWrapper<>();
 		deptQueryWrapper.eq("enterprise_id",enterpriseId);
 		List<Dept> depts = baseMapper.selectList(deptQueryWrapper);
