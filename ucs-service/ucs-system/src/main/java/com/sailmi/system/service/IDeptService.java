@@ -63,4 +63,5 @@ public interface IDeptService extends IService<Dept> {
 	 */
 	List<String> getDeptNames(String deptIds);
 
+	List<DeptVO> queryEnterTree(String enterpriseId);
 }

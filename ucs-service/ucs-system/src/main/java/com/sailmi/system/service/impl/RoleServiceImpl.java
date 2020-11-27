@@ -15,9 +15,12 @@
  */
 package com.sailmi.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sailmi.core.tool.utils.BeanUtil;
+import com.sailmi.system.entity.Enterprise;
 import lombok.AllArgsConstructor;
 import com.sailmi.core.secure.utils.SecureUtil;
 import com.sailmi.core.tool.constant.RoleConstant;
@@ -93,6 +96,21 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 	@Override
 	public List<String> getRoleNames(String roleIds) {
 		return baseMapper.getRoleNames(Func.toLongArray(roleIds));
+	}
+
+	@Override
+	public List<RoleVO> queryEnterTree(String enterpriseId) {
+		ArrayList<RoleVO> roleVOS = new ArrayList<>();
+		QueryWrapper<Role> enterpriseQueryWrapper = new QueryWrapper<>();
+		enterpriseQueryWrapper.eq("enterprise_id",enterpriseId);
+		List<Role> roles = baseMapper.selectList(enterpriseQueryWrapper);
+		if(roles!=null && roles.size()>0){
+			roles.stream().forEach(role -> {
+				RoleVO roleVO = BeanUtil.copy(role, RoleVO.class);
+				roleVOS.add(roleVO);
+			});
+		}
+		return  ForestNodeMerger.merge(roleVOS);
 	}
 
 }

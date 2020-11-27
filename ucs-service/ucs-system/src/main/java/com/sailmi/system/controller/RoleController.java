@@ -89,14 +89,27 @@ public class RoleController extends AppController {
 		return R.data(RoleWrapper.build().listNodeVO(list));
 	}
 
+	/**弃用原来的逻辑
+	 * 获取角色树形结构
+	 * ucs原来逻辑查询租户下的角色
+	 */
+	@GetMapping("/treenotuse")
+	@ApiOperationSupport(order = 3)
+	@ApiOperation(value = "树形结构", notes = "树形结构")
+	public R<List<RoleVO>> tree(String tenantId, AuthUser authUser) {
+		List<RoleVO> tree = roleService.tree(Func.toStr(tenantId, authUser.getTenantId()));
+		return R.data(tree);
+	}
+
+
 	/**
 	 * 获取角色树形结构
 	 */
 	@GetMapping("/tree")
 	@ApiOperationSupport(order = 3)
 	@ApiOperation(value = "树形结构", notes = "树形结构")
-	public R<List<RoleVO>> tree(String tenantId, AuthUser authUser) {
-		List<RoleVO> tree = roleService.tree(Func.toStr(tenantId, authUser.getTenantId()));
+	public R<List<RoleVO>> enterTree(String enterpriseId, AuthUser authUser) {
+		List<RoleVO> tree = roleService.queryEnterTree(Func.toStr(enterpriseId, authUser.getEnterpriseId()));
 		return R.data(tree);
 	}
 
