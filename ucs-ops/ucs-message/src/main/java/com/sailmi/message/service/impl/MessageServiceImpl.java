@@ -1,18 +1,30 @@
 package com.sailmi.message.service.impl;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sailmi.core.mp.base.BaseServiceImpl;
-import com.sailmi.message.dao.mapper.MessageSettingMapper;
-import com.sailmi.message.dao.model.MessageSetting;
-import com.sailmi.message.exception.ChannelException;
-import com.sailmi.message.model.vo.MessageVO;
+import com.sailmi.message.constant.BaseResultEnum;
+import com.sailmi.message.core.dao.constant.RedisKeys;
+import com.sailmi.message.core.dao.constant.SendStatus;
+import com.sailmi.message.core.dao.constant.ValidateStatus;
+import com.sailmi.message.core.dao.entity.BatchMessage;
+import com.sailmi.message.core.dao.entity.Message;
+import com.sailmi.message.core.dao.entity.MessageSetting;
+import com.sailmi.message.core.dao.entity.Template;
+import com.sailmi.message.core.dao.mapper.BatchMessageMapper;
+import com.sailmi.message.core.dao.mapper.MessageMapper;
+import com.sailmi.message.core.dao.mapper.MessageSettingMapper;
+import com.sailmi.message.core.dao.mapper.TemplateMapper;
+import com.sailmi.message.core.exception.BaseException;
+import com.sailmi.message.core.exception.ChannelException;
+import com.sailmi.message.core.health.SMSHealthIndicator;
+import com.sailmi.message.core.model.dto.*;
+import com.sailmi.message.core.model.vo.MessageVO;
+import com.sailmi.message.core.service.ChannelSMSServices;
+import com.sailmi.message.core.service.IChannelService;
+import com.sailmi.message.core.service.IMessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,26 +33,14 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.sailmi.message.constant.BaseResultEnum;
-import com.sailmi.message.dao.constant.Columns;
-import com.sailmi.message.dao.constant.RedisKeys;
-import com.sailmi.message.dao.mapper.BatchMessageMapper;
-import com.sailmi.message.dao.mapper.MessageMapper;
-import com.sailmi.message.dao.mapper.TemplateMapper;
-import com.sailmi.message.dao.model.BatchMessage;
-import com.sailmi.message.dao.model.Message;
-import com.sailmi.message.dao.model.Template;
-import com.sailmi.message.health.SMSHealthIndicator;
-import com.sailmi.message.model.dto.BatchMessageDTO;
-import com.sailmi.message.model.dto.MessageDTO;
-import com.sailmi.message.model.dto.QuerySendResult;
-import com.sailmi.message.model.dto.SendMessageResult;
-import com.sailmi.message.model.dto.ValidateCodeDTO;
-import com.sailmi.message.exception.BaseException;
-import com.sailmi.message.service.IChannelSMSService;
-import com.sailmi.message.service.IMessageService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
+/**
+ * 发送消息主类
+ * 依据MessageType，通过不同的Service实现，完成消息的发送。
+ */
 @Service
 public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message> implements IMessageService {
 
@@ -71,6 +71,17 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 
 	private static final int BATCH_MESSAGE_COUNT = 500;
 
+	/**
+	 *  消息发送方法：
+	 *  每一个租户，拥有一套消息配置
+	 *  系统需要发送消息的时候，需要指明发送何种类型的消息，发送类型可以是短信、邮件
+	 *  及APP推送、桌面推送、系统站内消息。
+	 *  具体站内消息，用户可以实现自己的模块
+	 *
+	 *  每一类消息通过一个Ｓｅｒｖｉｃｅ实现
+	 *  每一个消息Ｓｅｒｖｉｃｅ，可以考虑多个ｐｒｏｖｉｄｅｒ提供。
+	 */
+
 	@Override
 	public SendMessageResult send(MessageDTO messageDTO) {
 		Template template = templateMapper.selectById(Short.valueOf(messageDTO.getTemplateId()));
@@ -78,8 +89,9 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 			throw new BaseException(BaseResultEnum.TEMPLATE_NOT_EXIST);
 		}
 
-		//check app
-		MessageSetting messageSetting = messageSettingMapper.selectById(template.getMessageSettingId());
+		//检查消息设置
+
+		MessageSetting messageSetting = messageSettingMapper.selectById("");
 		if (messageSetting == null) {
 			throw new BaseException(BaseResultEnum.APP_NOT_EXIST);
 		}
@@ -105,15 +117,15 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 		}
 
 		logger.info("开始发送短信:{}", template);
-		Iterator<IChannelSMSService> iterator = channelSMSServices.iterator();
+		Iterator<IChannelService> iterator = channelSMSServices.iterator();
 		SendMessageResult result;
 		byte retry = 0;
 		String channel;
 		do {
-			IChannelSMSService channelSMSService =iterator.next();
-			channel = channelSMSService.getChannel();
+			IChannelService channelService =iterator.next();
+			channel = channelService.getChannel();
 			try {
-				result = channelSMSService.send(messageSetting, template, messageDTO);
+				result = channelService.send(messageSetting, template, messageDTO);
 				break;
 			} catch (ChannelException e) {
 				logger.error("渠道短信发送异常", e);
@@ -130,9 +142,9 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 			message.setParams(new ObjectMapper().writeValueAsString(params));
 			message.setTemplateId(template.getId());
 			if (result.isSuccess()) {
-				message.setSendStatus(Integer.valueOf(Columns.SendStatus.SENDING));
+				message.setSendStatus(Integer.valueOf(SendStatus.SENDING));
 			} else {
-				message.setSendStatus(Integer.valueOf(Columns.SendStatus.FAILURE));
+				message.setSendStatus(Integer.valueOf(SendStatus.FAILURE));
 				message.setFailCode(result.getFailCode());
 			}
 			if (retry > 0) {
@@ -141,7 +153,7 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 			message.setBizId(result.getBizId());
 			message.setChannel(channel);
 			message.setValidateCode(validateCode);
-			message.setValidateStatus(Integer.valueOf(Columns.ValidateStatus.NO));
+			message.setValidateStatus(Integer.valueOf(ValidateStatus.NO));
 			int rows = messageMapper.insert(message);
 			logger.info("{}插入结果:{},生成的自增id为:{}", message, rows, message.getId());
 			if (!StringUtils.isEmpty(validateCodeKey)) {
@@ -165,11 +177,11 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 	}
 
 	@Override
-	public QuerySendResult queryAndUpdateSendStatus(Message message, IChannelSMSService channelSMSService) {
+	public QuerySendResult queryAndUpdateSendStatus(Message message, IChannelService channelSMSService) {
 		Template template = templateMapper.selectById(message.getTemplateId());
-		MessageSetting messageSetting = messageSettingMapper.selectById(template.getMessageSettingId());
+		MessageSetting messageSetting = messageSettingMapper.selectById("");
 		QuerySendResult querySendResult = channelSMSService.querySendStatus(messageSetting, message);
-		if (querySendResult.isSuccess() && Columns.SendStatus.SENDING != querySendResult.getSendStatus()) {
+		if (querySendResult.isSuccess() && SendStatus.SENDING != querySendResult.getSendStatus()) {
 			updateMessageSendStatus(message, querySendResult);
 		}
 		return querySendResult;
@@ -183,7 +195,7 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 		} else if (StringUtils.isEmpty(template.getValidateCodeKey())) {
 			throw new BaseException(BaseResultEnum.NOT_VALIDATE_CODE_TEMPLATE);
 		}
-		MessageSetting messageSetting = messageSettingMapper.selectById(template.getMessageSettingId());
+		MessageSetting messageSetting = messageSettingMapper.selectById("");
 		if (messageSetting == null) {
 			throw new BaseException(BaseResultEnum.APP_NOT_EXIST);
 		}
@@ -225,7 +237,7 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 	@Override
 	public int updateMessageValidateStatus(Message message) {
 		Message updateMessage = new Message();
-		updateMessage.setValidateStatus(Integer.valueOf(Columns.ValidateStatus.YES));
+		updateMessage.setValidateStatus(Integer.valueOf(ValidateStatus.YES));
 		UpdateWrapper<Message> wrapper = new UpdateWrapper();
 		//Need to check logic  --yzh
 		wrapper.lambda().set(Message::getValidateStatus,message.getValidateStatus())
@@ -271,9 +283,9 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 		Message updateMessage = new Message();
 		updateMessage.setId(message.getId());
 		updateMessage.setSendStatus(Integer.valueOf(querySendResult.getSendStatus()));
-		if (Columns.SendStatus.FAILURE == querySendResult.getSendStatus()) {
+		if (SendStatus.FAILURE == querySendResult.getSendStatus()) {
 			updateMessage.setFailCode(querySendResult.getFailCode());
-		} else if (Columns.SendStatus.SUCCESS == querySendResult.getSendStatus()) {
+		} else if (SendStatus.SUCCESS == querySendResult.getSendStatus()) {
 			updateMessage.setReceiveDate(querySendResult.getReceiveDate());
 		}
 		int result = messageMapper.updateById(updateMessage);
@@ -313,7 +325,7 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 			String[] mobileArray = mobileList.subList(from, to).toArray(new String[0]);
 			from = to;
 			SendMessageResult sendMessageResult;
-			IChannelSMSService channelSMSService = channelSMSServices.getBatchSendable();
+			IChannelService channelSMSService = channelSMSServices.getBatchSendable();
 			try {
 				sendMessageResult = channelSMSService.batchSend(messageSetting, mobileArray, batchMessageDTO.getContent());
 			} catch (ChannelException e) {
@@ -325,9 +337,9 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 				batchMessage.setContent(batchMessageDTO.getContent());
 				batchMessage.setTotal((short) mobileArray.length);
 				if (sendMessageResult.isSuccess()) {
-					batchMessage.setSendStatus(Columns.SendStatus.SENDING);
+					batchMessage.setSendStatus(SendStatus.SENDING);
 				} else {
-					batchMessage.setSendStatus(Columns.SendStatus.FAILURE);
+					batchMessage.setSendStatus(SendStatus.FAILURE);
 					batchMessage.setFailCode(sendMessageResult.getFailCode());
 					batchMessage.setFailure(batchMessage.getTotal());
 				}
@@ -365,9 +377,9 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 		batchMessage.setFailure(failure);
 		if (sending == 0) {
 			if (failure == 0) {
-				batchMessage.setSendStatus(Columns.SendStatus.SUCCESS);
+				batchMessage.setSendStatus(SendStatus.SUCCESS);
 			} else {
-				batchMessage.setSendStatus(Columns.SendStatus.COMPLETE);
+				batchMessage.setSendStatus(SendStatus.COMPLETE);
 			}
 		}
 		UpdateWrapper updateWrapper = new UpdateWrapper(batchMessage);

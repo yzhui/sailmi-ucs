@@ -1,12 +1,12 @@
 package com.sailmi.message.controller;
 
-import com.sailmi.message.model.vo.BaseResult;
+import com.sailmi.message.core.model.vo.BaseResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.sailmi.message.constant.BaseResultEnum;
-import com.sailmi.message.exception.BaseException;
+import com.sailmi.message.core.exception.BaseException;
 
 public class BaseController {
 

@@ -15,13 +15,13 @@
  */
 package com.sailmi.message.service.impl;
 
-import com.sailmi.message.dao.model.Template;
-import com.sailmi.message.model.vo.TemplateVO;
-import com.sailmi.message.dao.mapper.TemplateMapper;
-import com.sailmi.message.service.ITemplateService;
-import com.sailmi.core.mp.base.BaseServiceImpl;
-import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.sailmi.core.mp.base.BaseServiceImpl;
+import com.sailmi.message.core.dao.entity.Template;
+import com.sailmi.message.core.dao.mapper.TemplateMapper;
+import com.sailmi.message.core.model.vo.TemplateVO;
+import com.sailmi.message.core.service.ITemplateService;
+import org.springframework.stereotype.Service;
 
 /**
  *  服务实现类

@@ -15,6 +15,7 @@
  */
 package com.sailmi.message.controller;
 
+import com.sailmi.message.core.service.ITemplateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -29,12 +30,10 @@ import com.sailmi.core.tool.utils.Func;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.sailmi.message.dao.model.Template;
-import com.sailmi.message.model.vo.TemplateVO;
-import com.sailmi.message.wrapper.TemplateWrapper;
-import com.sailmi.message.service.ITemplateService;
+import com.sailmi.message.core.dao.entity.Template;
+import com.sailmi.message.core.model.vo.TemplateVO;
+import com.sailmi.message.core.wrapper.TemplateWrapper;
 import com.sailmi.core.boot.ctrl.AppController;
-import java.util.List;
 
 /**
  *  控制器

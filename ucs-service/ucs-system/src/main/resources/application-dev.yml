@@ -2,14 +2,6 @@
 server:
   port: 8106
 
-#数据源配置
-spring:
-  datasource:
-    url: ${ucs.datasource.dev.url}
-    username: ${ucs.datasource.dev.username}
-    password: ${ucs.datasource.dev.password}
-
-
 #配置日志
 logging:
   #此处存放日志的路径

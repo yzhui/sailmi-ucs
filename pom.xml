@@ -23,13 +23,13 @@
         <captcha.version>1.6.2</captcha.version>
         <easyexcel.version>2.1.6</easyexcel.version>
         <mica.auto.version>1.1.0</mica.auto.version>
-        <alibaba.cloud.version>2.2.1.RELEASE</alibaba.cloud.version>
-        <spring.boot.admin.version>2.2.3</spring.boot.admin.version>
-
+        <nacos.client.version>1.4.0</nacos.client.version>
         <spring.boot.version>2.2.7.RELEASE</spring.boot.version>
-        <spring.cloud.version>Hoxton.SR5</spring.cloud.version>
+        <spring.boot.admin.version>2.2.3</spring.boot.admin.version>
+        <spring.cloud.dependencies.version>Hoxton.SR5</spring.cloud.dependencies.version>
+        <spring.cloud.context.version>2.2.5.RELEASE</spring.cloud.context.version>
         <spring.platform.version>Cairo-SR8</spring.platform.version>
-        <spring.context.version>2.2.5.RELEASE</spring.context.version>
+        <spring.cloud.nacos.version>2.2.1.RELEASE</spring.cloud.nacos.version>
         <!-- 推荐使用Harbor -->
         <docker.registry.url>10.211.55.5</docker.registry.url>
         <docker.registry.host>http://${docker.registry.url}:2375</docker.registry.host>
@@ -57,14 +57,14 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring.cloud.version}</version>
+                <version>${spring.cloud.dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-context</artifactId>
-                <version>${spring.context.version}</version>
+                <version>${spring.cloud.context.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -75,7 +75,16 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
+
     </dependencyManagement>
 
     <dependencies>
@@ -87,6 +96,11 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
+            <version>${nacos.client.version}</version>
         </dependency>
     </dependencies>
 

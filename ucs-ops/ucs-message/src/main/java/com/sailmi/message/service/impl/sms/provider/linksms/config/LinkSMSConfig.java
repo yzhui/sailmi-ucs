@@ -1,4 +1,4 @@
-package com.sailmi.message.config;
+package com.sailmi.message.service.impl.sms.provider.linksms.config;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;

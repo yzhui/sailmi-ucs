@@ -2,9 +2,3 @@
 server:
   port: 8106
 
-#数据源配置
-spring:
-  datasource:
-    url: ${ucs.datasource.prod.url}
-    username: ${ucs.datasource.prod.username}
-    password: ${ucs.datasource.prod.password}

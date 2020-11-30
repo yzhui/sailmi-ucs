@@ -1,7 +1,7 @@
 package com.sailmi.message.service;
 
-import com.sailmi.message.dao.mapper.MessageMapper;
-import com.sailmi.message.dao.model.Message;
+import com.sailmi.message.core.dao.mapper.MessageMapper;
+import com.sailmi.message.core.dao.entity.Message;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,4 +1,4 @@
-package com.sailmi.message.service.impl;
+package com.sailmi.message.service.impl.sms.provider.alisms.service;
 
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.dysmsapi.model.v20170525.QuerySendDetailsRequest;
@@ -8,21 +8,21 @@ import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.http.MethodType;
-import com.sailmi.message.constant.BaseResultEnum;
-import com.sailmi.message.constant.Channels;
-import com.sailmi.message.dao.constant.Columns;
-import com.sailmi.message.dao.model.Message;
-import com.sailmi.message.dao.model.MessageSetting;
-import com.sailmi.message.dao.model.Template;
-import com.sailmi.message.exception.AmountNotEnoughException;
-import com.sailmi.message.exception.BaseException;
-import com.sailmi.message.exception.ChannelException;
-import com.sailmi.message.model.dto.MessageDTO;
-import com.sailmi.message.model.dto.QuerySendResult;
-import com.sailmi.message.model.dto.SendMessageResult;
-import com.sailmi.message.service.IChannelSMSService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sailmi.message.constant.BaseResultEnum;
+import com.sailmi.message.constant.Channels;
+import com.sailmi.message.core.dao.constant.SendStatus;
+import com.sailmi.message.core.dao.entity.Message;
+import com.sailmi.message.core.dao.entity.MessageSetting;
+import com.sailmi.message.core.dao.entity.Template;
+import com.sailmi.message.core.exception.AmountNotEnoughException;
+import com.sailmi.message.core.exception.BaseException;
+import com.sailmi.message.core.exception.ChannelException;
+import com.sailmi.message.core.model.dto.MessageDTO;
+import com.sailmi.message.core.model.dto.QuerySendResult;
+import com.sailmi.message.core.model.dto.SendMessageResult;
+import com.sailmi.message.core.service.IChannelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +30,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.text.SimpleDateFormat;
-import java.time.*;
-import java.util.Date;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 @Service(Channels.ALI_SMS)
-public class AliSMSServiceImpl implements IChannelSMSService {
+public class AliSMSServiceImpl implements IChannelService {
 
 
 	private static final String SUCCESS = "OK";
@@ -111,7 +112,7 @@ public class AliSMSServiceImpl implements IChannelSMSService {
 				List<SmsSendDetailDTO> list = querySendDetailsResponse.getSmsSendDetailDTOs();
 				if (CollectionUtils.isEmpty(list)) {
 					if (Duration.between(message.getCreateTime().toInstant(), Instant.now()).toMinutes() > 5) {
-						return new QuerySendResult(true, Columns.SendStatus.FAILURE, null, null, "noMatchSendRecord");
+						return new QuerySendResult(true, SendStatus.FAILURE, null, null, "noMatchSendRecord");
 					} else {
 						logger.info("未查询到对应的短信记录,可能是因为阿里读写库同步延迟");
 						return new QuerySendResult(false);
@@ -120,15 +121,15 @@ public class AliSMSServiceImpl implements IChannelSMSService {
 				SmsSendDetailDTO smsSendDetailDTO = list.get(0);
 				logger.info("阿里云通讯短信查询结果为:{}", new ObjectMapper().writeValueAsString(smsSendDetailDTO));
 				int aliSendStatus = smsSendDetailDTO.getSendStatus().intValue();// 1：等待回执，2：发送失败，3：发送成功
-				byte sendStatus = Columns.SendStatus.SENDING;
+				byte sendStatus = SendStatus.SENDING;
 				LocalDateTime receiveDate = null;
 				String failCode = null;
 				if (aliSendStatus == 2) {
-					sendStatus = Columns.SendStatus.FAILURE;
+					sendStatus = SendStatus.FAILURE;
 					failCode = smsSendDetailDTO.getErrCode();
 				} else if (aliSendStatus == 3) {
 					receiveDate = LocalDateTime.parse(smsSendDetailDTO.getReceiveDate());
-					sendStatus = Columns.SendStatus.SUCCESS;
+					sendStatus = SendStatus.SUCCESS;
 				}
 				return new QuerySendResult(true, sendStatus, smsSendDetailDTO.getContent(), receiveDate,
 						failCode);

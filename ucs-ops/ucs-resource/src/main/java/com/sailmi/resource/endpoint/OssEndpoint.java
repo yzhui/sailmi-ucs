@@ -28,10 +28,20 @@ import com.sailmi.core.oss.model.OssFile;
 import com.sailmi.core.tool.api.R;
 import com.sailmi.core.tool.utils.Func;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.Collection;
+import java.util.Locale;
 
 /**
  * 对象存储端点
@@ -39,23 +49,57 @@ import javax.annotation.Resource;
  * @author Chill
  */
 @RestController
-@AllArgsConstructor
+@AllArgsConstructor()
 @RequestMapping("/oss/endpoint")
 @Api(value = "对象存储端点", tags = "对象存储端点")
 public class OssEndpoint {
 	//初始化OSSProperties
+	@Autowired
 	private OssProvider ossProvider;
 
 	/**
 	 * 获取文件信息
 	 *
-	 * @param fileName 存储桶对象名称
+	 * @param fileName 对象名称
+	 * @return InputStream
+	 */
+	@SneakyThrows
+	@GetMapping("/file/{fileName}")
+	public HttpServletResponse File(@PathVariable("fileName") String fileName) {
+		//缺省为公共的库，后面为每一个企业指定库。
+		String buckets="public";
+		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = attributes.getRequest();
+		HttpServletResponse response = attributes.getResponse();
+		System.out.println("request file name is:"+fileName);
+		InputStream fis= ossProvider.getFile(buckets,fileName);
+		response.setContentType("application/octet-stream");
+		OutputStream outputStream = response.getOutputStream();
+		int bufferLen= 1024;
+		byte[] buffer = new byte[bufferLen];
+		int readLen = fis.read(buffer);
+		while(readLen>0){
+			outputStream.write(buffer,0,readLen);
+			readLen = fis.read(buffer);
+		}
+		outputStream.close();
+		fis.close();
+		return response;
+	}
+
+
+	/**
+	 * 获取文件信息
+	 *
+	 * @param fileName 对象名称
 	 * @return InputStream
 	 */
 	@SneakyThrows
 	@GetMapping("/stat-file")
 	public R<OssFile> statFile(@RequestParam String fileName) {
-		return R.data(ossProvider.statFile(fileName));
+		String buckets="public";
+
+		return R.data(ossProvider.statFile(buckets,fileName));
 	}
 
 	/**
@@ -67,7 +111,8 @@ public class OssEndpoint {
 	@SneakyThrows
 	@GetMapping("/file-path")
 	public R<String> filePath(@RequestParam String fileName) {
-		return R.data(ossProvider.filePath(fileName));
+		String buckets="public";
+		return R.data(ossProvider.filePath(buckets,fileName));
 	}
 
 
@@ -84,7 +129,9 @@ public class OssEndpoint {
 		@ApiImplicitParam(name = "fileName", value = "文件名字", required = true)
 	})
 	public R<String> fileLink(@RequestParam String fileName) {
-		return R.data(ossProvider.fileLink(fileName));
+
+		String buckets="public";
+		return R.data(ossProvider.fileLink(buckets,fileName));
 	}
 
 	/**
@@ -100,8 +147,13 @@ public class OssEndpoint {
 		@ApiImplicitParam(name = "file", value = "二进制文件", required = true)
 	})
 	public R<GeneralFile> putFile(@RequestParam MultipartFile file) {
+		String buckets="public";
+
 		GeneralFile generalFile = null;
-		generalFile = ossProvider.putFile(file.getOriginalFilename(), (MultipartFile) file.getInputStream());
+		generalFile = ossProvider.putFile(buckets,file.getOriginalFilename(), file);
+		System.out.println("dataFile file link is:"+generalFile.getLink());
+		System.out.println("dataFile file name is:"+generalFile.getName());
+		System.out.println("dataFile file original name is:"+generalFile.getOriginalName());
 		return R.data(generalFile);
 	}
 
@@ -120,6 +172,8 @@ public class OssEndpoint {
 		@ApiImplicitParam(name = "file", value = "二进制文件", required = true)
 	})
 	public R<GeneralFile> putFile(@RequestParam String fileName, @RequestParam MultipartFile file) {
+		String buckets="public";
+
 		GeneralFile generalFile = null;
 		generalFile = ossProvider.putFile(file.getOriginalFilename(), (MultipartFile) file.getInputStream());
 		return R.data(generalFile);
@@ -134,7 +188,9 @@ public class OssEndpoint {
 	@SneakyThrows
 	@PostMapping("/remove-file")
 	public R removeFile(@RequestParam String fileName) {
-		ossProvider.removeFile(fileName);
+		String buckets="public";
+
+		ossProvider.removeFile(buckets,fileName);
 		return R.success("操作成功");
 	}
 
@@ -147,7 +203,9 @@ public class OssEndpoint {
 	@SneakyThrows
 	@PostMapping("/remove-files")
 	public R removeFiles(@RequestParam String fileNames) {
-		ossProvider.removeFiles(Func.toStrList(fileNames));
+		String buckets="public";
+
+		ossProvider.removeFiles(buckets,Func.toStrList(fileNames));
 		return R.success("操作成功");
 	}
 }
