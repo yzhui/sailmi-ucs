@@ -49,17 +49,13 @@ import java.util.Locale;
  * @author Chill
  */
 @RestController
-@AllArgsConstructor
+@AllArgsConstructor()
 @RequestMapping("/oss/endpoint")
 @Api(value = "对象存储端点", tags = "对象存储端点")
 public class OssEndpoint {
 	//初始化OSSProperties
 	@Autowired
 	private OssProvider ossProvider;
-
-	//缺省为公共的库，后面为每一个企业指定库。
-	String buckets="public";
-
 
 	/**
 	 * 获取文件信息
@@ -70,6 +66,8 @@ public class OssEndpoint {
 	@SneakyThrows
 	@GetMapping("/file/{fileName}")
 	public HttpServletResponse File(@PathVariable("fileName") String fileName) {
+		//缺省为公共的库，后面为每一个企业指定库。
+		String buckets="public";
 		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		HttpServletRequest request = attributes.getRequest();
 		HttpServletResponse response = attributes.getResponse();
@@ -99,6 +97,8 @@ public class OssEndpoint {
 	@SneakyThrows
 	@GetMapping("/stat-file")
 	public R<OssFile> statFile(@RequestParam String fileName) {
+		String buckets="public";
+
 		return R.data(ossProvider.statFile(buckets,fileName));
 	}
 
@@ -111,6 +111,7 @@ public class OssEndpoint {
 	@SneakyThrows
 	@GetMapping("/file-path")
 	public R<String> filePath(@RequestParam String fileName) {
+		String buckets="public";
 		return R.data(ossProvider.filePath(buckets,fileName));
 	}
 
@@ -128,6 +129,8 @@ public class OssEndpoint {
 		@ApiImplicitParam(name = "fileName", value = "文件名字", required = true)
 	})
 	public R<String> fileLink(@RequestParam String fileName) {
+
+		String buckets="public";
 		return R.data(ossProvider.fileLink(buckets,fileName));
 	}
 
@@ -144,6 +147,8 @@ public class OssEndpoint {
 		@ApiImplicitParam(name = "file", value = "二进制文件", required = true)
 	})
 	public R<GeneralFile> putFile(@RequestParam MultipartFile file) {
+		String buckets="public";
+
 		GeneralFile generalFile = null;
 		generalFile = ossProvider.putFile(buckets,file.getOriginalFilename(), file);
 		System.out.println("dataFile file link is:"+generalFile.getLink());
@@ -167,6 +172,8 @@ public class OssEndpoint {
 		@ApiImplicitParam(name = "file", value = "二进制文件", required = true)
 	})
 	public R<GeneralFile> putFile(@RequestParam String fileName, @RequestParam MultipartFile file) {
+		String buckets="public";
+
 		GeneralFile generalFile = null;
 		generalFile = ossProvider.putFile(file.getOriginalFilename(), (MultipartFile) file.getInputStream());
 		return R.data(generalFile);
@@ -181,6 +188,8 @@ public class OssEndpoint {
 	@SneakyThrows
 	@PostMapping("/remove-file")
 	public R removeFile(@RequestParam String fileName) {
+		String buckets="public";
+
 		ossProvider.removeFile(buckets,fileName);
 		return R.success("操作成功");
 	}
@@ -194,6 +203,8 @@ public class OssEndpoint {
 	@SneakyThrows
 	@PostMapping("/remove-files")
 	public R removeFiles(@RequestParam String fileNames) {
+		String buckets="public";
+
 		ossProvider.removeFiles(buckets,Func.toStrList(fileNames));
 		return R.success("操作成功");
 	}

@@ -71,7 +71,18 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
             <version>2.2.6.RELEASE</version>
         </dependency>
-
+        <!--核心依赖-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <!--UI展示页面-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
+        </dependency>
     </dependencies>
 
     <build>
