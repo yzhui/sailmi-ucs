@@ -182,4 +182,5 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 * @param hashMap
 	 */
 	void updatelastEnterprise(HashMap<Object, Object> hashMap);
+
 }

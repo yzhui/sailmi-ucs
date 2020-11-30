@@ -108,11 +108,9 @@ public class AuthClientController extends AppController {
 							queryWrapper.in("system_id",systemIds);
 							 pages = clientService.page(Condition.getPage(query), queryWrapper);
 						}
-
 					}
 				}
 			}
-
 		}
 		if(pages!=null && pages.getTotal()>0) {
 			 serviceVOIPage = AuthClientWrapper.build().pageVO(pages);

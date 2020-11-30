@@ -215,7 +215,8 @@ public class UserController {
 	@ApiOperationSupport(order = 3)
 	@ApiOperation(value = "列表", notes = "传入account和realName")
 	public R<IPage<UserVO>> list(@ApiIgnore @RequestParam Map<String, Object> user, Query query, AuthUser authUser) {
-		QueryWrapper<User> queryWrapper = Condition.getQueryWrapper(user, User.class);
+		//QueryWrapper<User> queryWrapper = Condition.getQueryWrapper(user, User.class);
+		QueryWrapper<User> queryWrapper =new QueryWrapper<>();
 		IPage<User>	pages=null;
 		if(authUser!=null) {
 			ArrayList<Long> userIds = new ArrayList<>();

@@ -329,7 +329,7 @@ public class EnterpriseController extends AppController {
 		enterprise.setTenantId(authUser.getTenantId());//设置租户ID
 //		enterprise.setTenantId("123321");//设置租户ID
 		enterpriseService.saveEnterpriseInfo(enterprise);//首先插入企业基本信息
-		Long id = enterprise.getId();
+		Long id = enterprise.getId();//新增的企业ID
 		//企业基本信息插入后插入企业详细信息
 		if (id != 0 && id != null) {//企业基本信息插入成功后插入企业详细信息
 			enterpriseDetails.setEnterpriseId(id);//企业详细信息关联企业ID
@@ -481,8 +481,8 @@ public class EnterpriseController extends AppController {
 	@RequestMapping(value = "getEnterprise", method = RequestMethod.POST)
 	public String selectEnterprise(AuthUser authUser, BigInteger userId, BigInteger enterpriseId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-//		userId = BigInteger.valueOf(authUser.getUserId());
-		userId = BigInteger.valueOf(1301788793255452694L);
+		userId = BigInteger.valueOf(authUser.getUserId());
+//		userId = BigInteger.valueOf(1301788793255452694L);
 		try {
 			Enterprise enterprise = enterpriseService.selectEnterprise(userId, enterpriseId);
 			Date createTime = enterprise.getCreateTime();
@@ -535,7 +535,7 @@ public class EnterpriseController extends AppController {
 	@RequestMapping(value = "updateUserEnterpriseStatus", method = RequestMethod.POST)
 	public String updateUserEnterpriseStatus(AuthUser authUser, BigInteger userId, BigInteger enterpriseId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-//		userId = BigInteger.valueOf(authUser.getUserId());
+		userId = BigInteger.valueOf(authUser.getUserId());
 		try {
 			int index = enterpriseService.updateUserEnterpriseStatus(userId, enterpriseId);
 			if (index > 0) {

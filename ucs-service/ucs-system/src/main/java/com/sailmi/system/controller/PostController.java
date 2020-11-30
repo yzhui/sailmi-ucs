@@ -115,7 +115,10 @@ public class PostController extends AppController {
 	@PostMapping("/submit")
 	@ApiOperationSupport(order = 6)
 	@ApiOperation(value = "新增或修改", notes = "传入post")
-	public R submit(@Valid @RequestBody Post post) {
+	public R submit(@Valid @RequestBody Post post,AuthUser authUser) {
+		if(authUser!=null && authUser.getEnterpriseId()!=null){
+			post.setEnterpriseId(authUser.getEnterpriseId());
+		}
 		return R.status(postService.saveOrUpdate(post));
 	}
 

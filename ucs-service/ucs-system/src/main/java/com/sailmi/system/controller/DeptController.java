@@ -82,14 +82,22 @@ public class DeptController extends AppController {
 
 	/**
 	 * 获取部门树形结构
-	 *
+	 *弃用
 	 * @return
 	 */
-	@GetMapping("/tree")
+	@GetMapping("/treenotuse")
 	@ApiOperationSupport(order = 3)
 	@ApiOperation(value = "树形结构", notes = "树形结构")
 	public R<List<DeptVO>> tree(String tenantId, AuthUser authUser) {
 		List<DeptVO> tree = deptService.tree(Func.toStr(tenantId, authUser.getTenantId()));
+		return R.data(tree);
+	}
+
+	@GetMapping("/tree")
+	@ApiOperationSupport(order = 3)
+	@ApiOperation(value = "树形结构", notes = "树形结构")
+	public R<List<DeptVO>> queryEnterTree(String enterpriseId, AuthUser authUser) {
+		List<DeptVO> tree = deptService.queryEnterTree(Func.toStr(enterpriseId, authUser.getEnterpriseId()));
 		return R.data(tree);
 	}
 
@@ -100,8 +108,8 @@ public class DeptController extends AppController {
 	@ApiOperationSupport(order = 4)
 	@ApiOperation(value = "新增或修改", notes = "传入dept")
 	public R submit(@Valid @RequestBody Dept dept, AuthUser user) {
-		if (Func.isEmpty(dept.getId())) {
-			dept.setEnterpriseId(user.getTenantId());
+		if (user!=null && user.getEnterpriseId()!=null) {
+			dept.setEnterpriseId(user.getEnterpriseId());
 		}
 		return R.status(deptService.saveOrUpdate(dept));
 	}

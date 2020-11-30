@@ -19,9 +19,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.system.entity.Enterprise;
-import com.sailmi.system.entity.Tenant;
 import com.sailmi.system.feign.IEnterpriseFeign;
-import com.sailmi.system.service.ITenantService;
 import com.sailmi.system.vo.DictVO;
 import com.sailmi.system.vo.EnterpriseVO;
 import io.swagger.annotations.*;
@@ -39,8 +37,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.sailmi.common.cache.CacheNames.DICT_LIST;
 import static com.sailmi.common.cache.CacheNames.DICT_VALUE;
@@ -80,6 +77,12 @@ public class DictController extends AppController {
 	@ApiOperationSupport(order = 2)
 	@ApiOperation(value = "列表", notes = "传入dict")
 	public R<List<INode>> list(AuthUser authUser, @ApiIgnore @RequestParam Map<String, Object> dict) {
+		//公共字典+企业自己的字典
+		QueryWrapper<Dict> queryWrappers = Condition.getQueryWrapper(dict, Dict.class);
+		queryWrappers.eq("is_tenant_common",0);
+		List<Dict> commondicList = dictService.list(queryWrappers);
+
+
 		QueryWrapper<Dict> queryWrapper = Condition.getQueryWrapper(dict, Dict.class);
 		if(authUser!=null && authUser.getEnterpriseId()!=null){
 			Long aLong = Long.valueOf(authUser.getEnterpriseId());
@@ -91,7 +94,12 @@ public class DictController extends AppController {
 			}
 		}
 		@SuppressWarnings("unchecked")
-		List<Dict> list = dictService.list(queryWrapper.lambda().orderByAsc(Dict::getSort));
+		List<Dict> tenantlist = dictService.list(queryWrapper.lambda().orderByAsc(Dict::getSort));
+
+		Set<Dict> dicts = new HashSet<Dict>();
+		dicts.addAll(commondicList);
+		dicts.addAll(tenantlist);
+		List<Dict> list = new ArrayList<>(dicts);
 		return R.data(DictWrapper.build().listNodeVO(list));
 	}
 

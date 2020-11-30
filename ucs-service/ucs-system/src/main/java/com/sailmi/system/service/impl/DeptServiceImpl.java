@@ -15,10 +15,12 @@
  */
 package com.sailmi.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sailmi.core.tool.node.ForestNodeMerger;
+import com.sailmi.core.tool.utils.BeanUtil;
 import com.sailmi.core.tool.utils.Func;
 import com.sailmi.system.entity.Dept;
 import com.sailmi.system.mapper.DeptMapper;
@@ -26,6 +28,7 @@ import com.sailmi.system.service.IDeptService;
 import com.sailmi.system.vo.DeptVO;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,6 +62,21 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 	@Override
 	public List<String> getDeptNames(String deptIds) {
 		return baseMapper.getDeptNames(Func.toLongArray(deptIds));
+	}
+
+	@Override
+	public List<DeptVO> queryEnterTree(String enterpriseId) {
+		List<DeptVO> deptVOS = new ArrayList<>();
+		QueryWrapper<Dept> deptQueryWrapper = new QueryWrapper<>();
+		deptQueryWrapper.eq("enterprise_id",enterpriseId);
+		List<Dept> depts = baseMapper.selectList(deptQueryWrapper);
+		if(depts!=null && depts.size()>0){
+			depts.stream().forEach(dept -> {
+				DeptVO deptVO = BeanUtil.copy(dept, DeptVO.class);
+				deptVOS.add(deptVO);
+			});
+		}
+		return ForestNodeMerger.merge(deptVOS);
 	}
 
 }
