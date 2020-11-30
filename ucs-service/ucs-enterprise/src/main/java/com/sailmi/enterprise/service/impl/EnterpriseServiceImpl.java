@@ -134,6 +134,7 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 		//用户加入企业
 		int r = baseMapper.joinEnterprise(Long.valueOf(id.toString()),userId,this.timeStamp2Date(), 2);/*用户加入企业默认是普通用户2标识*/
 		//更改用户的企业认证状态:暂时为用户加入之后默认已通过
+		System.out.println("加入企业: " + userId);
 		baseMapper.updateEnterpriseStatus(userId, 1);
 		if(r > 0){
 			return 1;
