@@ -18,8 +18,6 @@ package com.sailmi.system.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.system.entity.ServiceEntity;
-import com.sailmi.system.entity.SystemEntity;
-import com.sailmi.system.entity.Tenant;
 import com.sailmi.system.service.IServiceService;
 import com.sailmi.system.service.ISystemService;
 import com.sailmi.system.service.ITenantService;
@@ -41,7 +39,6 @@ import com.sailmi.core.tool.utils.Func;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sailmi.core.boot.ctrl.AppController;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -84,36 +81,6 @@ public class ServiceController extends AppController {
 		//获取该tenantId下的所有system，根据system查询所有service
 		IPage<ServiceEntity> pages=null;
 		IPage<ServiceVO> serviceVOIPage =null;
-//		if(user!=null && user.getEnterpriseId()!=null) {
-//			QueryWrapper<Tenant> tenantQueryWrapper = new QueryWrapper<>();
-//			tenantQueryWrapper.eq("enterprise_id",user.getEnterpriseId());//查询改企业管理的所有的租户
-//			List<Tenant> tenantList = tenantService.list(tenantQueryWrapper);
-//			if(tenantList!=null && tenantList.size()>0) {
-//				ArrayList<String> longs = new ArrayList<>();
-//				tenantList.stream().forEach(teant -> {
-//					longs.add(teant.getTenantId());
-//				});
-//				QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
-//				if (longs.size() > 0) {
-//					systemEntityQueryWrapper.in("tenant_id", longs);
-//				}
-//				List<SystemEntity> list = systemService.list(systemEntityQueryWrapper);
-//				if (list != null && list.size() > 0) {
-//					ArrayList<Long> systemIds = new ArrayList<>();
-//					list.stream().forEach(sysEntity -> {
-//						systemIds.add(sysEntity.getId());
-//					});
-//
-//					final QueryWrapper<ServiceEntity> queryWrapper = Condition.getQueryWrapper(service);
-//					if (systemIds != null && systemIds.size() > 0) {
-//						queryWrapper.in("system_id", systemIds);
-//						pages = serviceService.page(Condition.getPage(query), queryWrapper);
-//					}
-//
-//				}
-//			}
-//		}
-
 		if(user!=null && user.getEnterpriseId()!=null) {
 			 QueryWrapper<ServiceEntity> queryWrapper = Condition.getQueryWrapper(service);
 			 queryWrapper.in("enterprise_id", user.getEnterpriseId());
