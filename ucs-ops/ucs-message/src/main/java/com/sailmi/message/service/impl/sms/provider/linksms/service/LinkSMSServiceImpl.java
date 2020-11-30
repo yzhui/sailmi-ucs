@@ -1,18 +1,20 @@
-package com.sailmi.message.service.impl;
+package com.sailmi.message.service.impl.sms.provider.linksms.service;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.sailmi.message.dao.model.MessageSetting;
-import com.sailmi.message.exception.AmountNotEnoughException;
-import com.sailmi.message.exception.ChannelException;
+import com.sailmi.message.constant.Channels;
+import com.sailmi.message.core.dao.constant.RedisKeys;
+import com.sailmi.message.core.dao.constant.SendStatus;
+import com.sailmi.message.core.dao.entity.BatchMessage;
+import com.sailmi.message.core.dao.entity.Message;
+import com.sailmi.message.core.dao.entity.MessageSetting;
+import com.sailmi.message.core.dao.entity.Template;
+import com.sailmi.message.core.exception.AmountNotEnoughException;
+import com.sailmi.message.core.exception.ChannelException;
+import com.sailmi.message.core.model.dto.MessageDTO;
+import com.sailmi.message.core.model.dto.QuerySendResult;
+import com.sailmi.message.core.model.dto.SendMessageResult;
+import com.sailmi.message.core.service.IBatchQueryable;
+import com.sailmi.message.core.service.IMessageService;
+import com.sailmi.message.service.impl.sms.provider.linksms.config.LinkSMSConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +26,13 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
-import com.sailmi.message.config.LinkSMSConfig;
-import com.sailmi.message.constant.Channels;
-import com.sailmi.message.dao.constant.Columns;
-import com.sailmi.message.dao.constant.RedisKeys;
-import com.sailmi.message.dao.model.BatchMessage;
-import com.sailmi.message.dao.model.Message;
-import com.sailmi.message.dao.model.Template;
-import com.sailmi.message.model.dto.MessageDTO;
-import com.sailmi.message.model.dto.QuerySendResult;
-import com.sailmi.message.model.dto.SendMessageResult;
-import com.sailmi.message.service.IBatchQueryable;
-import com.sailmi.message.service.IMessageService;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service(Channels.LINK_SMS)
 public class LinkSMSServiceImpl implements IBatchQueryable {
@@ -133,16 +130,16 @@ public class LinkSMSServiceImpl implements IBatchQueryable {
 					LocalDateTime receiveDate= LocalDateTime.parse(args[5]);
 					Message message = messageService.queryMessage(mobile, bizId);
 					if (message != null) {
-						byte sendStatus = Columns.SendStatus.SENDING;
+						byte sendStatus = SendStatus.SENDING;
 						if (REPORT_STATUS_SUCCESS.equals(status)) {
-							sendStatus = Columns.SendStatus.SUCCESS;
+							sendStatus = SendStatus.SUCCESS;
 						} else if (REPORT_STATUS_FAILURE.equals(status)) {
-							sendStatus = Columns.SendStatus.FAILURE;
+							sendStatus = SendStatus.FAILURE;
 						}
 
 						QuerySendResult querySendResult = new QuerySendResult(true, sendStatus, null, receiveDate,
 								failCode);
-						if (sendStatus != Columns.SendStatus.SENDING) {
+						if (sendStatus != SendStatus.SENDING) {
 							messageService.updateMessageSendStatus(message, querySendResult);
 						}
 					} else {

@@ -57,6 +57,9 @@ public class OssEndpoint {
 	@Autowired
 	private OssProvider ossProvider;
 
+	//缺省为公共的库，后面为每一个企业指定库。
+	String buckets="public";
+
 
 	/**
 	 * 获取文件信息
@@ -71,7 +74,7 @@ public class OssEndpoint {
 		HttpServletRequest request = attributes.getRequest();
 		HttpServletResponse response = attributes.getResponse();
 		System.out.println("request file name is:"+fileName);
-		InputStream fis= ossProvider.getFile(fileName);
+		InputStream fis= ossProvider.getFile(buckets,fileName);
 		response.setContentType("application/octet-stream");
 		OutputStream outputStream = response.getOutputStream();
 		int bufferLen= 1024;
@@ -96,7 +99,7 @@ public class OssEndpoint {
 	@SneakyThrows
 	@GetMapping("/stat-file")
 	public R<OssFile> statFile(@RequestParam String fileName) {
-		return R.data(ossProvider.statFile(fileName));
+		return R.data(ossProvider.statFile(buckets,fileName));
 	}
 
 	/**
@@ -108,7 +111,7 @@ public class OssEndpoint {
 	@SneakyThrows
 	@GetMapping("/file-path")
 	public R<String> filePath(@RequestParam String fileName) {
-		return R.data(ossProvider.filePath(fileName));
+		return R.data(ossProvider.filePath(buckets,fileName));
 	}
 
 
@@ -125,7 +128,7 @@ public class OssEndpoint {
 		@ApiImplicitParam(name = "fileName", value = "文件名字", required = true)
 	})
 	public R<String> fileLink(@RequestParam String fileName) {
-		return R.data(ossProvider.fileLink(fileName));
+		return R.data(ossProvider.fileLink(buckets,fileName));
 	}
 
 	/**
@@ -142,7 +145,7 @@ public class OssEndpoint {
 	})
 	public R<GeneralFile> putFile(@RequestParam MultipartFile file) {
 		GeneralFile generalFile = null;
-		generalFile = ossProvider.putFile(file.getOriginalFilename(), file);
+		generalFile = ossProvider.putFile(buckets,file.getOriginalFilename(), file);
 		System.out.println("dataFile file link is:"+generalFile.getLink());
 		System.out.println("dataFile file name is:"+generalFile.getName());
 		System.out.println("dataFile file original name is:"+generalFile.getOriginalName());
@@ -178,7 +181,7 @@ public class OssEndpoint {
 	@SneakyThrows
 	@PostMapping("/remove-file")
 	public R removeFile(@RequestParam String fileName) {
-		ossProvider.removeFile(fileName);
+		ossProvider.removeFile(buckets,fileName);
 		return R.success("操作成功");
 	}
 
@@ -191,7 +194,7 @@ public class OssEndpoint {
 	@SneakyThrows
 	@PostMapping("/remove-files")
 	public R removeFiles(@RequestParam String fileNames) {
-		ossProvider.removeFiles(Func.toStrList(fileNames));
+		ossProvider.removeFiles(buckets,Func.toStrList(fileNames));
 		return R.success("操作成功");
 	}
 }

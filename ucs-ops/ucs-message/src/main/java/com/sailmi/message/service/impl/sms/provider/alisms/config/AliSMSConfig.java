@@ -1,4 +1,4 @@
-package com.sailmi.message.config;
+package com.sailmi.message.service.impl.sms.provider.alisms.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
