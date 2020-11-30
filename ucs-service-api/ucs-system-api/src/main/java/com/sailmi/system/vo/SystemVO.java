@@ -15,6 +15,8 @@
  */
 package com.sailmi.system.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import io.swagger.annotations.ApiModel;
@@ -33,6 +35,13 @@ public class SystemVO extends SystemEntity {
 	private static final long serialVersionUID = 1L;
 	private String createName;//创建人
 	private String updateName;//修改人
+
+	/**
+	 * 主键ID
+	 */
+	@JsonSerialize(using = ToStringSerializer.class)
+	private Long id;
+
 
 
 }
