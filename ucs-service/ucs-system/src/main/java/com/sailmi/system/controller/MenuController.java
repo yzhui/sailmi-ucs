@@ -128,11 +128,11 @@ public class MenuController extends AppController {
 //		}
 		if(lists!=null && lists.size()>0) {
 			 menuVOS = MenuWrapper.build().listNodeVO(lists);
-			if (menuVOS != null && menuVOS.size() > 0) {
-				menuVOS.stream().forEach(menuVO -> {
-					menuVO.setSystemName(systemService.getById(menuVO.getSystemId()).getSystemName());
-				});
-			}
+//			if (menuVOS != null && menuVOS.size() > 0) {
+//				menuVOS.stream().forEach(menuVO -> {
+//					menuVO.setSystemName(systemService.getById(menuVO.getSystemId()).getSystemName());
+//				});
+//			}
 		}
 		return R.data(menuVOS);
 	}
