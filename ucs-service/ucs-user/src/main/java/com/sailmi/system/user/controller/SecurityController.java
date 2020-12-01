@@ -168,6 +168,29 @@ public class SecurityController {
     }
 
     /**
+     * <p>Description: 保存头像路径</p>
+     *
+     * @param link:
+     * @return: com.sailmi.system.entity.Result
+     * @Author: syt
+     * @Date: 2020/12/1/0001 13:32
+     */
+	@RequestMapping("saveHeadImgUrl")
+    public Result saveHeadImg(AuthUser authUser, String link){
+		Result result = new Result();
+		BigInteger id = BigInteger.valueOf(authUser.getUserId());
+		int sta = securityService.saveHeadImg(id, link);
+		if (sta ==1) {
+			result.setCode(ResponseMessage.SUCCESS);
+			result.setMsg("头像路径保存成功");
+		} else {
+			result.setCode(ResponseMessage.FAILE);
+			result.setMsg("头像路径保存失败");
+		}
+		return result;
+	}
+
+    /**
      * 发送邮箱验证码
      *
      * @param eMailAddr 邮箱地址

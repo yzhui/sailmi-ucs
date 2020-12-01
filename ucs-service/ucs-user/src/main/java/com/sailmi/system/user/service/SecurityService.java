@@ -23,6 +23,7 @@ public interface SecurityService {
 	 */
 	int uploadHeadImg(MultipartFile headImg, BigInteger id, String path);
 
+	int saveHeadImg(BigInteger id, String link);
 	/**
 	 * 邮箱唯一性校验
 	 * @param eMailAddr 邮箱地址
