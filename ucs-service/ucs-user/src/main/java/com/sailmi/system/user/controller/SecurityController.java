@@ -178,7 +178,8 @@ public class SecurityController {
 	@RequestMapping("saveHeadImgUrl")
     public Result saveHeadImg(AuthUser authUser, String link){
 		Result result = new Result();
-		BigInteger id = BigInteger.valueOf(authUser.getUserId());
+//		BigInteger id = BigInteger.valueOf(authUser.getUserId());
+		BigInteger id = BigInteger.valueOf(1301788793255452712L);
 		int sta = securityService.saveHeadImg(id, link);
 		if (sta ==1) {
 			result.setCode(ResponseMessage.SUCCESS);
