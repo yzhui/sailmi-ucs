@@ -59,6 +59,7 @@ public class RealinfoController {
 	public String save(AuthUser authUser, RealUserEntity realinfo) {
 		HashMap<String,Object> hashMap = new HashMap<String,Object>();
 		BigInteger b = BigInteger.valueOf(authUser.getUserId());
+//		BigInteger b = BigInteger.valueOf(1301788793255452722l);
 //		realinfo.setId(b);
 		realinfo.setUserId(b);
 		int upsert = realUserService.upsert(realinfo);

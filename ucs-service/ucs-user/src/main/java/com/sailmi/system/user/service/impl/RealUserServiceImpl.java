@@ -53,15 +53,13 @@ public class RealUserServiceImpl implements RealUserService {
 	 * @param reUser
 	 * @return 返回值：1成功，0失败
 	 */
-	String url , url2, url3;
+//	String url , url2, url3;
 	@Override
 	public int upsert(RealUserEntity reUser) {
 
 		int status,acSta = 0;
-		reUser.setImgInfo(url);
-		reUser.setImgInfo2(url2);
-		reUser.setImgInfo3(url3);
 		status = realUserMapper.insert(reUser);
+		System.out.println("头像路径"+reUser.getImgInfo()+reUser.getImgInfo2()+reUser.getImgInfo3());
 		acSta = realUserMapper.insertAccount(reUser.getRealName(), reUser.getUserId());
 		if (status == 1 & acSta == 1) {
 			realUserMapper.realStatus(reUser.getUserId());
@@ -80,7 +78,7 @@ public class RealUserServiceImpl implements RealUserService {
 			if (reUser.getFile() != null) {
 				uploadData = UploadUtil.uploadData(reUser.getFile(), "/usr/share/nginx/html/ucs/ftpuser", 0);
 //				uploadData = UploadUtil.uploadData(reUser.getFile(), "/opt/microservice/update_file/" + reUser.getRealName() + "/uuserIDCard/", 0);
-				url = (String)uploadData.get("name");
+//				url = (String)uploadData.get("name");
 				if(uploadData.get("status").toString().equals("1")) {
 					reUser.setImgInfo(uploadData.get("url").toString());
 					realUserMapper.insertImgUrl(reUser);
@@ -91,7 +89,7 @@ public class RealUserServiceImpl implements RealUserService {
 			if (reUser.getFile2() != null) {
 //				uploadData = UploadUtil.uploadData(reUser.getFile2(), "D:/IDCard/" + reUser.getRealName() + "/uuserIDCard/", 0);
 				uploadData = UploadUtil.uploadData(reUser.getFile(), "/usr/share/nginx/html/ucs/ftpuser" + reUser.getRealName() + "/uuserIDCard/", 0);
-				url2 = (String)uploadData.get("name");
+//				url2 = (String)uploadData.get("name");
 				if(uploadData.get("status").toString().equals("1")) {
 					return 1;
 				}
@@ -100,7 +98,7 @@ public class RealUserServiceImpl implements RealUserService {
 			if (reUser.getFile3() != null) {
 //				uploadData = UploadUtil.uploadData(reUser.getFile3(), "D:/IDCard/" + reUser.getRealName() + "/uuserIDCard/", 0);
 				uploadData = UploadUtil.uploadData(reUser.getFile(), "/usr/share/nginx/html/ucs/ftpuser" + reUser.getRealName() + "/uuserIDCard/", 0);
-				url3 = (String)uploadData.get("name");
+//				url3 = (String)uploadData.get("name");
 				if(uploadData.get("status").toString().equals("1")) {
 					return 1;
 				}
