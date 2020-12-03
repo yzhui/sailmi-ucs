@@ -105,6 +105,7 @@ public class ServiceMenuController extends AppController {
 						if (menuIds.size() > 0) {
 							QueryWrapper<Menu> menuQueryWrapper = new QueryWrapper<>();
 							menuQueryWrapper.in("id", menuIds);
+							menuQueryWrapper.orderByAsc("sort");
 							menuList = serviceMenuService.queryUserMenus(menuQueryWrapper);
 						}
 					}
