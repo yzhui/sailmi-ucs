@@ -80,10 +80,10 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, Tenant> imp
 			//TODO
 			//设定租户管理员登陆人和role的绑定还是在用户中设定呢
 			//	}
-			Enterprise enterprise = new Enterprise();
-			enterprise.setTenantId(tenant.getTenantId());
-			enterprise.setId(Long.valueOf(tenant.getEnterpriseId()));
-			enterpriseFeign.update(enterprise);
+//			Enterprise enterprise = new Enterprise();
+//			enterprise.setTenantId(tenant.getTenantId());
+//			enterprise.setId(Long.valueOf(tenant.getEnterpriseId()));
+//			enterpriseFeign.update(enterprise);
 		}else{
 			tenant.setEnterpriseId("0");
 		}

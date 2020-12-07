@@ -18,8 +18,6 @@ package com.sailmi.system.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sailmi.core.secure.AuthUser;
 import com.sailmi.system.entity.ServiceEntity;
-import com.sailmi.system.entity.SystemEntity;
-import com.sailmi.system.entity.Tenant;
 import com.sailmi.system.service.IServiceService;
 import com.sailmi.system.service.ISystemService;
 import com.sailmi.system.service.ITenantService;
@@ -41,11 +39,7 @@ import com.sailmi.core.tool.utils.Func;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sailmi.core.boot.ctrl.AppController;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 可提供的服务清单，企业可以通过服务清单 控制器
@@ -88,42 +82,14 @@ public class ServiceController extends AppController {
 		IPage<ServiceEntity> pages=null;
 		IPage<ServiceVO> serviceVOIPage =null;
 		if(user!=null && user.getEnterpriseId()!=null) {
-			QueryWrapper<Tenant> tenantQueryWrapper = new QueryWrapper<>();
-			tenantQueryWrapper.eq("enterprise_id",user.getEnterpriseId());//查询改企业管理的所有的租户
-			List<Tenant> tenantList = tenantService.list(tenantQueryWrapper);
-			if(tenantList!=null && tenantList.size()>0) {
-				ArrayList<String> longs = new ArrayList<>();
-				tenantList.stream().forEach(teant -> {
-					longs.add(teant.getTenantId());
-				});
-				QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
-				if (longs.size() > 0) {
-					systemEntityQueryWrapper.in("tenant_id", longs);
-				}
-				List<SystemEntity> list = systemService.list(systemEntityQueryWrapper);
-				if (list != null && list.size() > 0) {
-					ArrayList<Long> systemIds = new ArrayList<>();
-					list.stream().forEach(sysEntity -> {
-						systemIds.add(sysEntity.getId());
-					});
-
-					final QueryWrapper<ServiceEntity> queryWrapper = Condition.getQueryWrapper(service);
-					if (systemIds != null && systemIds.size() > 0) {
-						queryWrapper.in("system_id", systemIds);
-						pages = serviceService.page(Condition.getPage(query), queryWrapper);
-					}
-
-				}
-			}
+			 QueryWrapper<ServiceEntity> queryWrapper = Condition.getQueryWrapper(service);
+			 queryWrapper.in("enterprise_id", user.getEnterpriseId());
+			 pages = serviceService.page(Condition.getPage(query), queryWrapper);
 		}
 		if(pages!=null && pages.getTotal()>0) {
 			 serviceVOIPage = ServiceWrapper.build().pageVO(pages);
 			if (serviceVOIPage != null && serviceVOIPage.getTotal() > 0) {
 				serviceVOIPage.getRecords().stream().forEach(serviceVO -> {
-					SystemEntity sysInfo = systemService.getById(serviceVO.getSystemId());
-					if (sysInfo != null && sysInfo.getSystemName() != null) {
-						serviceVO.setSystemName(sysInfo.getSystemName());
-					}
 					if (serviceVO.getServiceType() == 0) {
 						serviceVO.setServiceTypeName("公共授权");
 					} else {
@@ -151,8 +117,8 @@ public class ServiceController extends AppController {
 	@GetMapping("/service-tree")
 	@ApiOperationSupport(order = 8)
 	@ApiOperation(value = "服务包树形结构", notes = "服务报树形结构")
-	public R<List<ServiceVO>> grantTree() {
-		return R.data(serviceService.grantTree());
+	public R<List<ServiceVO>> grantTree(AuthUser authUser) {
+		return R.data(serviceService.grantTree(authUser));
 	}
 
 
@@ -221,7 +187,10 @@ public class ServiceController extends AppController {
 	@PostMapping("/submit")
     @ApiOperationSupport(order = 6)
 	@ApiOperation(value = "新增或修改", notes = "传入service")
-	public R submit(@Valid @RequestBody ServiceEntity service) {
+	public R submit(@Valid @RequestBody ServiceEntity service,AuthUser authUser) {
+		if(authUser!=null && authUser.getEnterpriseId()!=null){
+			service.setEnterpriseId(authUser.getEnterpriseId());
+		}
 		return R.status(serviceService.saveOrUpdate(service));
 	}
 

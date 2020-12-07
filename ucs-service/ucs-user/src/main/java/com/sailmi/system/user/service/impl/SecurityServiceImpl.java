@@ -85,6 +85,20 @@ public class SecurityServiceImpl implements SecurityService {
 		}
 	}
 
+	@Override
+	public int saveHeadImg(BigInteger id, String link) {
+		HashMap<String, Object> saveMap = new HashMap<String, Object>();
+		saveMap.put("id", id);
+		saveMap.put("headImg", link);
+		//图片信息存到数据库
+		int saveHead = securityMapper.saveHeadImg(saveMap);
+		if (saveHead == 1) {
+			return 1;
+		}
+		return 0;
+	}
+
+
 	private void logFileInfo() {
 		log.debug("类",Thread.currentThread().getStackTrace()[1].getFileName());
 		log.debug("行: ",Thread.currentThread().getStackTrace()[1].getLineNumber());

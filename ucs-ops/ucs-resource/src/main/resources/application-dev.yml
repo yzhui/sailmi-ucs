@@ -3,43 +3,9 @@ server:
   port: 8010
 
 
-sailmi:
-  fss:
-    provider: mongooss
-    enabled: true
-    tenantMode: true
-    alioss:
-      keyId: <your alioss key id>
-      keySecret: <your alioss key secret>
-      endpoint: oss-cn-shenzhen.aliyuncs.com
-      defaultBucket: testfss
-      clientConfiguration:
-        socketTimeout: 5000
-        connectionTimeout: 5000
-    mongooss:
-      enable: true
-      name: mongo
-    localoss:
-      store-path: <your local file store path>
-    qiniuoss:
-      accessKey: <your qiniu access key>
-      secretKey: <your qiniu secret ky>
-      host: <your qiniu subdomain>.bkt.clouddn.com
-      defaultBucket: testfss
-    webdavoss:
-      username: alice
-      password: secret1234
-      endpoint: http://127.0.0.1
 logging:
   level:
     in.clouthink: debug
     com.github.sardine: debug
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${ucs.datasource.dev.url}
-    username: ${ucs.datasource.dev.username}
-    password: ${ucs.datasource.dev.password}
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/sailmi-fss
+
+

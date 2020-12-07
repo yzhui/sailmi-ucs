@@ -16,6 +16,7 @@
 package com.sailmi.system.service.impl;
 
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sailmi.core.secure.AuthUser;
@@ -32,6 +33,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 服务功能包设定，表明此功能属于哪个服务包，只有享受此服务包的用户才能访问这个功能 服务实现类
@@ -52,7 +55,7 @@ public class ServiceMenuServiceImpl extends ServiceImpl<ServiceMenuMapper, Servi
 	@Override
 	public List<MenuTreeResultEntity> queryUserMenus(QueryWrapper<Menu> menuQueryWrapper) {
 		ArrayList<MenuTreeResultEntity> menuTreeResultEntities = new ArrayList<>();
-		ArrayList<MenuTreeResultEntity> menuTrees = new ArrayList<>();
+		List<MenuTreeResultEntity> menuTrees = new ArrayList<>();
 		List<Menu> list = menuService.list(menuQueryWrapper);
 		if(list!=null && list.size()>0){
 			list.stream().forEach(Menu->{
@@ -72,9 +75,19 @@ public class ServiceMenuServiceImpl extends ServiceImpl<ServiceMenuMapper, Servi
 		}
 		if(menuTreeResultEntities.size()>0){
 			menuTrees = sortMenus(menuTreeResultEntities, "0");
+			System.out.println(JSON.toJSONString(menuTreeResultEntities));
+			//List<MenuTreeResultEntity> menuTreeResultEntities1 = buildTree(menuTreeResultEntities);
+			//System.out.println(menuTreeResultEntities1);
+
 		}
 
 		return menuTrees;
+	}
+
+	public static List<MenuTreeResultEntity> buildTree(List<MenuTreeResultEntity> zoneList) {
+		Map<String, List<MenuTreeResultEntity>> zoneByParentIdMap = zoneList.stream().collect(Collectors.groupingBy(MenuTreeResultEntity::getPid));
+		zoneList.forEach(MenuTreeResultEntity -> MenuTreeResultEntity.menuChild = zoneByParentIdMap.get(MenuTreeResultEntity.getId()));
+		return zoneList.stream().filter(v -> v.getPid().equals("0")).collect(Collectors.toList());
 	}
 
 	private ArrayList<MenuTreeResultEntity> sortMenus(ArrayList<MenuTreeResultEntity> menuTreeResultEntities,String parentId) {

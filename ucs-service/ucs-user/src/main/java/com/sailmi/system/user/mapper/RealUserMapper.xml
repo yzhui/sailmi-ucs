@@ -69,6 +69,9 @@
 			bankName,
 			bankNum,
 			userId,
+			imgInfo,
+            imgInfo2,
+            imgInfo3,
 			del_flag
 		) VALUES (
 			#{realName},
@@ -80,6 +83,9 @@
 			#{bankName},
 			#{bankNum},
 			#{userId},
+			#{imgInfo},
+			#{imgInfo2},
+			#{imgInfo3},
 			'0'
 		)
 	</insert>

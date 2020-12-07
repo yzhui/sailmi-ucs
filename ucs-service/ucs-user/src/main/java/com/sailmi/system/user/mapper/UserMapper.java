@@ -62,7 +62,7 @@ public interface UserMapper extends BaseMapper<User> {
 	 * @param ids
 	 * @return
 	 */
-	List<String> getRoleAlias(String[] ids);
+	List<String> getRoleAlias(String... ids);
 
 	/**
 	 * 获取部门名

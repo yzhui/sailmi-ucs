@@ -82,43 +82,57 @@ public class MenuController extends AppController {
 	@ApiOperation(value = "列表", notes = "传入menu")
 	public R<List<MenuVO>> list(AuthUser user,@ApiIgnore @RequestParam Map<String, Object> menu) {
 		//查询登陆人企业下租户的所有菜单
+		//查询企业下的菜单和公共菜单
+
 		List<Menu> lists=null;
 		List<MenuVO> menuVOS=null;
-		QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
-		if(user!=null && user.getEnterpriseId()!=null ){
-			QueryWrapper<Tenant> tenantQueryWrapper = new QueryWrapper<>();
-			tenantQueryWrapper.eq("enterprise_id",user.getEnterpriseId());
-			List<Tenant> tenantList = tenantService.list(tenantQueryWrapper);//查询登陆人下的所有租户
-			ArrayList<String> strings = new ArrayList<>();
-			if(tenantList!=null && tenantList.size()>0){
-				tenantList.stream().forEach(tenant -> {
-					strings.add(tenant.getTenantId());
-				});
-			}
-			if(strings.size()>0) {
-				systemEntityQueryWrapper.in("tenant_id", strings);
-				List<SystemEntity> list = systemService.list(systemEntityQueryWrapper);
-				if(list!=null && list.size()>0){
-					ArrayList<Long> systemIds = new ArrayList<>();
-					list.stream().forEach(sysEntity->{
-						systemIds.add(sysEntity.getId());
-					});
-
-					QueryWrapper<Menu> queryWrapper = Condition.getQueryWrapper(menu, Menu.class);
-					if(systemIds!=null && systemIds.size()>0){
-						queryWrapper.in("system_id",systemIds);
-					}
-					 lists = menuService.list(queryWrapper.lambda().orderByAsc(Menu::getSort));
-				}
-			}
+		if(user!=null && user.getEnterpriseId()!=null){
+			QueryWrapper<Menu> queryWrapper = Condition.getQueryWrapper(menu, Menu.class);
+			queryWrapper.eq("enterprise_id",user.getEnterpriseId());
+			lists = menuService.list(queryWrapper.lambda().orderByAsc(Menu::getSort));
 		}
+		QueryWrapper<Menu> menuQueryWrapper = new QueryWrapper<>();
+		menuQueryWrapper.isNull("enterprise_id");
+		List<Menu> commonMenus = menuService.list(menuQueryWrapper);
+		if(commonMenus!=null && commonMenus.size()>0){
+			lists.addAll(commonMenus);
+		}
+
+//		QueryWrapper<SystemEntity> systemEntityQueryWrapper = new QueryWrapper<>();
+//		if(user!=null && user.getEnterpriseId()!=null ){
+//			QueryWrapper<Tenant> tenantQueryWrapper = new QueryWrapper<>();
+//			tenantQueryWrapper.eq("enterprise_id",user.getEnterpriseId());
+//			List<Tenant> tenantList = tenantService.list(tenantQueryWrapper);//查询登陆人下的所有租户
+//			ArrayList<String> strings = new ArrayList<>();
+//			if(tenantList!=null && tenantList.size()>0){
+//				tenantList.stream().forEach(tenant -> {
+//					strings.add(tenant.getTenantId());
+//				});
+//			}
+//			if(strings.size()>0) {
+//				systemEntityQueryWrapper.in("tenant_id", strings);
+//				List<SystemEntity> list = systemService.list(systemEntityQueryWrapper);
+//				if(list!=null && list.size()>0){
+//					ArrayList<Long> systemIds = new ArrayList<>();
+//					list.stream().forEach(sysEntity->{
+//						systemIds.add(sysEntity.getId());
+//					});
+//
+//					QueryWrapper<Menu> queryWrapper = Condition.getQueryWrapper(menu, Menu.class);
+//					if(systemIds!=null && systemIds.size()>0){
+//						queryWrapper.in("system_id",systemIds);
+//					}
+//					 lists = menuService.list(queryWrapper.lambda().orderByAsc(Menu::getSort));
+//				}
+//			}
+//		}
 		if(lists!=null && lists.size()>0) {
 			 menuVOS = MenuWrapper.build().listNodeVO(lists);
-			if (menuVOS != null && menuVOS.size() > 0) {
-				menuVOS.stream().forEach(menuVO -> {
-					menuVO.setSystemName(systemService.getById(menuVO.getSystemId()).getSystemName());
-				});
-			}
+//			if (menuVOS != null && menuVOS.size() > 0) {
+//				menuVOS.stream().forEach(menuVO -> {
+//					menuVO.setSystemName(systemService.getById(menuVO.getSystemId()).getSystemName());
+//				});
+//			}
 		}
 		return R.data(menuVOS);
 	}
@@ -130,7 +144,10 @@ public class MenuController extends AppController {
 	@PreAuth(RoleConstant.HAS_ROLE_TENANT_ADMIN)
 	@ApiOperationSupport(order = 3)
 	@ApiOperation(value = "新增或修改", notes = "传入menu")
-	public R submit(@Valid @RequestBody Menu menu) {
+	public R submit(@Valid @RequestBody Menu menu,AuthUser authUser) {
+		if(authUser!=null && authUser.getEnterpriseId()!=null){
+			menu.setEnterpriseId(Long.valueOf(authUser.getEnterpriseId()));
+		}
 		return R.status(menuService.saveOrUpdate(menu));
 	}
 

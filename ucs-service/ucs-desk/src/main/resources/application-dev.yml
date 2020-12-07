@@ -5,6 +5,6 @@ server:
 #数据源配置
 spring:
   datasource:
-    url: ${ucs.datasource.dev.url}
-    username: ${ucs.datasource.dev.username}
-    password: ${ucs.datasource.dev.password}
+    url: ${spring.datasource.url}
+    username: ${spring.datasource.username}
+    password: ${spring.datasource.password}

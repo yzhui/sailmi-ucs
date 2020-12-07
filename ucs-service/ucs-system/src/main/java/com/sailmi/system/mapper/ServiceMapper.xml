@@ -6,7 +6,7 @@
     <resultMap id="serviceResultMap" type="com.sailmi.system.entity.ServiceEntity">
         <id column="ID" property="id"/>
         <result column="service_name" property="serviceName"/>
-        <result column="system_id" property="systemId"/>
+        <result column="enterprise_id" property="enterpriseId"/>
         <result column="service_type" property="serviceType"/>
         <result column="create_user" property="createUser"/>
         <result column="create_time" property="createTime"/>

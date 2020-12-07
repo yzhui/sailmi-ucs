@@ -15,10 +15,14 @@
  */
 package com.sailmi.system.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import io.swagger.annotations.ApiModel;
@@ -37,14 +41,18 @@ public class ServiceEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-  @TableId("ID")
+
+  @ApiModelProperty(value = "主键")
+  @TableId(value = "ID", type = IdType.ASSIGN_ID)
+  @JsonSerialize(using = ToStringSerializer.class)
   private Long id;
+
   private String serviceName;
+
+  private  String enterpriseId;
     /**
      * 此服务由哪个系统提供
      */
-    @ApiModelProperty(value = "此服务由哪个系统提供")
-    private Long systemId;
     /**
      * 服务类型，所有人可访问，还是只是授权用户可以使用，授 权用户包括收费用户，只是收费是授 权的前提，是否收费由业务系统实现
      */

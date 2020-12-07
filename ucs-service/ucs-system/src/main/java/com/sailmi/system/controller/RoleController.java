@@ -89,14 +89,27 @@ public class RoleController extends AppController {
 		return R.data(RoleWrapper.build().listNodeVO(list));
 	}
 
+	/**弃用原来的逻辑
+	 * 获取角色树形结构
+	 * ucs原来逻辑查询租户下的角色
+	 */
+	@GetMapping("/treenotuse")
+	@ApiOperationSupport(order = 3)
+	@ApiOperation(value = "树形结构", notes = "树形结构")
+	public R<List<RoleVO>> tree(String tenantId, AuthUser authUser) {
+		List<RoleVO> tree = roleService.tree(Func.toStr(tenantId, authUser.getTenantId()));
+		return R.data(tree);
+	}
+
+
 	/**
 	 * 获取角色树形结构
 	 */
 	@GetMapping("/tree")
 	@ApiOperationSupport(order = 3)
 	@ApiOperation(value = "树形结构", notes = "树形结构")
-	public R<List<RoleVO>> tree(String tenantId, AuthUser authUser) {
-		List<RoleVO> tree = roleService.tree(Func.toStr(tenantId, authUser.getTenantId()));
+	public R<List<RoleVO>> enterTree(String enterpriseId, AuthUser authUser) {
+		List<RoleVO> tree = roleService.queryEnterTree(Func.toStr(enterpriseId, authUser.getEnterpriseId()));
 		return R.data(tree);
 	}
 
@@ -107,9 +120,8 @@ public class RoleController extends AppController {
 	@ApiOperationSupport(order = 4)
 	@ApiOperation(value = "新增或修改", notes = "传入role")
 	public R submit(@Valid @RequestBody Role role, AuthUser user) {
-		if (Func.isEmpty(role.getId())) {
-			String enterpriseId= "000000";
-			role.setEnterpriseId(Long.valueOf(enterpriseId));
+		if(user!=null && user.getEnterpriseId()!=null){
+			role.setEnterpriseId(Long.valueOf(user.getEnterpriseId()));
 		}
 		if(Func.isEmpty(role.getIsSys())){// 1 是默认的系统角色，企业都可见，但是不能删除与修改
 			role.setIsSys("0");
@@ -148,7 +160,7 @@ public class RoleController extends AppController {
 	public R grant(AuthUser authUser,@ApiParam(value = "roleId集合", required = true) @RequestParam String roleIds,
 				   @ApiParam(value = "menuId集合", required = true) @RequestParam String menuIds) {
 		R<String> status=null;
-		if(roleIds.contains("-2") || roleIds.contains("-3")){
+		if(roleIds.contains("-2") || roleIds.contains("-3") && !authUser.getUserId().equals("0")){
 			status = R.data(400, "", "该角色菜单是系统公共的，没有修改权限");
 		}else{
 			boolean temp = roleService.grant(Func.toLongList(roleIds), Func.toLongList(menuIds));

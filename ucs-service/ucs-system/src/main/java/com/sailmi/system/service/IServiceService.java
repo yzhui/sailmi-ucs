@@ -46,7 +46,7 @@ public interface IServiceService extends IService<ServiceEntity> {
 
 	boolean grant(String serviceId, List<Long> menuIds);
 
-	List<ServiceVO> grantTree();
+	List<ServiceVO> grantTree(AuthUser authUser);
 
 
 }

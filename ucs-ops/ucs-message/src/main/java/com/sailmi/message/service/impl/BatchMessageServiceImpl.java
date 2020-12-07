@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 package com.sailmi.message.service.impl;
-import com.sailmi.message.dao.model.BatchMessage;
-import com.sailmi.message.model.vo.BatchMessageVO;
-import com.sailmi.message.dao.mapper.BatchMessageMapper;
-import com.sailmi.message.service.IBatchMessageService;
-import com.sailmi.core.mp.base.BaseServiceImpl;
-import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 
-import java.util.Collection;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.sailmi.core.mp.base.BaseServiceImpl;
+import com.sailmi.message.core.dao.entity.BatchMessage;
+import com.sailmi.message.core.dao.mapper.BatchMessageMapper;
+import com.sailmi.message.core.model.vo.BatchMessageVO;
+import com.sailmi.message.service.IBatchMessageService;
+import org.springframework.stereotype.Service;
 
 /**
  *  服务实现类

@@ -117,22 +117,21 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
 	@Override
 	public List<MenuVO> grantServiceMenuTree(AuthUser user) {
-		//公共菜单tree和本公司的菜单tree
-		List<Long> longs = new ArrayList<>();
+		//公共菜单tree和本公司的菜单tree  企业字段为null是公共字段
 		List<Menu> menus =null;
-		if(user!=null && user.getTenantId()!=null) {
-			String tenantIds="000000";
-			longs=tenantMenuIds(tenantIds,longs);//公共菜单
-			if(!user.getTenantId().equals("000000")) {
-				tenantIds = user.getTenantId();//本租户菜单
-				longs = tenantMenuIds(tenantIds, longs);//公共菜单
-			}
-		}
-		if(longs!=null && longs.size()>0){
+
+		if(user!=null && user.getEnterpriseId()!=null){
 			QueryWrapper<Menu> menuQueryWrapper = new QueryWrapper<>();
-			menuQueryWrapper.in("system_id",longs);
-			 menus = baseMapper.selectList(menuQueryWrapper);
+			menuQueryWrapper.eq("enterprise_id",user.getEnterpriseId());
+			menus = baseMapper.selectList(menuQueryWrapper);//该企业下的菜单
 		}
+		QueryWrapper<Menu> menuQueryWrappers = new QueryWrapper<>();
+		menuQueryWrappers.isNull("enterprise_id");
+		List<Menu> menuslist = baseMapper.selectList(menuQueryWrappers);
+		if(menuslist!=null && menuslist.size()>0){
+			menus.addAll(menuslist);
+		}
+
 		MenuWrapper menuWrapper = new MenuWrapper();
 		return ForestNodeMerger.merge(menuWrapper.listNodeVO(menus));
 	}

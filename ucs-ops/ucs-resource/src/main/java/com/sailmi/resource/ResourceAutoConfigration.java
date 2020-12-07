@@ -16,14 +16,6 @@ public class ResourceAutoConfigration {
 	OssProperties ossProperties(){
 		return new OssProperties();
 	}
-	/**
-	 * 初始化 OssProvider
-	 */
 
-	@Bean(name = "ossProvider")
-	public OssProvider ossProvider() {
-		System.out.println(ossProperties().getProvider());
-		return new OssProvider(ossProperties());
-	}
 
 }

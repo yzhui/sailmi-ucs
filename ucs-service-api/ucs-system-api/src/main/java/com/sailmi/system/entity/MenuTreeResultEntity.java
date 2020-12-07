@@ -33,5 +33,7 @@ public class MenuTreeResultEntity {
 	//父id
 	private String pid;
 	//子菜单
-	private List<MenuTreeResultEntity> menuChild;
+	public List<MenuTreeResultEntity> menuChild;
+
+
 }

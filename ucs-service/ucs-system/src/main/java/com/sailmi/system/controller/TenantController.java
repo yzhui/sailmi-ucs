@@ -67,6 +67,7 @@ public class TenantController extends AppController {
 
 	/**
 	 * 分页
+	 * 	//@PreAuth(RoleConstant.HAS_ROLE_SAILPLAT_ADMIN)
 	 */
 	@ApiIgnore
 	@ApiOperation(value = "租户列表", notes = "传入tenant")
@@ -75,7 +76,6 @@ public class TenantController extends AppController {
 		@ApiImplicitParam(name = "tenantName", value = "角色别名", paramType = "query", dataType = "string"),
 		@ApiImplicitParam(name = "contactNumber", value = "联系电话", paramType = "query", dataType = "string")
 	})
-	@PreAuth(RoleConstant.HAS_ROLE_SAILPLAT_ADMIN)
 	@GetMapping("/list")
 	public R<IPage<TenantVo>> list(AuthUser user,@ApiIgnore @RequestParam Map<String, Object> tenant, Query query) {
 		QueryWrapper<Tenant> queryWrapper = Condition.getQueryWrapper(tenant, Tenant.class);

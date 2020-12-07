@@ -73,4 +73,5 @@ public interface IRoleService extends IService<Role> {
 	 */
 	List<String> getRoleNames(String roleIds);
 
+	List<RoleVO> queryEnterTree(String enterpriseId);
 }
