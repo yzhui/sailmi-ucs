@@ -22,6 +22,7 @@
         <module>ucs-user</module>
         <module>ucs-demo</module>
 		<module>ucs-enterprise</module>
+		<module>ucs-cms</module>
     </modules>
 
     <dependencies>
