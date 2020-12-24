@@ -128,7 +128,7 @@ public class TypeController extends AppController {
 	/**
 	 * 主站下载中心 下载分类树
 	 */
-	@PostMapping("/downTypeTree")
+	@GetMapping("/downTypeTree")
 	@ApiOperationSupport(order = 7)
 	@ApiOperation(value = "下载分类的树结构", notes = "不传参数")
 	public R downTypeTree() {
