@@ -15,6 +15,7 @@
  */
 package com.sailmi.cms.controller;
 
+import com.sailmi.cms.utils.TreeEntity;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -113,7 +114,7 @@ public class TypeController extends AppController {
 		return R.status(typeService.saveOrUpdate(type));
 	}
 
-	
+
 	/**
 	* 删除 内容分类
 	*/
@@ -124,5 +125,14 @@ public class TypeController extends AppController {
 		return R.status(typeService.deleteLogic(Func.toLongList(ids)));
 	}
 
-	
+	/**
+	 * 主站下载中心 下载分类树
+	 */
+	@PostMapping("/downTypeTree")
+	@ApiOperationSupport(order = 7)
+	@ApiOperation(value = "下载分类的树结构", notes = "不传参数")
+	public R downTypeTree() {
+		List<TreeEntity> downTree = typeService.downTypeTree();
+		return R.data(downTree);
+	}
 }

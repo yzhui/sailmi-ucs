@@ -16,9 +16,12 @@
 package com.sailmi.cms.service;
 
 import com.sailmi.cms.entity.Type;
+import com.sailmi.cms.utils.TreeEntity;
 import com.sailmi.cms.vo.TypeVO;
 import com.sailmi.core.mp.base.BaseService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+
+import java.util.List;
 
 /**
  * 内容分类 服务类
@@ -37,4 +40,8 @@ public interface ITypeService extends BaseService<Type> {
 	 */
 	IPage<TypeVO> selectTypePage(IPage<TypeVO> page, TypeVO type);
 
+	/**
+	 * 下载中心 下载分类树
+	 */
+	List<TreeEntity> downTypeTree();
 }

@@ -16,6 +16,7 @@
 package com.sailmi.cms.mapper;
 
 import com.sailmi.cms.entity.Type;
+import com.sailmi.cms.utils.TreeEntity;
 import com.sailmi.cms.vo.TypeVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -38,4 +39,12 @@ public interface TypeMapper extends BaseMapper<Type> {
 	 */
 	List<TypeVO> selectTypePage(IPage page, TypeVO type);
 
+	/**
+	 * <p>Description: 获取所有下载中心的父结构</p>
+	 *
+	 * @return: void
+	 * @Author: syt
+	 * @Date: 2020/12/24/024 11:38
+	 */
+	List<TreeEntity> downTypeTree();
 }

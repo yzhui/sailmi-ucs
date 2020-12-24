@@ -15,13 +15,17 @@
  */
 package com.sailmi.cms.service.impl;
 
+import com.sailmi.cms.utils.TreeUtils;
 import com.sailmi.cms.entity.Type;
+import com.sailmi.cms.utils.TreeEntity;
 import com.sailmi.cms.vo.TypeVO;
 import com.sailmi.cms.mapper.TypeMapper;
 import com.sailmi.cms.service.ITypeService;
 import com.sailmi.core.mp.base.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+
+import java.util.List;
 
 /**
  * 内容分类 服务实现类
@@ -35,6 +39,16 @@ public class TypeServiceImpl extends BaseServiceImpl<TypeMapper, Type> implement
 	@Override
 	public IPage<TypeVO> selectTypePage(IPage<TypeVO> page, TypeVO type) {
 		return page.setRecords(baseMapper.selectTypePage(page, type));
+	}
+
+	/**
+	 * 下载中心 下载分类树
+	 */
+	@Override
+	public List<TreeEntity> downTypeTree() {
+		List<TreeEntity> allDownType = baseMapper.downTypeTree();
+		List<TreeEntity> treeEntities = TreeUtils.treeMenuList(allDownType,0l);
+		return treeEntities;
 	}
 
 }
