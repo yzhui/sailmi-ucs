@@ -51,4 +51,16 @@ public class TypeServiceImpl extends BaseServiceImpl<TypeMapper, Type> implement
 		return treeEntities;
 	}
 
+	/**
+	 * <p>Description: 类型下拉数据源</p>
+	 *
+	 * @return: java.util.List<com.sailmi.cms.vo.TypeVO>
+	 * @Author: syt
+	 * @Date: 2020/12/25/025 16:11
+	 */
+	@Override
+	public List<TypeVO> dropDown() {
+		return baseMapper.dropDown();
+	}
+
 }

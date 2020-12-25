@@ -129,10 +129,25 @@ public class TypeController extends AppController {
 	 * 主站下载中心 下载分类树
 	 */
 	@GetMapping("/downTypeTree")
-	@ApiOperationSupport(order = 7)
+	@ApiOperationSupport(order = 8)
 	@ApiOperation(value = "下载分类的树结构", notes = "不传参数")
 	public R downTypeTree() {
 		List<TreeEntity> downTree = typeService.downTypeTree();
+		return R.data(downTree);
+	}
+
+	/**
+	 * <p>Description: 类型下拉数据源</p>
+	 *
+	 * @return: null
+	 * @Author: syt
+	 * @Date: 2020/12/25/025 16:08
+	 */
+	@GetMapping("/dropDown")
+	@ApiOperationSupport(order = 8)
+	@ApiOperation(value = "下载分类的树结构", notes = "不传参数")
+	public R dropDown() {
+		List<TypeVO> downTree = typeService.dropDown();
 		return R.data(downTree);
 	}
 }

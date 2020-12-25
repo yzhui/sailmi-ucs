@@ -44,4 +44,14 @@ public interface ITypeService extends BaseService<Type> {
 	 * 下载中心 下载分类树
 	 */
 	List<TreeEntity> downTypeTree();
+
+	/**
+	 * <p>Description: 类型下拉数据源</p>
+	 *
+
+	 * @return: java.util.List<com.sailmi.cms.vo.TypeVO>
+	 * @Author: syt
+	 * @Date: 2020/12/25/025 16:11
+	 */
+	List<TypeVO> dropDown();
 }
