@@ -86,10 +86,10 @@ public class UserRoleController extends AppController {
 		return R.data(ulist);
 	}
 
-	@GetMapping("/rolelist")
-	@ApiOperationSupport(order = 2)
+	@PostMapping("/rolelist")
+	@ApiOperationSupport(order = 5)
 	@ApiOperation(value = "人员列表", notes = "传入roleId")
-	public R<List<UserRole>> queryRolelist(HttpServletRequest request) {
+	public R<List<UserRole>> queryRolelist(HttpServletRequest request,String id) {
 		String roleId = request.getParameter("id");
 		List<UserRole> ulist = userRoleService.queryUserlistByRoleId(roleId);
 		return R.data(ulist);
