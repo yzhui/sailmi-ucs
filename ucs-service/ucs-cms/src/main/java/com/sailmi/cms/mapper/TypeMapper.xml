@@ -27,8 +27,9 @@
         WHERE id IN (16)
         OR pid IN(5,7,9,11,13,16)
     </select>
-    <!--下拉数据源-->
-    <select id="dropDown" resultType="com.sailmi.cms.entity.Type">
+
+    <select id="tree" resultType="com.sailmi.cms.utils.TreeEntity">
         SELECT * FROM ucs_cms_type WHERE is_deleted = 0
     </select>
+
 </mapper>

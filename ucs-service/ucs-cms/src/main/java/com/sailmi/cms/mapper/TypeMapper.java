@@ -49,11 +49,12 @@ public interface TypeMapper extends BaseMapper<Type> {
 	List<TreeEntity> downTypeTree();
 
 	/**
-	 * <p>Description: 类型下拉数据源</p>
+	 * <p>Description: 获取所有的</p>
 	 *
-	 * @return: java.util.List<com.sailmi.cms.vo.TypeVO>
+	 * @return: void
 	 * @Author: syt
-	 * @Date: 2020/12/25/025 16:12
+	 * @Date: 2020/12/24/024 11:38
 	 */
-	List<TypeVO> dropDown();
+	List<TreeEntity> tree();
+
 }

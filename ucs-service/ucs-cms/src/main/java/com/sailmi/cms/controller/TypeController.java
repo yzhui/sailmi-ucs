@@ -137,17 +137,13 @@ public class TypeController extends AppController {
 	}
 
 	/**
-	 * <p>Description: 类型下拉数据源</p>
-	 *
-	 * @return: null
-	 * @Author: syt
-	 * @Date: 2020/12/25/025 16:08
+	 *树
 	 */
-	@GetMapping("/dropDown")
-	@ApiOperationSupport(order = 8)
-	@ApiOperation(value = "下载分类的树结构", notes = "不传参数")
-	public R dropDown() {
-		List<TypeVO> downTree = typeService.dropDown();
+	@GetMapping("/tree")
+	@ApiOperationSupport(order = 9)
+	@ApiOperation(value = "内容分类的树结构", notes = "不传参数")
+	public R tree() {
+		List<TreeEntity> downTree = typeService.tree();
 		return R.data(downTree);
 	}
 }
