@@ -16,6 +16,7 @@
 package com.sailmi.system.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sailmi.system.entity.UserRole;
@@ -23,6 +24,8 @@ import com.sailmi.system.mapper.UserRoleMapper;
 import com.sailmi.system.service.IUserRoleService;
 import com.sailmi.system.vo.UserRoleVO;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 /**
@@ -37,6 +40,13 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
 	@Override
 	public IPage<UserRoleVO> selectUserRolePage(IPage<UserRoleVO> page, UserRoleVO userRole) {
 		return page.setRecords(baseMapper.selectUserRolePage(page, userRole));
+	}
+
+	@Override
+	public List<UserRole> queryUserlistByRoleId(String roleId) {
+		QueryWrapper<UserRole> userRoleQueryWrapper = new QueryWrapper<>();
+		userRoleQueryWrapper.eq("role_id",roleId);
+		return baseMapper.selectList(userRoleQueryWrapper);
 	}
 
 }
