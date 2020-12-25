@@ -29,4 +29,20 @@
         select * from ucs_cms_content where is_deleted = 0
     </select>
 
+    <select id="hotTool" resultType="com.sailmi.cms.entity.Content">
+        SELECT *
+        FROM ucs_cms_content
+        WHERE type_id IN (
+                SELECT id
+                FROM ucs_cms_type
+                WHERE pid IN (
+                        SELECT id
+                        FROM ucs_cms_type
+                        WHERE pid = 16
+                    )
+            )
+        ORDER BY clicknum
+        DESC
+        LIMIT #{hoti}
+    </select>
 </mapper>

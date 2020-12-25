@@ -125,4 +125,10 @@ public class ContentController extends AppController {
 	}
 
 
+	@GetMapping("hotTool")
+	@ApiOperationSupport(order = 8)
+	@ApiOperation(value = "热门工具", notes = "不需要参数")
+	public R hotTool(){
+		return R.data(contentService.hotTool());
+	}
 }

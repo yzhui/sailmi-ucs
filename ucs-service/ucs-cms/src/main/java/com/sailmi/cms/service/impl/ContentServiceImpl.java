@@ -23,6 +23,8 @@ import com.sailmi.core.mp.base.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import java.util.List;
+
 /**
  * 内容 服务实现类
  *
@@ -35,6 +37,19 @@ public class ContentServiceImpl extends BaseServiceImpl<ContentMapper, Content> 
 	@Override
 	public IPage<ContentVO> selectContentPage(IPage<ContentVO> page, ContentVO content) {
 		return page.setRecords(baseMapper.selectContentPage(page, content));
+	}
+
+	/**
+	 * <p>Description: 热门工具</p>
+	 *
+	 * @return: java.lang.Object
+	 * @Author: syt
+	 * @Date: 2020/12/25/025 10:56
+	 */
+	@Override
+	public List<Content> hotTool() {
+		int hoti = 10;
+		return baseMapper.hotTool(10);
 	}
 
 }

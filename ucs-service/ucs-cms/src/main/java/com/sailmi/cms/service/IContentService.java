@@ -20,6 +20,8 @@ import com.sailmi.cms.vo.ContentVO;
 import com.sailmi.core.mp.base.BaseService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import java.util.List;
+
 /**
  * 内容 服务类
  *
@@ -37,4 +39,12 @@ public interface IContentService extends BaseService<Content> {
 	 */
 	IPage<ContentVO> selectContentPage(IPage<ContentVO> page, ContentVO content);
 
+	/**
+	 * <p>Description: 热门工具</p>
+	 *
+	 * @return: java.lang.Object
+	 * @Author: syt
+	 * @Date: 2020/12/25/025 10:56
+	 */
+	List<Content> hotTool();
 }

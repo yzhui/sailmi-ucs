@@ -38,4 +38,12 @@ public interface ContentMapper extends BaseMapper<Content> {
 	 */
 	List<ContentVO> selectContentPage(IPage page, ContentVO content);
 
+	/**
+	 * <p>Description: 热门工具</p>
+	 *
+	 * @return: java.util.List<com.sailmi.cms.entity.Content>
+	 * @Author: syt
+	 * @Date: 2020/12/25/025 10:57
+	 */
+	List<Content> hotTool(int hoti);
 }
