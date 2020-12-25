@@ -24,7 +24,7 @@
 
     <select id="downTypeTree" resultType="com.sailmi.cms.utils.TreeEntity">
         SELECT * FROM ucs_cms_type
-        WHERE id IN (5,7,9,11,13)
-        OR pid IN(5,7,9,11,13)
+        WHERE id IN (16)
+        OR pid IN(5,7,9,11,13,16)
     </select>
 </mapper>
