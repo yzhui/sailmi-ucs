@@ -127,7 +127,9 @@ public class ServiceMenuController extends AppController {
 		menuIds.stream().forEach(menuId->{
 			Menu menu = menuService.getById(menuId);
 			ids.add(menuId.toString());
-			ids.add(menu.getParentId().toString());
+			if(menu!=null && menu.getParentId()!=null) {
+				ids.add(menu.getParentId().toString());
+			}
 		});
 		return new ArrayList(ids);
 
