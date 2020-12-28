@@ -45,6 +45,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sailmi.core.boot.ctrl.AppController;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -103,8 +104,9 @@ public class ServiceMenuController extends AppController {
 						});
 						//查询菜单信息
 						if (menuIds.size() > 0) {
+							ArrayList<String> Ids =dealMenuIds(menuIds);
 							QueryWrapper<Menu> menuQueryWrapper = new QueryWrapper<>();
-							menuQueryWrapper.in("id", menuIds);
+							menuQueryWrapper.in("id", Ids);
 							menuQueryWrapper.orderByAsc("sort");
 							menuList = serviceMenuService.queryUserMenus(menuQueryWrapper);
 						}
@@ -113,6 +115,22 @@ public class ServiceMenuController extends AppController {
 			}
 		}
 		return R.data(menuList);
+	}
+
+	/**
+	 * 如果只选择了子菜单，夫级菜单也要绑定上，不然没有夫级菜单，是不能显示二级菜单了
+	 * @param menuIds
+	 * @return
+	 */
+	private ArrayList<String> dealMenuIds(ArrayList<Long> menuIds) {
+		HashSet<String> ids = new HashSet<>();
+		menuIds.stream().forEach(menuId->{
+			Menu menu = menuService.getById(menuId);
+			ids.add(menuId.toString());
+			ids.add(menu.getParentId().toString());
+		});
+		return new ArrayList(ids);
+
 	}
 
 
