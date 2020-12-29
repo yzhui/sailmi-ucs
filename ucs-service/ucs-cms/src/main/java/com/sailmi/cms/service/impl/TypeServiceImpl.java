@@ -61,5 +61,15 @@ public class TypeServiceImpl extends BaseServiceImpl<TypeMapper, Type> implement
 		return treeEntities;
 	}
 
+	/**
+	 * 下载中心 下载分类树
+	 */
+	@Override
+	public List<TreeEntity> knowledgeTree() {
+		List<TreeEntity> allDownType = baseMapper.knowledgeTree();
+		List<TreeEntity> treeEntities = TreeUtils.treeMenuList(allDownType,0l);
+		return treeEntities;
+	}
+
 
 }

@@ -50,4 +50,9 @@ public interface ITypeService extends BaseService<Type> {
 	 */
 	List<TreeEntity> tree();
 
+	/**
+	 * 下载中心 下载分类树
+	 */
+	List<TreeEntity> knowledgeTree();
+
 }

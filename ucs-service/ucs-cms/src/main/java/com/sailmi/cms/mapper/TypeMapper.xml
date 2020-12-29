@@ -32,4 +32,8 @@
         SELECT * FROM ucs_cms_type WHERE is_deleted = 0
     </select>
 
+    <select id="knowledgeTree" resultType="com.sailmi.cms.utils.TreeEntity">
+        SELECT * FROM ucs_cms_type WHERE type_flag = "0" AND is_deleted = 0
+    </select>
+
 </mapper>

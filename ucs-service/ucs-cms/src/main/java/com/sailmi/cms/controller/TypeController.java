@@ -137,13 +137,24 @@ public class TypeController extends AppController {
 	}
 
 	/**
-	 *树
+	 *后台(运营平台)内容添加下拉树,数据全
 	 */
 	@GetMapping("/tree")
 	@ApiOperationSupport(order = 9)
 	@ApiOperation(value = "内容分类的树结构", notes = "不传参数")
 	public R tree() {
 		List<TreeEntity> downTree = typeService.tree();
+		return R.data(downTree);
+	}
+
+	/**
+	 *主站知识中心行业分类树
+	 */
+	@GetMapping("/knowledgeTree")
+	@ApiOperationSupport(order = 10)
+	@ApiOperation(value = "知识中心的树结构", notes = "不传参数")
+	public R knowledgeTree() {
+		List<TreeEntity> downTree = typeService.knowledgeTree();
 		return R.data(downTree);
 	}
 }

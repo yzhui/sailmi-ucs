@@ -57,4 +57,13 @@ public interface TypeMapper extends BaseMapper<Type> {
 	 */
 	List<TreeEntity> tree();
 
+	/**
+	 * <p>Description: 获取有关行业分类的</p>
+	 *
+	 * @return: void
+	 * @Author: syt
+	 * @Date: 2020/12/24/024 11:38
+	 */
+	List<TreeEntity> knowledgeTree();
+
 }

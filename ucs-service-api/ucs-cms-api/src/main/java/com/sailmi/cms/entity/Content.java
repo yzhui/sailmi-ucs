@@ -102,6 +102,9 @@ public class Content extends BaseEntity {
      */
     @ApiModelProperty(value = "添加时间")
     private LocalDateTime addTime;
-
-
+    /**
+     * 知识类型标记0测试方法1测试案例2故障诊断
+     */
+	@ApiModelProperty(value = "知识类型标记0测试方法1测试案例2故障诊断")
+	private String know_type;
 }
