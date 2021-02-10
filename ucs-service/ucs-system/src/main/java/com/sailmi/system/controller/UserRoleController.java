@@ -26,6 +26,8 @@ import io.swagger.annotations.ApiOperation;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.sailmi.core.mp.support.Condition;
@@ -83,6 +85,16 @@ public class UserRoleController extends AppController {
 		List<UserRole> ulist = userRoleService.list(Condition.getQueryWrapper(userRole));
 		return R.data(ulist);
 	}
+
+	@PostMapping("/rolelist")
+	@ApiOperationSupport(order = 5)
+	@ApiOperation(value = "人员列表", notes = "传入roleId")
+	public R<List<UserRole>> queryRolelist(HttpServletRequest request,String id) {
+		String roleId = request.getParameter("id");
+		List<UserRole> ulist = userRoleService.queryUserlistByRoleId(roleId);
+		return R.data(ulist);
+	}
+
 	/**
 	* 自定义分页
 	*/

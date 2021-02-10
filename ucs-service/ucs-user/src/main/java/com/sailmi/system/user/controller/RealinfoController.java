@@ -77,10 +77,11 @@ public class RealinfoController {
 
 	/**
 	 * 身份证上传
+	 * 使用ucs上传组件后该接口废弃
 	 * @param realinfo
 	 * @return
 	 */
-	@RequestMapping(value = "/IDCard", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/IDCard", method = RequestMethod.POST)
 	public String IDCard(RealUserEntity realinfo) {
 		HashMap<String,Object> hashMap = new HashMap<String,Object>();
 		int upID = realUserService.IDCard(realinfo);
@@ -93,6 +94,6 @@ public class RealinfoController {
 			hashMap.put("msg", "上传失败!");
 		}
 		return JSON.toJSONString(hashMap);
-	}
+	}*/
 
 }

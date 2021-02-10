@@ -19,12 +19,12 @@ public class UploadController {
 
 	/**
 	 * 文件上传
-	 *
+	 *使用ucs上传组件后该接口废弃
 	 * @param picture
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/uploadPicture", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/uploadPicture", method = RequestMethod.POST)
 	public UpResult upload(@RequestParam("picture") MultipartFile picture, HttpServletRequest request) {
 
 		// 获取文件在服务器的储存位置
@@ -71,5 +71,5 @@ public class UploadController {
 			e.printStackTrace();
 			return new UpResult(false, "上传失败");
 		}
-	}
+	}*/
 }

@@ -114,13 +114,13 @@ public class SecurityController {
 
     /**
      * 上传头像(限定jpg和png格式,大小不得超过500K)
-     *
+     *使用ucs上传组件后该接口废弃
      * @param headImg 	图片
      * @param id 		当前登录用户ID
      * @author suyt
      */
     //头像上传的路径
-    @Value("${headimg.uploadPath}")
+   /* @Value("${headimg.uploadPath}")
     private String headUrl ;
     @RequestMapping("uploadHeadImg")
 	public Result uploadHeadImg(AuthUser authUser, MultipartFile headImg,
@@ -165,7 +165,7 @@ public class SecurityController {
     	result.setCode(ResponseMessage.FAILE);
     	result.setMsg("头像上传失败");
     	return result;
-    }
+    }*/
 
     /**
      * <p>Description: 保存头像路径</p>
@@ -178,8 +178,8 @@ public class SecurityController {
 	@RequestMapping("saveHeadImgUrl")
     public Result saveHeadImg(AuthUser authUser, String link){
 		Result result = new Result();
-//		BigInteger id = BigInteger.valueOf(authUser.getUserId());
-		BigInteger id = BigInteger.valueOf(1301788793255452712L);
+		BigInteger id = BigInteger.valueOf(authUser.getUserId());
+//		BigInteger id = BigInteger.valueOf(1301788793255452712L);
 		int sta = securityService.saveHeadImg(id, link);
 		if (sta ==1) {
 			result.setCode(ResponseMessage.SUCCESS);

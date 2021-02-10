@@ -230,7 +230,7 @@ public class UserController {
 	 */
 	@ApiOperationSupport(order = 1)
 	@ApiOperation(value = "查看用户基础信息详情", notes = "传入id")
-	@GetMapping("/userdetail")
+	@PostMapping("/userdetail")
 	public R<User> detail(HttpServletRequest request) {
 		String id = request.getParameter("id");
 		User detail=null;

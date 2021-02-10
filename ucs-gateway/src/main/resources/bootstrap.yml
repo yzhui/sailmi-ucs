@@ -39,3 +39,5 @@ sailmi:
         location: /sailmi-resource
       - name: 企业管理模块
         location: /sailmi-enterprise
+      - name: 内容管理模块
+        location: /sailmi-cms

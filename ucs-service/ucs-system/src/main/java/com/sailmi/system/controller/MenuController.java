@@ -164,15 +164,6 @@ public class MenuController extends AppController {
 	}
 
 
-	@PostMapping("/serviceMenus")
-	@ApiOperationSupport(order = 14)
-	@ApiOperation(value = "菜单列表", notes = "传入enterpriseid")
-	public R<List<MenuVO>> queryEnterpriseServiceMenus(String enterpriseId){
-
-
-		return  null;
-	}
-
 
 	/**
 	 * 前端菜单数据

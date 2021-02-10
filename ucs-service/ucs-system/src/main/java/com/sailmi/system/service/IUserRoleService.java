@@ -21,6 +21,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.sailmi.system.entity.UserRole;
 import com.sailmi.system.vo.UserRoleVO;
 
+import java.util.List;
+
 /**
  *  服务类
  *
@@ -38,4 +40,5 @@ public interface IUserRoleService extends IService<UserRole> {
 	 */
 	IPage<UserRoleVO> selectUserRolePage(IPage<UserRoleVO> page, UserRoleVO userRole);
 
+	List<UserRole> queryUserlistByRoleId(String roleId);
 }

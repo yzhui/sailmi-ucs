@@ -30,6 +30,8 @@ import io.swagger.annotations.ApiOperation;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.sailmi.core.mp.support.Condition;
@@ -73,10 +75,15 @@ public class EnterpriseController extends AppController {
 	/**
 	* 详情
 	*/
-	@GetMapping("/detail")
+	@PostMapping("/detail")
     @ApiOperationSupport(order = 1)
 	@ApiOperation(value = "详情", notes = "传入enterprise")
-	public R<EnterpriseVO> detail(Enterprise enterprise) {
+	public R<EnterpriseVO> detail(HttpServletRequest request) {
+		String parameter = request.getParameter("id");
+		Enterprise enterprise = new Enterprise();
+		if(parameter!=null){
+			enterprise.setId(Long.valueOf(parameter));
+		}
 		Enterprise detail = enterpriseService.getOne(Condition.getQueryWrapper(enterprise));
 		return R.data(EnterpriseWrapper.build().entityVO(detail));
 	}
