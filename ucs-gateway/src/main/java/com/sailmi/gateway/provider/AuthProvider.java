@@ -53,14 +53,17 @@ public class AuthProvider {
 		defaultSkipUrl.add("/updatePass");
 		defaultSkipUrl.add("/upload/uploadPicture");
 		defaultSkipUrl.add("/realuser/IDCard");
+		defaultSkipUrl.add("/security/uploadHeadImg");
+		defaultSkipUrl.add("/checkCode");
+		defaultSkipUrl.add("/file/**");
 		/**
 		 * knowniot - public house
 		 * alice
 		 */
 		defaultSkipUrl.add("/alice/**");
-		defaultSkipUrl.add("/security/uploadHeadImg");
-		defaultSkipUrl.add("/checkCode");
-		defaultSkipUrl.add("/file/**");
+		defaultSkipUrl.add("/wechat/**");
+		defaultSkipUrl.add("/oss/endpoint/alice/put-file");
+		defaultSkipUrl.add("/oss/endpoint/alice/put-file/base64");
 	}
 
 	/**

@@ -38,6 +38,7 @@ import com.sailmi.system.user.entity.UserInfo;
 import com.sailmi.system.user.excel.UserExcel;
 import com.sailmi.system.user.mapper.UserMapper;
 import com.sailmi.system.user.service.IUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -110,12 +111,12 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 	 */
 	@Override
 	public String registerUserV2(UcsAccountuser users) {
-		int count = queryUnikePhone(users.getUserPhone());
-		if (count>0) {
-			return "phone";
-		}
 		User user = new User();
-		if (users.getUserPhone() != null) {//手机号和账号
+		if (!StringUtils.isEmpty(users.getUserPhone())) {//手机号和账号
+			int count = queryUnikePhone(users.getUserPhone());
+			if (count > 0) {
+				return "phone";
+			}
 			user.setPhone(users.getUserPhone());
 			user.setAccount(users.getUserPhone());
 			String md5 = MD5Tools.MD5(users.getUserPhone());//安全码
