@@ -65,7 +65,6 @@ public class AuthProvider {
 		defaultSkipUrl.add("/alice/**");
 		defaultSkipUrl.add("/wechat/**");
 		defaultSkipUrl.add("/oss/endpoint/alice/put-file");
-		defaultSkipUrl.add("/oss/endpoint/alice/put-file/base64");
 	}
 
 	/**
