@@ -10,9 +10,11 @@ MAINTAINER yzh yinzhaohui@126.com
 VOLUME tmp
 # 将jar包添加到容器中
 WORKDIR /ucs-apps/
-ADD ucs-apps /ucs-apps/
+ADD target/*.jar /ucs-apps/lib
 ADD ucs-web /usr/local/tomcat/webapps/ucs
-RUN chmod +x /ucs-apps/startUcs.sh
+ADD startApp.sh /ucs-apps/
+ADD dependency/sentinel /ucs-apps/sentinel
+RUN chmod +x /ucs-apps/startApp.sh
 
 #RUN chkconfig --add /ucs-apps/startUcs.sh\
 #    &&chkconfig /ucs-apps/startUcs.sh on

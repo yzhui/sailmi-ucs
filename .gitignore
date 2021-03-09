@@ -23,7 +23,6 @@ Thumbs.db
 pic/*
 
 # Package Files #
-*.jar
 *.war
 *.ear
 
