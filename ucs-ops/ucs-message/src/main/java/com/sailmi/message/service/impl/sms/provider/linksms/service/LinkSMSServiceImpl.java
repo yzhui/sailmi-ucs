@@ -1,19 +1,19 @@
 package com.sailmi.message.service.impl.sms.provider.linksms.service;
 
-import com.sailmi.message.constant.Channels;
-import com.sailmi.message.core.dao.constant.RedisKeys;
-import com.sailmi.message.core.dao.constant.SendStatus;
-import com.sailmi.message.core.dao.entity.BatchMessage;
-import com.sailmi.message.core.dao.entity.Message;
-import com.sailmi.message.core.dao.entity.MessageSetting;
-import com.sailmi.message.core.dao.entity.Template;
-import com.sailmi.message.core.exception.AmountNotEnoughException;
-import com.sailmi.message.core.exception.ChannelException;
-import com.sailmi.message.core.model.dto.MessageDTO;
-import com.sailmi.message.core.model.dto.QuerySendResult;
-import com.sailmi.message.core.model.dto.SendMessageResult;
-import com.sailmi.message.core.service.IBatchQueryable;
-import com.sailmi.message.core.service.IMessageService;
+import com.sailmi.core.message.constant.Channels;
+import com.sailmi.core.message.dao.constant.RedisKeys;
+import com.sailmi.core.message.dao.constant.SendStatus;
+import com.sailmi.core.message.dao.entity.MessageTask;
+import com.sailmi.core.message.dao.entity.MessageLog;
+import com.sailmi.core.message.dao.entity.MessageSetting;
+import com.sailmi.core.message.dao.entity.MessageTemplate;
+import com.sailmi.core.message.exception.AmountNotEnoughException;
+import com.sailmi.core.message.exception.ChannelException;
+import com.sailmi.core.message.model.dto.MessageDTO;
+import com.sailmi.core.message.model.dto.QuerySendResult;
+import com.sailmi.core.message.model.dto.SendMessageResult;
+import com.sailmi.core.message.service.IBatchQueryable;
+import com.sailmi.core.message.service.IMessageService;
 import com.sailmi.message.service.impl.sms.provider.linksms.config.LinkSMSConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +58,7 @@ public class LinkSMSServiceImpl implements IBatchQueryable {
 	private StringRedisTemplate stringRedisTemplate;
 
 	@Override
-	public SendMessageResult send(MessageSetting messageSetting, Template template, MessageDTO message) throws ChannelException {
+	public SendMessageResult send(MessageSetting messageSetting, MessageTemplate template, MessageDTO message) throws ChannelException {
 		String content = renderString(template.getTemplate(), message.getParams());
 		content += "【" + messageSetting.getPrefix() + "】";
 		MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
@@ -102,7 +102,7 @@ public class LinkSMSServiceImpl implements IBatchQueryable {
 	}
 
 	@Override
-	public QuerySendResult querySendStatus(MessageSetting messageSetting, Message message) {
+	public QuerySendResult querySendStatus(MessageSetting messageSetting, MessageLog message) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -118,7 +118,7 @@ public class LinkSMSServiceImpl implements IBatchQueryable {
 		} else if (body.endsWith("|||")) {// ID+'$$$$$'+号码+''$$$$$'+时间+'$$$$$'+报告标志+'$$$$$'+报告+'$$$$$'+报告日期+'|||'
 			logger.info("凌凯接收短信发送状态报告接口返回{}", body);
 			String[] reports = body.split("\\|\\|\\|");
-			Map<String, BatchMessage> batchMessages = new HashMap<>();// 自己实现一级缓存
+			Map<String, MessageTask> batchMessages = new HashMap<>();// 自己实现一级缓存
 			for (String report : reports) {
 				try {
 					String[] args = report.split("\\$\\$\\$\\$\\$");
@@ -128,7 +128,7 @@ public class LinkSMSServiceImpl implements IBatchQueryable {
 					String failCode = args[4];// 报告：各运营商直接返回的状态报告值
 					//Date receiveDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(args[5]);// 2018-05-29 10:36:48
 					LocalDateTime receiveDate= LocalDateTime.parse(args[5]);
-					Message message = messageService.queryMessage(mobile, bizId);
+					MessageLog message = messageService.queryMessage(mobile, bizId);
 					if (message != null) {
 						byte sendStatus = SendStatus.SENDING;
 						if (REPORT_STATUS_SUCCESS.equals(status)) {
@@ -144,7 +144,7 @@ public class LinkSMSServiceImpl implements IBatchQueryable {
 						}
 					} else {
 						logger.debug("检查是否是批量发送短信");
-						BatchMessage batchMessage = batchMessages.get(bizId);
+						MessageTask batchMessage = batchMessages.get(bizId);
 						if (batchMessage == null) {
 							batchMessage = messageService.queryBatchMessage(bizId);
 						}
@@ -165,7 +165,7 @@ public class LinkSMSServiceImpl implements IBatchQueryable {
 					logger.error("凌凯接收短信发送状态格式异常:{}", e.getMessage());
 				}
 			}
-			for (BatchMessage batchMessage : batchMessages.values()) {
+			for (MessageTask batchMessage : batchMessages.values()) {
 				try {
 					int id = batchMessage.getId();
 					short sending = stringRedisTemplate.opsForSet().size(RedisKeys.BATCH_MESSAGE_SENDING.format(id)).shortValue();

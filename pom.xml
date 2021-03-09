@@ -15,6 +15,7 @@
         <ucs.project.version>2.7.1</ucs.project.version>
         <java.version>1.8</java.version>
         <maven.plugin.version>3.8.1</maven.plugin.version>
+        <maven.sufire.version>2.22.2</maven.sufire.version>
         <swagger.version>2.9.2</swagger.version>
         <swagger.models.version>1.5.21</swagger.models.version>
         <knife4j.version>2.0.3</knife4j.version>
@@ -30,9 +31,9 @@
         <spring.cloud.context.version>2.2.5.RELEASE</spring.cloud.context.version>
         <spring.platform.version>Cairo-SR8</spring.platform.version>
         <spring.cloud.nacos.version>2.2.1.RELEASE</spring.cloud.nacos.version>
-        <!-- 推荐使用Harbor -->
-        <docker.registry.url>10.211.55.5</docker.registry.url>
-        <docker.registry.host>http://${docker.registry.url}:2375</docker.registry.host>
+        <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+        <docker.registry.host>119.27.177.43</docker.registry.host>
+        <docker.registry.url>http://${docker.registry.host}:26505</docker.registry.url>
         <docker.plugin.version>1.2.0</docker.plugin.version>
     </properties>
 
@@ -43,6 +44,7 @@
         <module>ucs-service</module>
         <module>ucs-service-api</module>
         <module>ucs-common</module>
+        <module>ucs-docker</module>
     </modules>
 
     <dependencyManagement>
@@ -153,7 +155,16 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
-        </plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.sufire.version}</version>
+                <configuration>
+                    <skip>${maven.test.skip}</skip>
+                    <testFailureIgnore>${maven.test.failure.ignore}</testFailureIgnore>
+                </configuration>
+            </plugin>
+         </plugins>
     </build>
 
     <repositories>
@@ -164,16 +175,7 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-        <repository>
-            <id>sailmi-repo</id>
-            <name>Sailmi Repository</name>
-            <url>http://nexus.iitplat.com/repository/sailmi-repo/</url>
-        </repository>
-        <repository>
-            <id>linose-repos</id>
-            <name>linose nexus repository</name>
-            <url>http://nexus.iitplat.com/repository/linose-repo/</url>
-        </repository>
+
     </repositories>
 
     <pluginRepositories>
@@ -202,4 +204,5 @@
         </snapshotRepository>
     </distributionManagement>
     <!-- 将源码打包插件 -->
+
 </project>

@@ -21,7 +21,6 @@
         <module>ucs-system-api</module>
         <module>ucs-user-api</module>
         <module>ucs-demo-api</module>
-        <module>ucs-cms-api</module>
     </modules>
 
     <dependencies>

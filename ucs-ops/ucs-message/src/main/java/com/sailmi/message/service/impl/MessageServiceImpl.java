@@ -5,26 +5,26 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sailmi.core.mp.base.BaseServiceImpl;
-import com.sailmi.message.constant.BaseResultEnum;
-import com.sailmi.message.core.dao.constant.RedisKeys;
-import com.sailmi.message.core.dao.constant.SendStatus;
-import com.sailmi.message.core.dao.constant.ValidateStatus;
-import com.sailmi.message.core.dao.entity.BatchMessage;
-import com.sailmi.message.core.dao.entity.Message;
-import com.sailmi.message.core.dao.entity.MessageSetting;
-import com.sailmi.message.core.dao.entity.Template;
-import com.sailmi.message.core.dao.mapper.BatchMessageMapper;
-import com.sailmi.message.core.dao.mapper.MessageMapper;
-import com.sailmi.message.core.dao.mapper.MessageSettingMapper;
-import com.sailmi.message.core.dao.mapper.TemplateMapper;
-import com.sailmi.message.core.exception.BaseException;
-import com.sailmi.message.core.exception.ChannelException;
-import com.sailmi.message.core.health.SMSHealthIndicator;
-import com.sailmi.message.core.model.dto.*;
-import com.sailmi.message.core.model.vo.MessageVO;
-import com.sailmi.message.core.service.ChannelSMSServices;
-import com.sailmi.message.core.service.IChannelService;
-import com.sailmi.message.core.service.IMessageService;
+import com.sailmi.core.message.constant.BaseResultEnum;
+import com.sailmi.core.message.dao.constant.RedisKeys;
+import com.sailmi.core.message.dao.constant.SendStatus;
+import com.sailmi.core.message.dao.constant.ValidateStatus;
+import com.sailmi.core.message.dao.entity.MessageTask;
+import com.sailmi.core.message.dao.entity.MessageLog;
+import com.sailmi.core.message.dao.entity.MessageSetting;
+import com.sailmi.core.message.dao.entity.MessageTemplate;
+import com.sailmi.core.message.dao.mapper.MessageTaskMapper;
+import com.sailmi.core.message.dao.mapper.MessageLogMapper;
+import com.sailmi.core.message.dao.mapper.MessageSettingMapper;
+import com.sailmi.core.message.dao.mapper.MessageTemplateMapper;
+import com.sailmi.core.message.exception.BaseException;
+import com.sailmi.core.message.exception.ChannelException;
+import com.sailmi.core.message.health.SMSHealthIndicator;
+import com.sailmi.core.message.model.dto.*;
+import com.sailmi.core.message.model.vo.MessageLogVO;
+import com.sailmi.core.message.service.ChannelSMSServices;
+import com.sailmi.core.message.service.IChannelService;
+import com.sailmi.core.message.service.IMessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,20 +42,20 @@ import java.util.concurrent.TimeUnit;
  * 依据MessageType，通过不同的Service实现，完成消息的发送。
  */
 @Service
-public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message> implements IMessageService {
+public class MessageServiceImpl  extends BaseServiceImpl<MessageLogMapper, MessageLog> implements IMessageService {
 
 	private static final Logger logger = LoggerFactory.getLogger(MessageServiceImpl.class);
 	@Autowired
 	private MessageSettingMapper messageSettingMapper;
 
 	@Autowired
-	private TemplateMapper templateMapper;
+	private MessageTemplateMapper templateMapper;
 
 	@Autowired
-	private MessageMapper messageMapper;
+	private MessageLogMapper messageMapper;
 
 	@Autowired
-	private BatchMessageMapper batchMessageMapper;
+	private MessageTaskMapper batchMessageMapper;
 
 	@Autowired
 	private ChannelSMSServices channelSMSServices;
@@ -84,7 +84,7 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 
 	@Override
 	public SendMessageResult send(MessageDTO messageDTO) {
-		Template template = templateMapper.selectById(Short.valueOf(messageDTO.getTemplateId()));
+		MessageTemplate template = templateMapper.selectById(Short.valueOf(messageDTO.getTemplateId()));
 		if (template == null) {
 			throw new BaseException(BaseResultEnum.TEMPLATE_NOT_EXIST);
 		}
@@ -137,7 +137,7 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 		} while (iterator.hasNext());
 
 		try {
-			Message message = new Message();
+			MessageLog message = new MessageLog();
 			message.setMobile(messageDTO.getMobile());
 			message.setParams(new ObjectMapper().writeValueAsString(params));
 			message.setTemplateId(template.getId());
@@ -177,8 +177,8 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 	}
 
 	@Override
-	public QuerySendResult queryAndUpdateSendStatus(Message message, IChannelService channelSMSService) {
-		Template template = templateMapper.selectById(message.getTemplateId());
+	public QuerySendResult queryAndUpdateSendStatus(MessageLog message, IChannelService channelSMSService) {
+		MessageTemplate template = templateMapper.selectById(message.getTemplateId());
 		MessageSetting messageSetting = messageSettingMapper.selectById("");
 		QuerySendResult querySendResult = channelSMSService.querySendStatus(messageSetting, message);
 		if (querySendResult.isSuccess() && SendStatus.SENDING != querySendResult.getSendStatus()) {
@@ -189,7 +189,7 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 
 	@Override
 	public boolean check(ValidateCodeDTO validateDTO) {
-		Template template = templateMapper.selectById(Short.valueOf(validateDTO.getTemplateId()));
+		MessageTemplate template = templateMapper.selectById(Short.valueOf(validateDTO.getTemplateId()));
 		if (template == null) {
 			throw new BaseException(BaseResultEnum.TEMPLATE_NOT_EXIST);
 		} else if (StringUtils.isEmpty(template.getValidateCodeKey())) {
@@ -201,7 +201,7 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 		}
 		String messageRedisKey = RedisKeys.VALIDATE_CODE_MESSAGE.format(validateDTO.getMobile(), template.getId());
 		String retryRedisKey = RedisKeys.VALIDATE_RETRY.format(validateDTO.getMobile(), template.getId());
-		Message message = (Message) redisTemplate.opsForValue().get(messageRedisKey);
+		MessageLog message = (MessageLog) redisTemplate.opsForValue().get(messageRedisKey);
 		if (message == null) {
 			logger.debug("验证码已过期");
 			return false;
@@ -235,23 +235,23 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 	}
 
 	@Override
-	public int updateMessageValidateStatus(Message message) {
-		Message updateMessage = new Message();
+	public int updateMessageValidateStatus(MessageLog message) {
+		MessageLog updateMessage = new MessageLog();
 		updateMessage.setValidateStatus(Integer.valueOf(ValidateStatus.YES));
-		UpdateWrapper<Message> wrapper = new UpdateWrapper();
+		UpdateWrapper<MessageLog> wrapper = new UpdateWrapper();
 		//Need to check logic  --yzh
-		wrapper.lambda().set(Message::getValidateStatus,message.getValidateStatus())
-						.eq(Message::getId,message.getId());
+		wrapper.lambda().set(MessageLog::getValidateStatus,message.getValidateStatus())
+						.eq(MessageLog::getId,message.getId());
 		int result = messageMapper.update(message,wrapper);
 		logger.info("{}更新验证码状态结果{}", message, result);
 		return result;
 	}
 
 	@Override
-	public Message queryLatestMessage(String mobile, Template template) {
+	public MessageLog queryLatestMessage(String mobile, MessageTemplate template) {
 		Instant expire = Instant.now().minusSeconds(template.getValidateCodeExpire());
 		//change to mybatis ++
-		QueryWrapper<Message> queryWrapper = new QueryWrapper<>();
+		QueryWrapper<MessageLog> queryWrapper = new QueryWrapper<>();
 
 		/*
 		Example example = new Example.Builder(Message.class)
@@ -269,9 +269,9 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 	}
 
 	@Override
-	public Message queryMessage(String mobile, String bizId) {
-		QueryWrapper<Message> queryWrapper = new QueryWrapper<Message>();
-		Message message = new Message();
+	public MessageLog queryMessage(String mobile, String bizId) {
+		QueryWrapper<MessageLog> queryWrapper = new QueryWrapper<MessageLog>();
+		MessageLog message = new MessageLog();
 		message.setBizId(bizId);
 		message.setMobile(mobile);
 		queryWrapper.setEntity(message);
@@ -279,8 +279,8 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 	}
 
 	@Override
-	public int updateMessageSendStatus(Message message, QuerySendResult querySendResult) {
-		Message updateMessage = new Message();
+	public int updateMessageSendStatus(MessageLog message, QuerySendResult querySendResult) {
+		MessageLog updateMessage = new MessageLog();
 		updateMessage.setId(message.getId());
 		updateMessage.setSendStatus(Integer.valueOf(querySendResult.getSendStatus()));
 		if (SendStatus.FAILURE == querySendResult.getSendStatus()) {
@@ -295,8 +295,8 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 	}
 
 	@Override
-	public List<Message> querySendingMessages(Date fromDate, String channel) {
-		QueryWrapper<Message> queryWrapper = new QueryWrapper<>();
+	public List<MessageLog> querySendingMessages(Date fromDate, String channel) {
+		QueryWrapper<MessageLog> queryWrapper = new QueryWrapper<>();
 		/*
 		Example example = new Example.Builder(Message.class)
 				.where(WeekendSqls.<Message>custom()
@@ -311,7 +311,7 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 	}
 
 	@Override
-	public void batchSend(BatchMessageDTO batchMessageDTO) {
+	public void batchSend(MessageTaskDTO batchMessageDTO) {
 		MessageSetting messageSetting = messageSettingMapper.selectById(batchMessageDTO.getAppId());
 		if (messageSetting == null) {
 			throw new BaseException(BaseResultEnum.APP_NOT_EXIST);
@@ -332,7 +332,7 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 				sendMessageResult = new SendMessageResult(e.getMessage());
 			}
 			try {
-				BatchMessage batchMessage = new BatchMessage();
+				MessageTask batchMessage = new MessageTask();
 				batchMessage.setMessageSettingId(messageSetting.getId());
 				batchMessage.setContent(batchMessageDTO.getContent());
 				batchMessage.setTotal((short) mobileArray.length);
@@ -361,9 +361,9 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 	}
 
 	@Override
-	public BatchMessage queryBatchMessage(String bizId) {
-		QueryWrapper<BatchMessage> queryWrapper = new QueryWrapper<>();
-		BatchMessage batchMessage = new BatchMessage();
+	public MessageTask queryBatchMessage(String bizId) {
+		QueryWrapper<MessageTask> queryWrapper = new QueryWrapper<>();
+		MessageTask batchMessage = new MessageTask();
 		batchMessage.setBizId(bizId);
 		queryWrapper.setEntity(batchMessage);
 		return batchMessageMapper.selectOne(queryWrapper);
@@ -371,7 +371,7 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 
 	@Override
 	public int updateBatchMessageCount(int id, short sending, short success, short failure) {
-		BatchMessage batchMessage = new BatchMessage();
+		MessageTask batchMessage = new MessageTask();
 		batchMessage.setId(id);
 		batchMessage.setSuccess(success);
 		batchMessage.setFailure(failure);
@@ -389,7 +389,7 @@ public class MessageServiceImpl  extends BaseServiceImpl<MessageMapper, Message>
 	}
 
 	@Override
-	public IPage<MessageVO> selectMessagePage(IPage<MessageVO> page, MessageVO message) {
+	public IPage<MessageLogVO> selectMessagePage(IPage<MessageLogVO> page, MessageLogVO message) {
 		return page.setRecords(baseMapper.selectMessagePage(page, message));
 	}
 }

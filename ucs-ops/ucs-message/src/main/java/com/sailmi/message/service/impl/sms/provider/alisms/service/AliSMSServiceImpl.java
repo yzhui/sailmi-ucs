@@ -10,19 +10,19 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.http.MethodType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sailmi.message.constant.BaseResultEnum;
-import com.sailmi.message.constant.Channels;
-import com.sailmi.message.core.dao.constant.SendStatus;
-import com.sailmi.message.core.dao.entity.Message;
-import com.sailmi.message.core.dao.entity.MessageSetting;
-import com.sailmi.message.core.dao.entity.Template;
-import com.sailmi.message.core.exception.AmountNotEnoughException;
-import com.sailmi.message.core.exception.BaseException;
-import com.sailmi.message.core.exception.ChannelException;
-import com.sailmi.message.core.model.dto.MessageDTO;
-import com.sailmi.message.core.model.dto.QuerySendResult;
-import com.sailmi.message.core.model.dto.SendMessageResult;
-import com.sailmi.message.core.service.IChannelService;
+import com.sailmi.core.message.constant.BaseResultEnum;
+import com.sailmi.core.message.constant.Channels;
+import com.sailmi.core.message.dao.constant.SendStatus;
+import com.sailmi.core.message.dao.entity.MessageLog;
+import com.sailmi.core.message.dao.entity.MessageSetting;
+import com.sailmi.core.message.dao.entity.MessageTemplate;
+import com.sailmi.core.message.exception.AmountNotEnoughException;
+import com.sailmi.core.message.exception.BaseException;
+import com.sailmi.core.message.exception.ChannelException;
+import com.sailmi.core.message.model.dto.MessageDTO;
+import com.sailmi.core.message.model.dto.QuerySendResult;
+import com.sailmi.core.message.model.dto.SendMessageResult;
+import com.sailmi.core.message.service.IChannelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ public class AliSMSServiceImpl implements IChannelService {
 	private IAcsClient acsClient;
 
 	@Override
-	public SendMessageResult send(MessageSetting messageSetting, Template template, MessageDTO message) throws ChannelException {
+	public SendMessageResult send(MessageSetting messageSetting, MessageTemplate template, MessageDTO message) throws ChannelException {
 		SendSmsRequest request = new SendSmsRequest();
 		request.setMethod(MethodType.POST);
 		request.setPhoneNumbers(message.getMobile());
@@ -92,7 +92,7 @@ public class AliSMSServiceImpl implements IChannelService {
 	}
 
 	@Override
-	public QuerySendResult querySendStatus(MessageSetting messageSetting, Message message) {
+	public QuerySendResult querySendStatus(MessageSetting messageSetting, MessageLog message) {
 		try {
 			QuerySendDetailsRequest request = new QuerySendDetailsRequest();
 			// 必填-号码

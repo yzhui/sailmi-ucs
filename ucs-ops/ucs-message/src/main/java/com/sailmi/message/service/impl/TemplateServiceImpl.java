@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2028, Chill Zhuang 庄骞 (smallchill@163.com).
+ * Copyright (c) 2018-2028.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@ package com.sailmi.message.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sailmi.core.mp.base.BaseServiceImpl;
-import com.sailmi.message.core.dao.entity.Template;
-import com.sailmi.message.core.dao.mapper.TemplateMapper;
-import com.sailmi.message.core.model.vo.TemplateVO;
-import com.sailmi.message.core.service.ITemplateService;
+import com.sailmi.core.message.dao.entity.MessageTemplate;
+import com.sailmi.core.message.dao.mapper.MessageTemplateMapper;
+import com.sailmi.core.message.model.vo.MessageTemplateVO;
+import com.sailmi.core.message.service.IMessageTemplateService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,10 +30,10 @@ import org.springframework.stereotype.Service;
  * @since 2020-07-17
  */
 @Service
-public class TemplateServiceImpl extends BaseServiceImpl<TemplateMapper, Template> implements ITemplateService {
+public class TemplateServiceImpl extends BaseServiceImpl<MessageTemplateMapper, MessageTemplate> implements IMessageTemplateService {
 
 	@Override
-	public IPage<TemplateVO> selectTemplatePage(IPage<TemplateVO> page, TemplateVO template) {
+	public IPage<MessageTemplateVO> selectTemplatePage(IPage<MessageTemplateVO> page, MessageTemplateVO template) {
 		return page.setRecords(baseMapper.selectTemplatePage(page, template));
 	}
 

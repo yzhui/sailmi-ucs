@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2028, Chill Zhuang 庄骞 (smallchill@163.com).
+ * Copyright (c) 2018-2028.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package com.sailmi.message.controller;
 
-import com.sailmi.message.service.IBatchMessageService;
+import com.sailmi.core.message.service.IMessageTaskService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -30,9 +30,9 @@ import com.sailmi.core.tool.utils.Func;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.sailmi.message.core.dao.entity.BatchMessage;
-import com.sailmi.message.core.model.vo.BatchMessageVO;
-import com.sailmi.message.core.wrapper.BatchMessageWrapper;
+import com.sailmi.core.message.dao.entity.MessageTask;
+import com.sailmi.core.message.model.vo.MessageTaskVO;
+import com.sailmi.core.message.wrapper.MessageTaskWrapper;
 import com.sailmi.core.boot.ctrl.AppController;
 
 /**
@@ -43,11 +43,11 @@ import com.sailmi.core.boot.ctrl.AppController;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/batchmessage")
+@RequestMapping("/messagetask")
 @Api(value = "", tags = "接口")
-public class BatchMessageController extends AppController {
+public class MessageTaskController extends AppController {
 
-	private IBatchMessageService batchMessageService;
+	private IMessageTaskService batchMessageService;
 
 	/**
 	* 详情
@@ -55,9 +55,9 @@ public class BatchMessageController extends AppController {
 	@GetMapping("/detail")
     @ApiOperationSupport(order = 1)
 	@ApiOperation(value = "详情", notes = "传入batchMessage")
-	public R<BatchMessageVO> detail(BatchMessage batchMessage) {
-		BatchMessage detail = batchMessageService.getOne(Condition.getQueryWrapper(batchMessage));
-		return R.data(BatchMessageWrapper.build().entityVO(detail));
+	public R<MessageTaskVO> detail(MessageTask batchMessage) {
+		MessageTask detail = batchMessageService.getOne(Condition.getQueryWrapper(batchMessage));
+		return R.data(MessageTaskWrapper.build().entityVO(detail));
 	}
 
 	/**
@@ -66,9 +66,9 @@ public class BatchMessageController extends AppController {
 	@GetMapping("/list")
     @ApiOperationSupport(order = 2)
 	@ApiOperation(value = "分页", notes = "传入batchMessage")
-	public R<IPage<BatchMessageVO>> list(BatchMessage batchMessage, Query query) {
-		IPage<BatchMessage> pages = batchMessageService.page(Condition.getPage(query), Condition.getQueryWrapper(batchMessage));
-		return R.data(BatchMessageWrapper.build().pageVO(pages));
+	public R<IPage<MessageTaskVO>> list(MessageTask batchMessage, Query query) {
+		IPage<MessageTask> pages = batchMessageService.page(Condition.getPage(query), Condition.getQueryWrapper(batchMessage));
+		return R.data(MessageTaskWrapper.build().pageVO(pages));
 	}
 
 	/**
@@ -77,8 +77,8 @@ public class BatchMessageController extends AppController {
 	@GetMapping("/page")
     @ApiOperationSupport(order = 3)
 	@ApiOperation(value = "分页", notes = "传入batchMessage")
-	public R<IPage<BatchMessageVO>> page(BatchMessageVO batchMessage, Query query) {
-		IPage<BatchMessageVO> pages = batchMessageService.selectBatchMessagePage(Condition.getPage(query), batchMessage);
+	public R<IPage<MessageTaskVO>> page(MessageTaskVO batchMessage, Query query) {
+		IPage<MessageTaskVO> pages = batchMessageService.selectMessageTaskPage(Condition.getPage(query), batchMessage);
 		return R.data(pages);
 	}
 
@@ -88,7 +88,7 @@ public class BatchMessageController extends AppController {
 	@PostMapping("/save")
     @ApiOperationSupport(order = 4)
 	@ApiOperation(value = "新增", notes = "传入batchMessage")
-	public R save(@Valid @RequestBody BatchMessage batchMessage) {
+	public R save(@Valid @RequestBody MessageTask batchMessage) {
 		return R.status(batchMessageService.save(batchMessage));
 	}
 
@@ -98,7 +98,7 @@ public class BatchMessageController extends AppController {
 	@PostMapping("/update")
     @ApiOperationSupport(order = 5)
 	@ApiOperation(value = "修改", notes = "传入batchMessage")
-	public R update(@Valid @RequestBody BatchMessage batchMessage) {
+	public R update(@Valid @RequestBody MessageTask batchMessage) {
 		return R.status(batchMessageService.updateById(batchMessage));
 	}
 
@@ -108,7 +108,7 @@ public class BatchMessageController extends AppController {
 	@PostMapping("/submit")
     @ApiOperationSupport(order = 6)
 	@ApiOperation(value = "新增或修改", notes = "传入batchMessage")
-	public R submit(@Valid @RequestBody BatchMessage batchMessage) {
+	public R submit(@Valid @RequestBody MessageTask batchMessage) {
 		return R.status(batchMessageService.saveOrUpdate(batchMessage));
 	}
 

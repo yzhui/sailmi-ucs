@@ -108,21 +108,26 @@
     </dependencies>
     <build>
         <plugins>
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>${docker.plugin.version}</version>
-                <configuration>
-                    <skipDockerBuild>true</skipDockerBuild>
-                </configuration>
-            </plugin>
+            <!-- 资源拷贝 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skip>${maven.test.skip}</skip>
-                    <testFailureIgnore>${maven.test.failure.ignore}</testFailureIgnore>
-                </configuration>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <!--suppress UnresolvedMavenProperty -->
+                                <copy overwrite="true"
+                                      tofile="${session.executionRootDirectory}/target/${artifactId}.jar"
+                                      file="${project.build.directory}/${artifactId}.jar" />
+                             </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -15,11 +15,11 @@ spring:
         enabled: true
     nacos:
       config:
-        server-addr: localhost:8848
-        namespace: public
+        server-addr: 172.17.0.1:26508
+        namespace: test
         group: DEFAULT_GROUP
       discovery:
-        server-addr: localhost:8848
+        server-addr: 172.17.0.1:26508
 
 # 聚合文档配置
 sailmi:

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2028, Chill Zhuang 庄骞 (smallchill@163.com).
+ * Copyright (c) 2018-2028.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package com.sailmi.message.controller;
 
-import com.sailmi.message.core.service.ITemplateService;
+import com.sailmi.core.message.service.IMessageTemplateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -30,9 +30,9 @@ import com.sailmi.core.tool.utils.Func;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.sailmi.message.core.dao.entity.Template;
-import com.sailmi.message.core.model.vo.TemplateVO;
-import com.sailmi.message.core.wrapper.TemplateWrapper;
+import com.sailmi.core.message.dao.entity.MessageTemplate;
+import com.sailmi.core.message.model.vo.MessageTemplateVO;
+import com.sailmi.core.message.wrapper.MessageTemplateWrapper;
 import com.sailmi.core.boot.ctrl.AppController;
 
 /**
@@ -47,7 +47,7 @@ import com.sailmi.core.boot.ctrl.AppController;
 @Api(value = "", tags = "接口")
 public class TemplateController extends AppController {
 
-	private ITemplateService templateService;
+	private IMessageTemplateService templateService;
 
 	/**
 	* 详情
@@ -55,9 +55,9 @@ public class TemplateController extends AppController {
 	@GetMapping("/detail")
     @ApiOperationSupport(order = 1)
 	@ApiOperation(value = "详情", notes = "传入template")
-	public R<TemplateVO> detail(Template template) {
-		Template detail = templateService.getOne(Condition.getQueryWrapper(template));
-		return R.data(TemplateWrapper.build().entityVO(detail));
+	public R<MessageTemplateVO> detail(MessageTemplate template) {
+		MessageTemplate detail = templateService.getOne(Condition.getQueryWrapper(template));
+		return R.data(MessageTemplateWrapper.build().entityVO(detail));
 	}
 
 	/**
@@ -66,9 +66,9 @@ public class TemplateController extends AppController {
 	@GetMapping("/list")
     @ApiOperationSupport(order = 2)
 	@ApiOperation(value = "分页", notes = "传入template")
-	public R<IPage<TemplateVO>> list(Template template, Query query) {
-		IPage<Template> pages = templateService.page(Condition.getPage(query), Condition.getQueryWrapper(template));
-		return R.data(TemplateWrapper.build().pageVO(pages));
+	public R<IPage<MessageTemplateVO>> list(MessageTemplate template, Query query) {
+		IPage<MessageTemplate> pages = templateService.page(Condition.getPage(query), Condition.getQueryWrapper(template));
+		return R.data(MessageTemplateWrapper.build().pageVO(pages));
 	}
 
 	/**
@@ -77,8 +77,8 @@ public class TemplateController extends AppController {
 	@GetMapping("/page")
     @ApiOperationSupport(order = 3)
 	@ApiOperation(value = "分页", notes = "传入template")
-	public R<IPage<TemplateVO>> page(TemplateVO template, Query query) {
-		IPage<TemplateVO> pages = templateService.selectTemplatePage(Condition.getPage(query), template);
+	public R<IPage<MessageTemplateVO>> page(MessageTemplateVO template, Query query) {
+		IPage<MessageTemplateVO> pages = templateService.selectTemplatePage(Condition.getPage(query), template);
 		return R.data(pages);
 	}
 
@@ -88,7 +88,7 @@ public class TemplateController extends AppController {
 	@PostMapping("/save")
     @ApiOperationSupport(order = 4)
 	@ApiOperation(value = "新增", notes = "传入template")
-	public R save(@Valid @RequestBody Template template) {
+	public R save(@Valid @RequestBody MessageTemplate template) {
 		return R.status(templateService.save(template));
 	}
 
@@ -98,7 +98,7 @@ public class TemplateController extends AppController {
 	@PostMapping("/update")
     @ApiOperationSupport(order = 5)
 	@ApiOperation(value = "修改", notes = "传入template")
-	public R update(@Valid @RequestBody Template template) {
+	public R update(@Valid @RequestBody MessageTemplate template) {
 		return R.status(templateService.updateById(template));
 	}
 
@@ -108,7 +108,7 @@ public class TemplateController extends AppController {
 	@PostMapping("/submit")
     @ApiOperationSupport(order = 6)
 	@ApiOperation(value = "新增或修改", notes = "传入template")
-	public R submit(@Valid @RequestBody Template template) {
+	public R submit(@Valid @RequestBody MessageTemplate template) {
 		return R.status(templateService.saveOrUpdate(template));
 	}
 

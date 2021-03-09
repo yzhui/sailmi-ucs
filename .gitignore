@@ -20,11 +20,9 @@ Thumbs.db
 .idea
 *.iml
 /target
-script/*
+ucs-docker/script/*
+ucs-docker/docker/*
 pic/*
-
-
-
 
 # Package Files #
 *.jar

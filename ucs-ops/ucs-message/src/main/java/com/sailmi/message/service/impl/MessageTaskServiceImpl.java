@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-2028, Chill Zhuang 庄骞 (smallchill@163.com).
+ * Copyright (c) 2018-2028.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sailmi.cms.service.impl;
+package com.sailmi.message.service.impl;
 
-import com.sailmi.cms.entity.File;
-import com.sailmi.cms.vo.FileVO;
-import com.sailmi.cms.mapper.FileMapper;
-import com.sailmi.cms.service.IFileService;
-import com.sailmi.core.mp.base.BaseServiceImpl;
-import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.sailmi.core.mp.base.BaseServiceImpl;
+import com.sailmi.core.message.dao.entity.MessageTask;
+import com.sailmi.core.message.dao.mapper.MessageTaskMapper;
+import com.sailmi.core.message.model.vo.MessageTaskVO;
+import com.sailmi.core.message.service.IMessageTaskService;
+import org.springframework.stereotype.Service;
 
 /**
- * 内容附件 服务实现类
+ *  服务实现类
  *
  * @author sailmi
- * @since 2020-12-16
+ * @since 2020-07-17
  */
 @Service
-public class FileServiceImpl extends BaseServiceImpl<FileMapper, File> implements IFileService {
-
+public class MessageTaskServiceImpl extends BaseServiceImpl<MessageTaskMapper, MessageTask> implements IMessageTaskService {
 	@Override
-	public IPage<FileVO> selectFilePage(IPage<FileVO> page, FileVO file) {
-		return page.setRecords(baseMapper.selectFilePage(page, file));
+	public IPage<MessageTaskVO> selectMessageTaskPage(IPage<MessageTaskVO> page, MessageTaskVO batchMessage) {
+		return page.setRecords(baseMapper.selectMessageTaskPage(page, batchMessage));
 	}
 
 }

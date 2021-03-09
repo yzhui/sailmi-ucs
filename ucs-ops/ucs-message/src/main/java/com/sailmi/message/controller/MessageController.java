@@ -8,22 +8,22 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sailmi.core.mp.support.Condition;
 import com.sailmi.core.mp.support.Query;
 import com.sailmi.core.tool.utils.Func;
-import com.sailmi.message.core.dao.entity.Message;
-import com.sailmi.message.core.model.dto.BatchMessageDTO;
-import com.sailmi.message.core.model.dto.MessageDTO;
-import com.sailmi.message.core.model.dto.SendMessageResult;
-import com.sailmi.message.core.model.dto.ValidateCodeDTO;
-import com.sailmi.message.core.model.vo.BaseResult;
-import com.sailmi.message.core.model.vo.MessageVO;
-import com.sailmi.message.core.service.IMessageService;
-import com.sailmi.message.core.wrapper.MessageWrapper;
+import com.sailmi.core.message.dao.entity.MessageLog;
+import com.sailmi.core.message.model.dto.MessageTaskDTO;
+import com.sailmi.core.message.model.dto.MessageDTO;
+import com.sailmi.core.message.model.dto.SendMessageResult;
+import com.sailmi.core.message.model.dto.ValidateCodeDTO;
+import com.sailmi.core.message.model.vo.BaseResult;
+import com.sailmi.core.message.model.vo.MessageLogVO;
+import com.sailmi.core.message.service.IMessageService;
+import com.sailmi.core.message.wrapper.MessageWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import com.sailmi.message.constant.BaseResultEnum;
+import com.sailmi.core.message.constant.BaseResultEnum;
 import io.swagger.annotations.ApiOperation;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.sailmi.core.tool.api.R;
@@ -87,7 +87,7 @@ public class MessageController extends BaseController {
 	 * @return
 	 */
 	@PostMapping("/batchSend")
-	public BaseResult batchSend(@RequestBody @Valid BatchMessageDTO batchMessage, BindingResult bindingResult) {
+	public BaseResult batchSend(@RequestBody @Valid MessageTaskDTO batchMessage, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return new BaseResult(BaseResultEnum.ILLEGAL_ARGUMENT, bindingResult.getFieldError().getDefaultMessage());
 		}
@@ -101,8 +101,8 @@ public class MessageController extends BaseController {
 	@GetMapping("/detail")
 	@ApiOperationSupport(order = 1)
 	@ApiOperation(value = "详情", notes = "传入message")
-	public R<MessageVO> detail(Message message) {
-		Message detail = messageService.getOne(Condition.getQueryWrapper(message));
+	public R<MessageLogVO> detail(MessageLog message) {
+		MessageLog detail = messageService.getOne(Condition.getQueryWrapper(message));
 		return R.data(MessageWrapper.build().entityVO(detail));
 	}
 
@@ -112,8 +112,8 @@ public class MessageController extends BaseController {
 	@GetMapping("/list")
 	@ApiOperationSupport(order = 2)
 	@ApiOperation(value = "分页", notes = "传入message")
-	public R<IPage<MessageVO>> list(Message message, Query query) {
-		IPage<Message> pages = messageService.page(Condition.getPage(query), Condition.getQueryWrapper(message));
+	public R<IPage<MessageLogVO>> list(MessageLog message, Query query) {
+		IPage<MessageLog> pages = messageService.page(Condition.getPage(query), Condition.getQueryWrapper(message));
 		return R.data(MessageWrapper.build().pageVO(pages));
 	}
 
@@ -123,8 +123,8 @@ public class MessageController extends BaseController {
 	@GetMapping("/page")
 	@ApiOperationSupport(order = 3)
 	@ApiOperation(value = "分页", notes = "传入message")
-	public R<IPage<MessageVO>> page(MessageVO message, Query query) {
-		IPage<MessageVO> pages = messageService.selectMessagePage(Condition.getPage(query), message);
+	public R<IPage<MessageLogVO>> page(MessageLogVO message, Query query) {
+		IPage<MessageLogVO> pages = messageService.selectMessagePage(Condition.getPage(query), message);
 		return R.data(pages);
 	}
 
@@ -134,7 +134,7 @@ public class MessageController extends BaseController {
 	@PostMapping("/save")
 	@ApiOperationSupport(order = 4)
 	@ApiOperation(value = "新增", notes = "传入message")
-	public R save(@Valid @RequestBody Message message) {
+	public R save(@Valid @RequestBody MessageLog message) {
 		return R.status(messageService.save(message));
 	}
 
@@ -144,7 +144,7 @@ public class MessageController extends BaseController {
 	@PostMapping("/update")
 	@ApiOperationSupport(order = 5)
 	@ApiOperation(value = "修改", notes = "传入message")
-	public R update(@Valid @RequestBody Message message) {
+	public R update(@Valid @RequestBody MessageLog message) {
 		return R.status(messageService.updateById(message));
 	}
 
@@ -154,7 +154,7 @@ public class MessageController extends BaseController {
 	@PostMapping("/submit")
 	@ApiOperationSupport(order = 6)
 	@ApiOperation(value = "新增或修改", notes = "传入message")
-	public R submit(@Valid @RequestBody Message message) {
+	public R submit(@Valid @RequestBody MessageLog message) {
 		return R.status(messageService.saveOrUpdate(message));
 	}
 

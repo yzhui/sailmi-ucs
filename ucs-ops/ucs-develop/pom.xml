@@ -67,17 +67,9 @@
         </dependency>
 
     </dependencies>
-
     <build>
         <plugins>
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>${docker.plugin.version}</version>
-                <configuration>
-                    <skipDockerBuild>true</skipDockerBuild>
-                </configuration>
-            </plugin>
+            <!-- 资源拷贝 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -100,5 +92,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
