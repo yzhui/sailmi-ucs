@@ -190,7 +190,6 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
-
     <distributionManagement>
         <repository>
             <id>aw-repos-release</id>
