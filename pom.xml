@@ -179,9 +179,7 @@
             <name>aw-repos</name>
             <url>http://119.27.177.43:26501/repository/sailmi-repo/</url>
         </repository>
-
     </repositories>
-
     <pluginRepositories>
         <pluginRepository>
             <id>aw-repos</id>
