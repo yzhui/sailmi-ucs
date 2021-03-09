@@ -44,7 +44,6 @@
         <module>ucs-service</module>
         <module>ucs-service-api</module>
         <module>ucs-common</module>
-        <module>ucs-docker</module>
     </modules>
 
     <dependencyManagement>
@@ -180,9 +179,9 @@
 
     <pluginRepositories>
         <pluginRepository>
-            <id>linose-repos</id>
-            <name>linose-repos</name>
-            <url>http://nexus.iitplat.com/repository/maven-public/</url>
+            <id>aw-repos</id>
+            <name>aw-repos</name>
+            <url>http://119.27.177.43:26501/repository/maven-public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -193,16 +192,17 @@
     </pluginRepositories>
     <distributionManagement>
         <repository>
-            <id>linose-repos-release</id>
-            <name>linose-repos-release</name>
-            <url>http://nexus.iitplat.com/repository/sailmi-repo/</url>
+            <id>aw-repos-release</id>
+            <name>aw-repos-release</name>
+            <url>http://119.27.177.43:26501/repository/sailmi-repo/</url>
         </repository>
         <snapshotRepository>
-            <id>linose-repos-snapshot</id>
-            <name>linose-repos-snapshot</name>
-            <url>http://nexus.iitplat.com/repository/sailmi-repo/</url>
+            <id>aw-repos-snapshot</id>
+            <name>aw-repos-snapshot</name>
+            <url>http://119.27.177.43:26501/repository/sailmi-repo/</url>
         </snapshotRepository>
     </distributionManagement>
     <!-- 将源码打包插件 -->
 
 </project>
+
